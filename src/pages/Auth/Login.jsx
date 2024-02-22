@@ -27,7 +27,7 @@ const URL = process.env.REACT_APP_ADMIN_NODE_SERVER_URL;
 
 
  const adminLogin = async(data) => {
-  console.log("admin data login -->", data);
+  // console.log("admin data login -->", data);
 
   try {
       const res = await axios.post(`${URL}/api/v1/auth/login`, data)
