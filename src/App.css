@@ -36,7 +36,13 @@ main {
   line-height: 0;
 }
 .bars {
-  width: 30px;
+  width: 25px;
+  position: fixed;
+  left: 10px;
+  top: 18px;
+}
+.bars-open {
+  width: 25px;
 }
 .hide {
   display: none;
@@ -108,8 +114,6 @@ main {
   border-bottom: #fff 0.5px solid;
 }
 
-
-
 .sidebar {
   position: absolute;
   top: 0;
@@ -127,4 +131,11 @@ main {
 
 .main-container > main {
   position: relative;
+}
+.scroll-bar {
+  overflow: scroll;
+  height: 370px;
+}
+::-webkit-scrollbar {
+  width: 0px;
 }

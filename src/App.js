@@ -17,7 +17,7 @@ import Advitisors from "./pages/Advitisors";
 import Offers from "./pages/Offers";
 import TransactionDeatil from "./pages/TransactionDeatil";
 import { Toaster } from "react-hot-toast";
-import Affiliates from "./pages/Affiliates";
+import Students from "./pages/Students";
 import Wallet from "./pages/Wallet";
 
 function App() {
@@ -33,7 +33,7 @@ function App() {
           <Route path="/transactionDeatil" element={<PrivateRoute Component={TransactionDeatil} />} />
           <Route path="/offers" element={<PrivateRoute Component={Offers} />} />
           <Route path="/file-manager" element={<PrivateRoute Component={FileManager} />} />
-          <Route path="/affiliates" element={<PrivateRoute Component={Affiliates} />} />
+          <Route path="/students" element={<PrivateRoute Component={Students} />} />
           <Route path="/wallet" element={<PrivateRoute Component={Wallet} />} />
 
 
