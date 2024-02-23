@@ -136,7 +136,12 @@ const Students = () => {
     try {
       const result = window.confirm("Are you sure to delete this user?");
       if (result) {
-        const response = await axios.delete(url);
+         const config = {
+           headers: {
+             "Content-Type": "application/json",
+           },
+         };
+        const response = await axios.delete(url,config);
         if (response.status === 200) {
           toast.success(response?.data?.message);
           getStudents();
