@@ -8,11 +8,11 @@ import { BsCartCheck } from "react-icons/bs";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SidebarMenu from "./SidebarMenu";
-import BusinessIcon from '@mui/icons-material/Business';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import PriceCheckIcon from '@mui/icons-material/PriceCheck';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import BusinessIcon from "@mui/icons-material/Business";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 
 const routes = [
   {
@@ -26,8 +26,8 @@ const routes = [
     icon: <BusinessIcon />,
   },
   {
-    path: "/affiliates",
-    name: "Affiliates",
+    path: "/students",
+    name: "Students",
     icon: <FaUser />,
   },
   {
@@ -141,17 +141,17 @@ const SideBar = ({ children }) => {
 
   return (
     <>
-      <div className="main-container " >
+      <div className="main-container ">
         <motion.div
           animate={{
-            width: isOpen ? "250px" : "45px",
+            width: isOpen ? "250px" : "0px",
             transition: {
               duration: 0.5,
               type: "spring",
               damping: 10,
             },
           }}
-          className={`sidebar ${isOpen ? 'open' : ''} `}
+          className={`sidebar ${isOpen ? "open" : ""} `}
         >
           <div className="top_section">
             <AnimatePresence>
@@ -166,12 +166,12 @@ const SideBar = ({ children }) => {
                   Admin Narayana House
                 </motion.h1>
               )}
+              <div className={`${isOpen? "bars-open":"bars"}`}>
+                <FaBars onClick={toggle} />
+              </div>
             </AnimatePresence>
-
-            <div className="bars">
-              <FaBars onClick={toggle} />
-            </div>
           </div>
+
           <div className="search">
             <div className="search_icon">
               <BiSearch />
@@ -205,7 +205,7 @@ const SideBar = ({ children }) => {
               return (
                 <NavLink
                   to={route.path}
-                  style={{ textDecoration: 'none' }}
+                  style={{ textDecoration: "none" }}
                   key={index}
                   className="link"
                   activeClassName="active"
