@@ -123,8 +123,8 @@ const Students = () => {
       };
       const res = await axios.patch(url, config);
       if (res?.status === 200) {
-        alert(res?.data?.message);
-        window.location.reload();
+        toast.success(res?.data?.message);
+        getStudents();
       }
     } catch (error) {
       console.log(error.message);
@@ -138,7 +138,8 @@ const Students = () => {
       if (result) {
         const response = await axios.delete(url);
         if (response.status === 200) {
-          alert(response?.data?.message);
+          toast.success(response?.data?.message);
+          getStudents();
         }
       }
     } catch (error) {
@@ -212,7 +213,6 @@ const Students = () => {
         },
       };
       const res = await axios.put(url, data, config);
-      
 
       if (res?.status === 200) {
         toast.success(res?.data?.message);
@@ -227,9 +227,9 @@ const Students = () => {
 
   return (
     <div className=" h-100 p-3 " style={{ marginLeft: "2%" }}>
-      <div className="d-flex justify-content-between">
-        <h2 className="text-center">All Students </h2>
-        <h4 className="text-center mb-3">Page No : {pageNo}</h4>
+      <h2 className="text-center">All Students </h2>
+      <div className="d-flex justify-content-end">
+        <h4 className="text-center ">Page No : {pageNo}</h4>
       </div>
       <div className="d-flex justify-content-between mb-3 ">
         <Button
@@ -362,7 +362,7 @@ const Students = () => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Edit Student</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form className="scroll-bar">
