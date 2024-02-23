@@ -26,6 +26,11 @@ const routes = [
     icon: <BusinessIcon />,
   },
   {
+    path: "/hostels",
+    name: "Hostels",
+    icon: <BusinessIcon />,
+  },
+  {
     path: "/students",
     name: "Students",
     icon: <FaUser />,

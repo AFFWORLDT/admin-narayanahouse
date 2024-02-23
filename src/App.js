@@ -19,6 +19,7 @@ import TransactionDeatil from "./pages/TransactionDeatil";
 import { Toaster } from "react-hot-toast";
 import Students from "./pages/Students";
 import Wallet from "./pages/Wallet";
+import Hostels from "./pages/Hostels";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<PrivateRoute Component={Dashboard} />} />
           <Route path="/advitisors" element={<PrivateRoute Component={Advitisors} />} />
+          <Route path="/hostels" element={<PrivateRoute Component={Hostels} />} />
           <Route path="/transactionDeatil" element={<PrivateRoute Component={TransactionDeatil} />} />
           <Route path="/offers" element={<PrivateRoute Component={Offers} />} />
           <Route path="/file-manager" element={<PrivateRoute Component={FileManager} />} />
