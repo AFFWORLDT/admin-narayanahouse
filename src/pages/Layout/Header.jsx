@@ -48,6 +48,7 @@ function ResponsiveAppBar() {
         toast.success('Logged out successfully');
         setTimeout(() => {
             navigate('/login');
+            window.location.reload()
         }, 2000);
     };
 
