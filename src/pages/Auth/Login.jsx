@@ -74,6 +74,7 @@ export default function SignInSide() {
 
       setTimeout(() => {
         navigate("/");
+        window.location.reload()
       }, 2000) 
     
       setAuth({

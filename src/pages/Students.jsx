@@ -101,6 +101,22 @@ const Students = () => {
   useEffect(() => {
     getStudents();
   }, [pageNo]);
+  useEffect(() => {
+    const startIndex = page * rowsPerPage;
+    const dataForPage = student?.slice(
+      startIndex,
+      startIndex + rowsPerPage
+    );
+    setPageData(dataForPage);
+  }, [page, rowsPerPage]);
+
+  const slicePage = () => {
+    const startIndex = page * rowsPerPage;
+    const endIndex = Math.min(startIndex + rowsPerPage, student.length);
+    // Ensure pageData is always within bounds of affiliatedata
+    const dataForPage = student.slice(startIndex, endIndex);
+    setPageData(dataForPage);
+  };
 
   useEffect(() => {
     const startIndex = page * rowsPerPage;
@@ -136,12 +152,12 @@ const Students = () => {
     try {
       const result = window.confirm("Are you sure to delete this user?");
       if (result) {
-         const config = {
-           headers: {
-             "Content-Type": "application/json",
-           },
-         };
-        const response = await axios.delete(url,config);
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+        const response = await axios.delete(url, config);
         if (response.status === 200) {
           toast.success(response?.data?.message);
           getStudents();
@@ -274,7 +290,7 @@ const Students = () => {
                   <TableCell align="center">Bio</TableCell>
                   <TableCell align="center">Email</TableCell>
                   <TableCell align="center">Students_id</TableCell>
-                  <TableCell align="center">Level</TableCell>
+                  {/* <TableCell align="center">Level</TableCell> */}
                   <TableCell align="center">Status</TableCell>
                   <TableCell align="center">Verified</TableCell>
                   <TableCell align="center">Edit</TableCell>
@@ -302,9 +318,9 @@ const Students = () => {
                         <TableCell align="center">
                           {row?.student_id === null ? "N/A" : row?.student_id}
                         </TableCell>
-                        <TableCell align="center">
+                        {/* <TableCell align="center">
                           {row?.level === null ? "N/A" : row?.level}
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell align="center">
                           {row?.verified === true ? (
                             <CloudDoneIcon sx={{ color: "green" }} />

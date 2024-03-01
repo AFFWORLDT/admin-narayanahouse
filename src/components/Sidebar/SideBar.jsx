@@ -20,11 +20,11 @@ const routes = [
     name: "Dashboard",
     icon: <FaHome />,
   },
-  {
-    path: "/advitisors",
-    name: "Advitisors",
-    icon: <BusinessIcon />,
-  },
+  // {
+  //   path: "/advitisors",
+  //   name: "Advitisors",
+  //   icon: <BusinessIcon />,
+  // },
   {
     path: "/hostels",
     name: "Hostels",
@@ -35,14 +35,14 @@ const routes = [
     name: "Students",
     icon: <FaUser />,
   },
+  // {
+  //   path: "/offers",
+  //   name: "Offers",
+  //   icon: <PriceCheckIcon />,
+  // },
   {
-    path: "/offers",
-    name: "Offers",
-    icon: <PriceCheckIcon />,
-  },
-  {
-    path: "/transactionDeatil",
-    name: "TransactionDeatil",
+    path: "/news",
+    name: "News",
     icon: <ReceiptLongIcon />,
   },
   {
@@ -50,33 +50,33 @@ const routes = [
     name: "Wallet",
     icon: <AccountBalanceWalletIcon />,
   },
-  {
-    path: "/file-manager",
-    name: "File Manager",
-    icon: <AiTwotoneFileExclamation />,
-    subRoutes: [
-      {
-        path: "/settings/profile",
-        name: "Profile ",
-        icon: <FaUser />,
-      },
-      {
-        path: "/settings/2fa",
-        name: "2FA",
-        icon: <FaLock />,
-      },
-      {
-        path: "/settings/billing",
-        name: "Billing",
-        icon: <FaMoneyBill />,
-      },
-    ],
-  },
-  {
-    path: "/order",
-    name: "Order",
-    icon: <BsCartCheck />,
-  },
+  // {
+  //   path: "/file-manager",
+  //   name: "File Manager",
+  //   icon: <AiTwotoneFileExclamation />,
+  //   subRoutes: [
+  //     {
+  //       path: "/settings/profile",
+  //       name: "Profile ",
+  //       icon: <FaUser />,
+  //     },
+  //     {
+  //       path: "/settings/2fa",
+  //       name: "2FA",
+  //       icon: <FaLock />,
+  //     },
+  //     {
+  //       path: "/settings/billing",
+  //       name: "Billing",
+  //       icon: <FaMoneyBill />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: "/order",
+  //   name: "Order",
+  //   icon: <BsCartCheck />,
+  // },
   {
     path: "/settings",
     name: "Settings",
@@ -100,11 +100,12 @@ const routes = [
       },
     ],
   },
-  {
-    path: "/saved",
-    name: "Saved",
-    icon: <AiFillHeart />,
-  },
+  // {
+  //   path: "/saved",
+  //   name: "Saved",
+  //   icon: <AiFillHeart />,
+
+  // },
 ];
 
 const SideBar = ({ children }) => {
@@ -171,7 +172,7 @@ const SideBar = ({ children }) => {
                   Admin Narayana House
                 </motion.h1>
               )}
-              <div className={`${isOpen? "bars-open":"bars"}`}>
+              <div className={`${isOpen ? "bars-open" : "bars"}`}>
                 <FaBars onClick={toggle} />
               </div>
             </AnimatePresence>
