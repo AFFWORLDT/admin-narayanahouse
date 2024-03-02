@@ -139,3 +139,13 @@ main {
 ::-webkit-scrollbar {
   width: 0px;
 }
+
+@media screen and (max-width: 768px) {
+  .bars {
+    width: 25px;
+    font-size: 20px;
+    position: fixed;
+    margin: 10px;
+    z-index: 100;
+  }
+}
