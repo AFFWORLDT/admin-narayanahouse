@@ -77,29 +77,29 @@ const routes = [
   //   name: "Order",
   //   icon: <BsCartCheck />,
   // },
-  {
-    path: "/settings",
-    name: "Settings",
-    icon: <BiCog />,
-    exact: true,
-    subRoutes: [
-      {
-        path: "/settings/profile",
-        name: "Profile ",
-        icon: <FaUser />,
-      },
-      {
-        path: "/settings/2fa",
-        name: "2FA",
-        icon: <FaLock />,
-      },
-      {
-        path: "/settings/billing",
-        name: "Billing",
-        icon: <FaMoneyBill />,
-      },
-    ],
-  },
+  // {
+  //   path: "/settings",
+  //   name: "Settings",
+  //   icon: <BiCog />,
+  //   exact: true,
+  //   subRoutes: [
+  //     {
+  //       path: "/settings/profile",
+  //       name: "Profile ",
+  //       icon: <FaUser />,
+  //     },
+  //     {
+  //       path: "/settings/2fa",
+  //       name: "2FA",
+  //       icon: <FaLock />,
+  //     },
+  //     {
+  //       path: "/settings/billing",
+  //       name: "Billing",
+  //       icon: <FaMoneyBill />,
+  //     },
+  //   ],
+  // },
   // {
   //   path: "/saved",
   //   name: "Saved",
