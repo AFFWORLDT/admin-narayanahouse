@@ -82,7 +82,7 @@ const Dashboard = () => {
       <div
         style={{
           backgroundColor: "#F9FAFB",
-          margin: "0",
+       marginLeft:"265px",
           height: "auto",
           padding: "30px 50px",
         }}
@@ -249,7 +249,7 @@ const Dashboard = () => {
               height: "auto",
               borderRadius: "20px",
               margin: "20px 30px",
-              padding:"10px 5px"
+              padding: "10px 5px",
             }}
           >
             <h2 style={{ margin: "20px 30px" }}>News Update</h2>
@@ -270,8 +270,7 @@ const Dashboard = () => {
                   >
                     <h2>{item.headline}</h2>
                     <p>{item.description}</p>
-                    <p>{new Date(item.timestamp).toLocaleDateString()
-}</p>
+                    <p>{new Date(item.timestamp).toLocaleDateString()}</p>
                   </Box>
                 </>
               );

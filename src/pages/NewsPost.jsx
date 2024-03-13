@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import Modal from "react-bootstrap/Modal";
 
-import  { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 import AddIcon from "@mui/icons-material/Add";
 
@@ -24,7 +24,7 @@ const News = () => {
   const [news, setNews] = useState([]);
   const [pageNo, setPageNo] = useState(1);
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
-  
+
   const [description, setDescription] = useState("");
   const [headline, setHeadline] = useState("");
   const [subject, setSubject] = useState("");
@@ -53,7 +53,7 @@ const News = () => {
       subject: subject,
       headline: headline,
       description: description,
-      icon:""
+      icon: "",
     };
     try {
       const config = {
@@ -96,7 +96,7 @@ const News = () => {
   }, []);
 
   return (
-    <div className=" h-100 p-3 " style={{ marginLeft: "2%" }}>
+    <div className=" h-100 p-3 " style={{ marginLeft: "265px" }}>
       <h2 className="text-center">News </h2>
 
       <div className="d-flex justify-content-end"></div>

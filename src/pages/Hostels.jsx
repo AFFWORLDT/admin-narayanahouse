@@ -158,9 +158,9 @@ const Hostels = () => {
         },
       };
       const res = await axios.put(url, data, config);
-      if (res.status===200){
-          alert(res?.data?.message);
-      } 
+      if (res.status === 200) {
+        alert(res?.data?.message);
+      }
       setIsEdit(false);
       handleClose();
     } catch (error) {
@@ -171,8 +171,8 @@ const Hostels = () => {
   };
 
   return (
-    <div className=" h-100 p-3 " style={{ marginLeft: "2%" }}>
-      <h2 className="text-center">All Students </h2>
+    <div className=" h-100 p-3 " style={{ marginLeft: "265px" }}>
+      <h2 className="text-center">All Hostels </h2>
 
       <div className="d-flex justify-content-end">
         <h4 className="text-center ">Page No : {pageNo}</h4>
