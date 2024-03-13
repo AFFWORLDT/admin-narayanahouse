@@ -1,245 +1,242 @@
-import { NavLink } from "react-router-dom";
-import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
-import { MdMessage } from "react-icons/md";
-import { BiAnalyse, BiSearch } from "react-icons/bi";
-import { BiCog } from "react-icons/bi";
-import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
-import { BsCartCheck } from "react-icons/bs";
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import SidebarMenu from "./SidebarMenu";
-import BusinessIcon from "@mui/icons-material/Business";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import PriceCheckIcon from "@mui/icons-material/PriceCheck";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import MenuIcon from "@mui/icons-material/Menu";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import ApartmentIcon from "@mui/icons-material/Apartment";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import SettingsIcon from "@mui/icons-material/Settings";
+import {
+  Link as RouterLink,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import Logout from "@mui/icons-material/Logout";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
 
-const routes = [
-  {
-    path: "/",
-    name: "Dashboard",
-    icon: <FaHome />,
-  },
-  // {
-  //   path: "/advitisors",
-  //   name: "Advitisors",
-  //   icon: <BusinessIcon />,
-  // },
-  {
-    path: "/hostels",
-    name: "Hostels",
-    icon: <BusinessIcon />,
-  },
-  {
-    path: "/students",
-    name: "Students",
-    icon: <FaUser />,
-  },
-  // {
-  //   path: "/offers",
-  //   name: "Offers",
-  //   icon: <PriceCheckIcon />,
-  // },
-  {
-    path: "/news",
-    name: "News",
-    icon: <ReceiptLongIcon />,
-  },
-  {
-    path: "/wallet",
-    name: "Wallet",
-    icon: <AccountBalanceWalletIcon />,
-  },
-  // {
-  //   path: "/file-manager",
-  //   name: "File Manager",
-  //   icon: <AiTwotoneFileExclamation />,
-  //   subRoutes: [
-  //     {
-  //       path: "/settings/profile",
-  //       name: "Profile ",
-  //       icon: <FaUser />,
-  //     },
-  //     {
-  //       path: "/settings/2fa",
-  //       name: "2FA",
-  //       icon: <FaLock />,
-  //     },
-  //     {
-  //       path: "/settings/billing",
-  //       name: "Billing",
-  //       icon: <FaMoneyBill />,
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: "/order",
-  //   name: "Order",
-  //   icon: <BsCartCheck />,
-  // },
-  // {
-  //   path: "/settings",
-  //   name: "Settings",
-  //   icon: <BiCog />,
-  //   exact: true,
-  //   subRoutes: [
-  //     {
-  //       path: "/settings/profile",
-  //       name: "Profile ",
-  //       icon: <FaUser />,
-  //     },
-  //     {
-  //       path: "/settings/2fa",
-  //       name: "2FA",
-  //       icon: <FaLock />,
-  //     },
-  //     {
-  //       path: "/settings/billing",
-  //       name: "Billing",
-  //       icon: <FaMoneyBill />,
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: "/saved",
-  //   name: "Saved",
-  //   icon: <AiFillHeart />,
+const drawerWidth = 265;
 
-  // },
-];
+function SideBar(props) {
+  const { window } = props;
+  const [open, setOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const location = useLocation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-const SideBar = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
-  const inputAnimation = {
-    hidden: {
-      width: 0,
-      padding: 0,
-      transition: {
-        duration: 0.2,
-      },
-    },
-    show: {
-      width: "140px",
-      padding: "5px 15px",
-      transition: {
-        duration: 0.2,
-      },
-    },
+  const handleDrawerToggle = () => {
+    setOpen(!open);
   };
 
-  const showAnimation = {
-    hidden: {
-      width: 0,
-      opacity: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-    show: {
-      opacity: 1,
-      width: "auto",
-      transition: {
-        duration: 0.5,
-      },
-    },
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const opendropdown = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+  };
+
+  const routes = [
+    {
+      path: "/",
+      name: "Dashboard",
+      icon: <DashboardIcon />,
+    },
+    {
+      path: "/roomallocation",
+      name: "Room Allocation",
+      icon: <RoomPreferencesIcon />,
+    },
+    {
+      path: "/hostels",
+      name: "Hostels",
+      icon: <ApartmentIcon />,
+    },
+    {
+      path: "/students",
+      name: "Students",
+      icon: <AssignmentIndIcon />,
+    },
+    {
+      path: "/news",
+      name: "News",
+      icon: <MonetizationOnIcon />,
+    },
+    {
+      path: "/wallet",
+      name: "Wallet",
+      icon: <MonetizationOnIcon />,
+    },
+  ];
 
   return (
-    <>
-      <div className="main-container ">
-        <motion.div
-          animate={{
-            width: isOpen ? "250px" : "0px",
-            transition: {
-              duration: 0.5,
-              type: "spring",
-              damping: 10,
+    <Box sx={{ display: "flex" }}>
+      <AppBar position="fixed" sx={{ background: "#fff" }}>
+        <Toolbar>
+          <IconButton
+            color="primary"
+            aria-label="open drawer"
+            onClick={handleDrawerToggle}
+            edge="start"
+            sx={{ mr: 2, ...(open && { display: "none" }) }}
+          >
+            <MenuIcon />
+          </IconButton>
+
+          <IconButton
+            color="inherit"
+            aria-label="open menu"
+            aria-controls="account-menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+            edge="end"
+            sx={{ ml: "auto" }}
+          >
+            <Avatar src={""} alt="userImg" />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            id="account-menu"
+            open={opendropdown}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+          >
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <ManageAccountsIcon />
+              </ListItemIcon>
+              Profile
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              Settings
+            </MenuItem>
+            <Divider />
+            <MenuItem>
+              <ListItemIcon>
+                <Logout />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        container={container}
+        variant={isMobile ? "temporary" : "permanent"}
+        anchor="left"
+        open={open}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        sx={{
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: drawerWidth,
+          },
+          ...(isMobile && {
+            "& .MuiDrawer-paperAnchorLeft": {
+              width: drawerWidth,
             },
+          }),
+        }}
+      >
+        <Avatar
+          alt="Remy Sharp"
+          src={""}
+          sx={{
+            width: 120,
+            height: 120,
+            margin: "20px auto",
+            borderRadius: "10px",
           }}
-          className={`sidebar ${isOpen ? "open" : ""} `}
-        >
-          <div className="top_section">
-            <AnimatePresence>
-              {isOpen && (
-                <motion.h1
-                  variants={showAnimation}
-                  initial="hidden"
-                  animate="show"
-                  exit="hidden"
-                  className="logo"
-                >
-                  Admin Narayana House
-                </motion.h1>
-              )}
-              <div className={`${isOpen ? "bars-open" : "bars"}`}>
-                <FaBars onClick={toggle} />
-              </div>
-            </AnimatePresence>
-          </div>
+        />
 
-          <div className="search">
-            <div className="search_icon">
-              <BiSearch />
-            </div>
-            <AnimatePresence>
-              {isOpen && (
-                <motion.input
-                  initial="hidden"
-                  animate="show"
-                  exit="hidden"
-                  variants={inputAnimation}
-                  type="text"
-                  placeholder="Search"
-                />
-              )}
-            </AnimatePresence>
-          </div>
-          <section className="routes">
-            {routes.map((route, index) => {
-              if (route.subRoutes) {
-                return (
-                  <SidebarMenu
-                    setIsOpen={setIsOpen}
-                    route={route}
-                    showAnimation={showAnimation}
-                    isOpen={isOpen}
-                  />
-                );
-              }
+        <List sx={{ margin: "10px" }}>
+          {routes.map((item, index) => (
+            <ListItemButton
+              key={index}
+              component={RouterLink}
+              to={item.path}
+              onClick={() => handleItemClick(item)}
+              sx={{
+                backgroundColor:
+                  location.pathname === item.path ? "#EDF6FF" : "transparent",
+              }}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.name} />
+              <ListItemIcon
+                sx={{
+                  background: "#fff",
+                  width: 39,
+                  height: 46.05,
+                  borderRadius: "50%",
+                  padding: "15px 15px",
+                }}
+              >
+                <ArrowForwardIosIcon fontSize="sm" />
+              </ListItemIcon>
+            </ListItemButton>
+          ))}
+        </List>
+      </Drawer>
 
-              return (
-                <NavLink
-                  to={route.path}
-                  style={{ textDecoration: "none" }}
-                  key={index}
-                  className="link"
-                  activeClassName="active"
-                >
-                  <div className="icon">{route.icon}</div>
-                  <AnimatePresence>
-                    {isOpen && (
-                      <motion.div
-                        variants={showAnimation}
-                        initial="hidden"
-                        animate="show"
-                        exit="hidden"
-                        className="link_text"
-                      >
-                        {route.name}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </NavLink>
-              );
-            })}
-          </section>
-        </motion.div>
-
-        <main>{children}</main>
-      </div>
-    </>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          bgcolor: "background.default",
+          p: 3,
+          marginLeft: { sm: open ? `${drawerWidth}px` : 0 },
+          transition: "margin-left 0.3s ease-in-out",
+        }}
+      >
+        <Toolbar />
+        <Outlet />
+      </Box>
+    </Box>
   );
-};
+}
 
 export default SideBar;

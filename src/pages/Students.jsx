@@ -103,10 +103,7 @@ const Students = () => {
   }, [pageNo]);
   useEffect(() => {
     const startIndex = page * rowsPerPage;
-    const dataForPage = student?.slice(
-      startIndex,
-      startIndex + rowsPerPage
-    );
+    const dataForPage = student?.slice(startIndex, startIndex + rowsPerPage);
     setPageData(dataForPage);
   }, [page, rowsPerPage]);
 
@@ -247,7 +244,7 @@ const Students = () => {
   };
 
   return (
-    <div className=" h-100 p-3 " style={{ marginLeft: "2%" }}>
+    <div className=" h-100 p-3 " style={{ marginLeft: "265px" }}>
       <h2 className="text-center">All Students </h2>
       <div className="d-flex justify-content-end">
         <h4 className="text-center ">Page No : {pageNo}</h4>

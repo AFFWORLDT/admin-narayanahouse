@@ -18,6 +18,7 @@ import Hostels from "./pages/Hostels";
 import { useEffect, useState } from "react";
 import { getUserFromLocalStorage } from "./service/localstorage";
 import NewsPost from "./pages/NewsPost";
+import RoomAllocation from "./pages/RoomAllocation";
 function App() {
   const [user, setUser] = useState({});
   useEffect(() => {
@@ -28,7 +29,6 @@ function App() {
   return (
     <>
       <Router>
-        <Header />
         {user ? <SideBar /> : null}
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -39,9 +39,10 @@ function App() {
             element={<PrivateRoute Component={Hostels} />}
           />
           <Route
-            path="/news"
-            element={<PrivateRoute Component={NewsPost} />}
+            path="/roomallocation"
+            element={<PrivateRoute Component={RoomAllocation} />}
           />
+          <Route path="/news" element={<PrivateRoute Component={NewsPost} />} />
           {/* <Route path="/offers" element={<PrivateRoute Component={Offers} />} /> */}
           {/* <Route path="/file-manager" element={<PrivateRoute Component={FileManager} />} /> */}
           <Route

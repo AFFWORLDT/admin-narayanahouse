@@ -87,95 +87,97 @@ const Wallet = () => {
 
   return (
     <>
-      <h1 className="text-center">All Transaction Queries </h1>
-
       <div>
-        {loading ? (
-          <>
-            <LinearProgress />
-          </>
-        ) : (
-          <>
-            <TableContainer component={Paper}>
-              <Table
-                id="offers-table"
-                sx={{ minWidth: 650 }}
-                aria-label="simple table"
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="center">Student Name</TableCell>
-                    <TableCell align="center">Amount</TableCell>
-                    <TableCell align="center">Order Id</TableCell>
-                    <TableCell align="center">Verified</TableCell>
-                    <TableCell align="center">Remarks</TableCell>
+        <h1 className="text-center">All Transaction Queries </h1>
 
-                    <TableCell align="center">Time</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {pageData?.length > 0 ? (
-                    pageData.map((row) => (
-                      <TableRow
-                        key={row.student_id}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell align="center" component="td" scope="row">
-                          {row.student_name}
-                        </TableCell>
-                        <TableCell align="center">₹{row?.amount}</TableCell>
+        <div style={{ marginLeft: "268px" }}>
+          {loading ? (
+            <>
+              <LinearProgress />
+            </>
+          ) : (
+            <>
+              <TableContainer component={Paper}>
+                <Table
+                  id="offers-table"
+                  sx={{ minWidth: 650 }}
+                  aria-label="simple table"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">Student Name</TableCell>
+                      <TableCell align="center">Amount</TableCell>
+                      <TableCell align="center">Order Id</TableCell>
+                      <TableCell align="center">Verified</TableCell>
+                      <TableCell align="center">Remarks</TableCell>
 
-                        <TableCell align="center">{row?.order_id}</TableCell>
+                      <TableCell align="center">Time</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {pageData?.length > 0 ? (
+                      pageData.map((row) => (
+                        <TableRow
+                          key={row.student_id}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell align="center" component="td" scope="row">
+                            {row.student_name}
+                          </TableCell>
+                          <TableCell align="center">₹{row?.amount}</TableCell>
 
-                        <TableCell align="center">
-                          {row?.verified === "True" ? (
-                            <CloudDoneIcon sx={{ color: "green" }} />
-                          ) : (
-                            <PauseIcon sx={{ color: "red" }} />
-                          )}
-                        </TableCell>
+                          <TableCell align="center">{row?.order_id}</TableCell>
 
-                        <TableCell align="center">
-                          <Button
-                            variant="contained"
-                            color={
-                              row?.verified === "True" ? "warning" : "success"
-                            }
-                            onClick={() => updateTransactionStatus(row)}
-                          >
-                            {" "}
-                            {row?.verified === "True"
-                              ? "Pending"
-                              : "Approve"}{" "}
-                          </Button>
-                        </TableCell>
-                        <TableCell align="center">
-                          {new Date(row.timestamp).toLocaleDateString()}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <h3>No Transactions Available!!</h3>
-                  )}
-                </TableBody>
-              </Table>
-              <TablePagination
-                rowsPerPageOptions={[10, 25, 50, 100]}
-                component="div"
-                count={transactionData?.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </TableContainer>
-          </>
-        )}
+                          <TableCell align="center">
+                            {row?.verified === "True" ? (
+                              <CloudDoneIcon sx={{ color: "green" }} />
+                            ) : (
+                              <PauseIcon sx={{ color: "red" }} />
+                            )}
+                          </TableCell>
+
+                          <TableCell align="center">
+                            <Button
+                              variant="contained"
+                              color={
+                                row?.verified === "True" ? "warning" : "success"
+                              }
+                              onClick={() => updateTransactionStatus(row)}
+                            >
+                              {" "}
+                              {row?.verified === "True"
+                                ? "Pending"
+                                : "Approve"}{" "}
+                            </Button>
+                          </TableCell>
+                          <TableCell align="center">
+                            {new Date(row.timestamp).toLocaleDateString()}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <h3>No Transactions Available!!</h3>
+                    )}
+                  </TableBody>
+                </Table>
+                <TablePagination
+                  rowsPerPageOptions={[10, 25, 50, 100]}
+                  component="div"
+                  count={transactionData?.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </TableContainer>
+            </>
+          )}
+        </div>
+
+        <Toaster />
       </div>
-
-      <Toaster />
     </>
   );
 };

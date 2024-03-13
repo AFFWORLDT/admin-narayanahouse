@@ -42,7 +42,6 @@ function ResponsiveAppBar() {
   };
 
   const handleLogout = () => {
-    // Your logout logic here
     console.log("Logging out...");
     removeUserFromLocalStorage();
     toast.success("Logged out successfully");
@@ -53,16 +52,13 @@ function ResponsiveAppBar() {
   };
 
   const handleAccount = () => {
-    // Your account logic here
     console.log("Navigating to account...");
   };
 
   const handleSettings = () => {
-    // Your settings logic here
-    console.log("Opening settings...");
+    navigate("/");
   };
   const handleProfile = () => {
-    // Your settings logic here
     console.log("Opening Profile...");
   };
 
