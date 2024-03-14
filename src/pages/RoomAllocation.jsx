@@ -17,6 +17,8 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import PersonIcon from "@mui/icons-material/Person";
 import HotelIcon from "@mui/icons-material/Hotel";
 import axios from "axios";
+import AddIcon from "@mui/icons-material/Add";
+import { styled } from "@mui/system";
 function RoomAllocation() {
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
   const theme = useTheme();
@@ -63,6 +65,9 @@ function RoomAllocation() {
     return 0;
   });
 
+  const HandleOpenPop = () => {
+    alert("Open");
+  };
   useEffect(() => {
     getRoomByHostelName();
   }, [expanded, loading]);
@@ -288,12 +293,7 @@ function RoomAllocation() {
                       {loading && <LinearProgress color="primary" />}
 
                       <Box sx={{ p: { xs: "0px", md: "10px" } }}>
-                        <Grid
-                          container
-                          spacing={2}
-                          justifyContent="center"
-                          alignItems="center"
-                        >
+                        <Grid container spacing={2}>
                           {sortedRoomData?.map((data, i) => (
                             <Grid
                               item
@@ -430,6 +430,36 @@ function RoomAllocation() {
                               </Paper>
                             </Grid>
                           ))}
+
+                          <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
+                            display={"flex"}
+                            justifyContent="center"
+                            alignItems="center"
+                          >
+                            <Paper
+                              elevation={3}
+                              sx={{
+                                width: { xs: "280px", md: "260px" },
+                                height: "199px",
+                                padding: "20px",
+                                margin: "5px",
+                                bgcolor: "#EFEFEF",
+                                color: "dark",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <AddIcon
+                                style={{ fontSize: "80px", color: "#1976d2" }}
+                              />
+                            </Paper>
+                          </Grid>
                         </Grid>
                       </Box>
                     </AccordionDetails>
@@ -437,6 +467,75 @@ function RoomAllocation() {
                 </div>
               );
             })}
+
+            <Box
+              className="mt-3"
+              component={"div"}
+              onClick={HandleOpenPop}
+              sx={{
+                [theme.breakpoints.up("xs")]: {
+                  width: "100%",
+                  padding: "10px",
+                  height: "100px ",
+                  border: "1px solid black",
+                  bgcolor: "transparent",
+                  cursor: "pointer",
+                },
+                [theme.breakpoints.up("md")]: {
+                  width: "100%",
+                  padding: "10px",
+                  height: "100px ",
+                  border: "1px solid black",
+                  bgcolor: "transparent",
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <Grid container spacing={1}>
+                {/* First Box */}
+                <Grid
+                  item
+                  xs={12}
+                  md={4}
+                  className="d-flex justify-content-center align-items-center"
+                >
+                  <Box
+                    sx={{
+                      padding: "10px",
+                      textAlign: "",
+                      widthl: "100%",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Box className=" mx-auto">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          [theme.breakpoints.up("xs")]: {
+                            fontSize: "16px",
+                            color: "#384D6C",
+                            fontWeight: "700",
+                            marginLeft: "10px",
+                            textAlign: "center",
+                            marginTop: "10px",
+                          },
+                          [theme.breakpoints.up("md")]: {
+                            fontSize: "16px",
+                            color: "#384D6C",
+                            fontWeight: "700",
+                            marginLeft: "40px",
+                            textAlign: "center",
+                            marginTop: "20px",
+                          },
+                        }}
+                      >
+                        Add Hostel <AddIcon />
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
           </Box>
         </Box>
       </Box>
