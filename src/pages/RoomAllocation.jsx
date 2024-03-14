@@ -10,6 +10,7 @@ import {
   Grid,
   Modal,
   LinearProgress,
+  Button,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -24,6 +25,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DescriptionIcon from "@mui/icons-material/Description";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
+import toast from "react-hot-toast";
 function RoomAllocation() {
   const inputRef = useRef();
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
@@ -37,6 +39,35 @@ function RoomAllocation() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("select");
+  const [newAddHostelFormData, setNewAddHostelFormData] = useState({
+    name: "",
+    location: "",
+    description: "",
+  });
+
+  const onChangeHandlerForAddNewHostelFormData = (event) => {
+    const { name, value } = event.target;
+    setNewAddHostelFormData({
+      ...newAddHostelFormData,
+      [name]: value,
+    });
+  };
+
+  const handleNewAddHostellSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(`${URL}/hostel`, newAddHostelFormData);
+      if (response) {
+        toast.success("yehh new hostel created successfully 🎉", 6000);
+        // console.log("new hostel -->",response?.data);
+        setAddHostelModel(false);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    // console.log("newAddHostelFormData->", newAddHostelFormData);
+  };
 
   const handleFileChange = (event) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -609,7 +640,7 @@ function RoomAllocation() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              bgcolor: "white",
+              bgcolor: "#EEEEFF",
               boxShadow: 24,
               p: 1,
               borderRadius: "8px",
@@ -620,89 +651,229 @@ function RoomAllocation() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              bgcolor: "white",
+              bgcolor: "#EEEEFF",
               boxShadow: 24,
               p: 2,
               borderRadius: "8px",
-              width: "50%",
+              width: "80%",
             },
           }}
         >
-          <div>
-            <input
-              ref={inputRef}
-              type="file"
-              onChange={handleFileChange}
-              style={{ display: "none" }}
-            />
+          <Box
+            sx={{
+              [theme.breakpoints.up("xs")]: {
+                marginY: "10px",
+                marginX: "20px",
+              },
+              [theme.breakpoints.up("md")]: {},
+            }}
+          >
+            <Typography variant="h5">Add New Hostel</Typography>
+          </Box>
+          <Grid container>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              className="justify-content-center  d-flex align-items-center"
+            >
+              <Box
+                sx={{
+                  [theme.breakpoints.up("xs")]: {
+                    width: "100%",
+                    padding: "10px 20px",
+                    margin: "10px",
+                    height: "auto ",
+                    border: "1px solid black",
+                    cursor: "pointer",
+                  },
+                }}
+              >
+                <form onSubmit={handleNewAddHostellSubmit}>
+                  <Grid container spacing={0}>
+                    <Grid item xs={12} md={12}>
+                      <div className="m-2">
+                        <label
+                          htmlFor="hostel_name"
+                          className="form-label fw-bold mb-2"
+                          style={{ color: "#384D6C", fontSize: "20px" }}
+                        >
+                          Hostel Name
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control py-2"
+                          id="hostel_name"
+                          placeholder="Enter hostel name"
+                          name="name"
+                          value={newAddHostelFormData.name}
+                          onChange={onChangeHandlerForAddNewHostelFormData}
+                        />
+                      </div>
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                      <div className="m-2">
+                        <label
+                          htmlFor="hostel_address"
+                          className="form-label fw-bold mb-2"
+                          style={{ color: "#384D6C", fontSize: "20px" }}
+                        >
+                          Hostel Address
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control py-2"
+                          id="hostel_address"
+                          placeholder="Enter hostel address"
+                          name="location"
+                          value={newAddHostelFormData.location}
+                          onChange={onChangeHandlerForAddNewHostelFormData}
+                        />
+                      </div>
+                    </Grid>{" "}
+                    <Grid item xs={12} md={12}>
+                      <div className="m-2">
+                        <label
+                          htmlFor="floatingTextarea"
+                          className="form-label fw-bold mb-2"
+                          style={{ color: "#384D6C", fontSize: "20px" }}
+                        >
+                          Description
+                        </label>
+                        <div className="form-floating">
+                          <textarea
+                            className="form-control"
+                            placeholder="Leave a comment here"
+                            id="floatingTextarea"
+                            name="description"
+                            value={newAddHostelFormData.description}
+                            onChange={onChangeHandlerForAddNewHostelFormData}
+                          ></textarea>
+                          <label htmlFor="floatingTextarea">Description</label>
+                        </div>
+                      </div>
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                      <div className="m-2 py-3">
+                        <div className="d-flex gap-3 justify-content-evenly  align-items-center">
+                          <button
+                            onClick={() => {
+                              setAddHostelModel(false);
+                            }}
+                            className="btn"
+                            variant="outlined"
+                            style={{
+                              background: "#ffff",
+                              color: "black",
+                              width: "180px",
+                              fontWeight: "400",
+                              border: "1px solid #384D6C",
+                            }}
+                          >
+                            Cancle
+                          </button>
+                          <button
+                            className="btn"
+                            variant="outlined"
+                            style={{
+                              background: "#384D6C",
+                              color: "#fff",
+                              width: "180px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </div>
+                    </Grid>
+                  </Grid>
+                </form>
+              </Box>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              className="justify-content-center  d-flex align-items-center"
+            >
+              <div className="m-3">
+                <input
+                  ref={inputRef}
+                  type="file"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
 
-            {/* Input field for hostel name */}
-            {/* <input
+                {/* Input field for hostel name */}
+                {/* <input
         type="text"
         placeholder="Enter hostel name"
         value={hostelName}
         onChange={(e) => setHostelName(e.target.value)}
       /> */}
 
-            {/* Button to trigger the file input dialog */}
-            {!selectedFile && (
-              <button className="file-btn" onClick={onChooseFile}>
-                <span className="material-symbols-outlined">
-                  <CloudUploadIcon />
-                </span>{" "}
-                Upload Image
-              </button>
-            )}
+                {/* Button to trigger the file input dialog */}
+                {!selectedFile && (
+                  <button className="file-btn" onClick={onChooseFile}>
+                    <span className="material-symbols-outlined">
+                      <CloudUploadIcon />
+                    </span>{" "}
+                    Upload Image
+                  </button>
+                )}
 
-            {selectedFile && (
-              <>
-                <div className="file-card">
-                  <span className="material-symbols-outlined icon">
-                    <DescriptionIcon />
-                  </span>
+                {selectedFile && (
+                  <>
+                    <div className="file-card">
+                      <span className="material-symbols-outlined icon">
+                        <DescriptionIcon />
+                      </span>
 
-                  <div className="file-info">
-                    <div style={{ flex: 1 }}>
-                      <h6>{selectedFile?.name}</h6>
+                      <div className="file-info">
+                        <div style={{ flex: 1 }}>
+                          <h6>{selectedFile?.name}</h6>
 
-                      <div className="progress-bg">
-                        <div
-                          className="progress"
-                          style={{ width: `${progress}%` }}
-                        />
+                          <div className="progress-bg">
+                            <div
+                              className="progress"
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        {uploadStatus === "select" ? (
+                          <button onClick={clearFileInput}>
+                            <span className="material-symbols-outlined close-icon">
+                              <CloseIcon />
+                            </span>
+                          </button>
+                        ) : (
+                          <div className="check-circle">
+                            {uploadStatus === "uploading" ? (
+                              `${progress}%`
+                            ) : uploadStatus === "done" ? (
+                              <span
+                                className="material-symbols-outlined"
+                                style={{ fontSize: "20px" }}
+                              >
+                                <CheckIcon />
+                              </span>
+                            ) : null}
+                          </div>
+                        )}
                       </div>
                     </div>
-
-                    {uploadStatus === "select" ? (
-                      <button onClick={clearFileInput}>
-                        <span className="material-symbols-outlined close-icon">
-                          <CloseIcon />
-                        </span>
-                      </button>
-                    ) : (
-                      <div className="check-circle">
-                        {uploadStatus === "uploading" ? (
-                          `${progress}%`
-                        ) : uploadStatus === "done" ? (
-                          <span
-                            className="material-symbols-outlined"
-                            style={{ fontSize: "20px" }}
-                          >
-                            <CheckIcon />
-                          </span>
-                        ) : null}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <button className="upload-btn" onClick={handleUpload}>
-                  {uploadStatus === "select" || uploadStatus === "uploading"
-                    ? "Upload"
-                    : "Done"}
-                </button>
-              </>
-            )}
-          </div>
+                    <button className="upload-btn" onClick={handleUpload}>
+                      {uploadStatus === "select" || uploadStatus === "uploading"
+                        ? "Upload"
+                        : "Done"}
+                    </button>
+                  </>
+                )}
+              </div>
+            </Grid>
+          </Grid>
         </Box>
       </Modal>
     </>
