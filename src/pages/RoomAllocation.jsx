@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import {
   Box,
@@ -8,6 +8,7 @@ import {
   AccordionDetails,
   Paper,
   Grid,
+  Modal,
   LinearProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -18,8 +19,13 @@ import PersonIcon from "@mui/icons-material/Person";
 import HotelIcon from "@mui/icons-material/Hotel";
 import axios from "axios";
 import AddIcon from "@mui/icons-material/Add";
-import { styled } from "@mui/system";
+import "./../styles/FileUpload.css";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import DescriptionIcon from "@mui/icons-material/Description";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
 function RoomAllocation() {
+  const inputRef = useRef();
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
   const theme = useTheme();
   const [expanded, setExpanded] = useState(null);
@@ -27,6 +33,62 @@ function RoomAllocation() {
   const [roomByHostelName, setRoomByHostelName] = useState([]);
   const [hostelName, setHostelName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [addHostelModel, setAddHostelModel] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState("select");
+
+  const handleFileChange = (event) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const onChooseFile = () => {
+    inputRef.current.click();
+  };
+
+  const clearFileInput = () => {
+    inputRef.current.value = "";
+    setSelectedFile(null);
+    setProgress(0);
+    setUploadStatus("select");
+  };
+
+  const handleUpload = async () => {
+    if (uploadStatus === "done") {
+      clearFileInput();
+      return;
+    }
+
+    try {
+      setUploadStatus("uploading");
+
+      const formData = new FormData();
+      formData.append("files", selectedFile); // Change the key to "files"
+      formData.append("hostel_name", hostelName);
+      console.log("dddddd", formData);
+
+      const response = await axios.post(
+        "https://admin-api.narayanahouse.com/hostel/upload_images",
+        formData,
+        {
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentCompleted);
+          },
+        }
+      );
+
+      console.log("api response---", response);
+
+      setUploadStatus("done");
+    } catch (error) {
+      setUploadStatus("select");
+    }
+  };
 
   const getAllHostels = async () => {
     try {
@@ -65,8 +127,8 @@ function RoomAllocation() {
     return 0;
   });
 
-  const HandleOpenPop = () => {
-    alert("Open");
+  const HandleAddHostell = () => {
+    setAddHostelModel(true);
   };
   useEffect(() => {
     getRoomByHostelName();
@@ -471,7 +533,7 @@ function RoomAllocation() {
             <Box
               className="mt-3"
               component={"div"}
-              onClick={HandleOpenPop}
+              onClick={HandleAddHostell}
               sx={{
                 [theme.breakpoints.up("xs")]: {
                   width: "100%",
@@ -539,6 +601,110 @@ function RoomAllocation() {
           </Box>
         </Box>
       </Box>
+      <Modal onClose={() => setAddHostelModel(false)} open={addHostelModel}>
+        <Box
+          sx={{
+            [theme.breakpoints.up("xs")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "white",
+              boxShadow: 24,
+              p: 1,
+              borderRadius: "8px",
+              width: "95%",
+            },
+            [theme.breakpoints.up("md")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "white",
+              boxShadow: 24,
+              p: 2,
+              borderRadius: "8px",
+              width: "50%",
+            },
+          }}
+        >
+          <div>
+            <input
+              ref={inputRef}
+              type="file"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+
+            {/* Input field for hostel name */}
+            {/* <input
+        type="text"
+        placeholder="Enter hostel name"
+        value={hostelName}
+        onChange={(e) => setHostelName(e.target.value)}
+      /> */}
+
+            {/* Button to trigger the file input dialog */}
+            {!selectedFile && (
+              <button className="file-btn" onClick={onChooseFile}>
+                <span className="material-symbols-outlined">
+                  <CloudUploadIcon />
+                </span>{" "}
+                Upload Image
+              </button>
+            )}
+
+            {selectedFile && (
+              <>
+                <div className="file-card">
+                  <span className="material-symbols-outlined icon">
+                    <DescriptionIcon />
+                  </span>
+
+                  <div className="file-info">
+                    <div style={{ flex: 1 }}>
+                      <h6>{selectedFile?.name}</h6>
+
+                      <div className="progress-bg">
+                        <div
+                          className="progress"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {uploadStatus === "select" ? (
+                      <button onClick={clearFileInput}>
+                        <span className="material-symbols-outlined close-icon">
+                          <CloseIcon />
+                        </span>
+                      </button>
+                    ) : (
+                      <div className="check-circle">
+                        {uploadStatus === "uploading" ? (
+                          `${progress}%`
+                        ) : uploadStatus === "done" ? (
+                          <span
+                            className="material-symbols-outlined"
+                            style={{ fontSize: "20px" }}
+                          >
+                            <CheckIcon />
+                          </span>
+                        ) : null}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <button className="upload-btn" onClick={handleUpload}>
+                  {uploadStatus === "select" || uploadStatus === "uploading"
+                    ? "Upload"
+                    : "Done"}
+                </button>
+              </>
+            )}
+          </div>
+        </Box>
+      </Modal>
     </>
   );
 }
