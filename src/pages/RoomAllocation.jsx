@@ -90,7 +90,7 @@ function RoomAllocation() {
               className="mt-3"
               sx={{ color: "#384D6C", marginLeft: { xs: "20px", md: "40px" } }}
             >
-              Room Allocaton
+              Room Allocation
             </Typography>
           </Box>
           <Box sx={{ px: 5, py: 3 }}>
