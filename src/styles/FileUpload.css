@@ -1,5 +1,5 @@
 .file-btn {
-    width: 330px;
+    width: 200px;
     height: 150px;
     font-size: 18px;
     font-weight: 500;
@@ -34,7 +34,7 @@
   }
   
   .file-card {
-    width: 300px;
+    width: 330px;
     display: flex;
     align-items: center;
     gap: 15px;
