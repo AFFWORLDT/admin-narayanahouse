@@ -346,58 +346,87 @@ function RoomAllocation() {
                                   </Box>
                                 </Box>
 
-                                <Box component={"div"} className="mt-3 ">
-                                  <Grid container spacing={1}>
-                                    {data.allotted_students.map(
-                                      (allottedStudentObj, i) => {
-                                        const { student_name } =
-                                          allottedStudentObj;
-                                        return (
-                                          <Grid item xs={12} md={12} key={i}>
-                                            <Box
-                                              sx={{
-                                                height: "35px",
-                                                width: "100%",
-                                                bgcolor:
-                                                  student_name === "Vacant"
-                                                    ? "#d9ffb3"
-                                                    : "#bfbfbf",
-                                                borderRadius: "5px",
-                                                display: "flex",
-                                                justifyContent: "start",
-                                                padding: "5px",
-                                              }}
-                                            >
-                                              {student_name ? (
+                                {data.availibility ? (
+                                  <Box component={"div"} className="mt-3 ">
+                                    <Grid container spacing={1}>
+                                      {data.allotted_students.map(
+                                        (allottedStudentObj, i) => {
+                                          const { student_name } =
+                                            allottedStudentObj;
+                                          return (
+                                            <Grid item xs={12} md={12} key={i}>
+                                              <Box
+                                                sx={{
+                                                  height: "35px",
+                                                  width: "100%",
+                                                  bgcolor:
+                                                    student_name === "Vacant"
+                                                      ? "#d9ffb3"
+                                                      : "#bfbfbf",
+                                                  borderRadius: "5px",
+                                                  display: "flex",
+                                                  justifyContent: "start",
+                                                  padding: "5px",
+                                                }}
+                                              >
                                                 <Typography
                                                   component={"span"}
                                                   fontSize="15px"
                                                   color={"primary"}
                                                 >
-                                                  {" "}
-                                                  <PersonIcon fontSize="15px" />{" "}
-                                                  {student_name}
+                                                  {student_name === "Vacant" ? (
+                                                    <>
+                                                      <HotelIcon
+                                                        fontSize="15px"
+                                                        style={{
+                                                          marginRight: "5px",
+                                                        }}
+                                                      />
+                                                      <span
+                                                        className=""
+                                                        style={{
+                                                          fontSize: "12px",
+                                                        }}
+                                                      >
+                                                        {" "}
+                                                        Vacant
+                                                      </span>
+                                                    </>
+                                                  ) : (
+                                                    <>
+                                                      <PersonIcon
+                                                        fontSize="15px"
+                                                        style={{
+                                                          marginRight: "5px",
+                                                        }}
+                                                      />
+                                                      <span
+                                                        className=""
+                                                        style={{
+                                                          fontSize: "12px",
+                                                        }}
+                                                      >
+                                                        {" "}
+                                                        {student_name}
+                                                      </span>
+                                                    </>
+                                                  )}
                                                 </Typography>
-                                              ) : (
-                                                <Typography
-                                                  component={"span"}
-                                                  fontSize="15px"
-                                                  color={"primary"}
-                                                >
-                                                  {" "}
-                                                  <HotelIcon fontSize="15px" />{" "}
-                                                  {student_name === null
-                                                    ? "Unkwon"
-                                                    : student_name}
-                                                </Typography>
-                                              )}
-                                            </Box>
-                                          </Grid>
-                                        );
-                                      }
-                                    )}
-                                  </Grid>
-                                </Box>
+                                              </Box>
+                                            </Grid>
+                                          );
+                                        }
+                                      )}
+                                    </Grid>
+                                  </Box>
+                                ) : (
+                                  <div
+                                    className="d-flex justify-content-center  h-75 mt-2 align-items-center fw-bold"
+                                    style={{ color: "#384D6C" }}
+                                  >
+                                    Not Available
+                                  </div>
+                                )}
                               </Paper>
                             </Grid>
                           ))}
