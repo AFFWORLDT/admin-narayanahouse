@@ -56,18 +56,28 @@ function RoomAllocation() {
       [name]: value,
     });
   };
+
+  const getHostelByName = async (name) => {
+    try {
+      const response = await axios.get(`${URL}/hostel/${name}`);
+      setNewAddHostelFormData(response?.data);
+    } catch (error) {
+      console.error("Error fetching hostel:", error);
+    }
+  };
+
   const handleEditHostellSubmit = async (e) => {
     e.preventDefault();
     console.log(currentHostelName);
     let data = { ...newAddHostelFormData, name: currentHostelName };
-    console.log(data)
+    console.log(data);
     try {
       const response = await axios.put(
         `${URL}/hostel/${currentHostelName}`,
         data
       );
       if (response) {
-        toast.success(" Hostel updated successfully ",5000);
+        toast.success(" Hostel updated successfully ", 5000);
         setNewAddHostelFormData({
           name: "",
           full_address: "",
@@ -209,7 +219,7 @@ function RoomAllocation() {
   }, [expanded]);
   useEffect(() => {
     getAllHostels();
-  }, [addHostelModel,editHostelInfoModel]);
+  }, [addHostelModel, editHostelInfoModel]);
 
   console.log(currentHostelName);
 
@@ -441,6 +451,7 @@ function RoomAllocation() {
                                 onClick={() => {
                                   setEditHostelInfoModel(true);
                                   setCurrentHostelName(hostelObj.name);
+                                  getHostelByName(name)
                                 }}
                               />
                             </Box>
@@ -1035,9 +1046,7 @@ function RoomAllocation() {
               [theme.breakpoints.up("md")]: {},
             }}
           >
-            <Typography variant="h5">
-             
-            </Typography>
+            <Typography variant="h5"></Typography>
           </Box>
           <Grid container>
             <Grid
