@@ -25,6 +25,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DescriptionIcon from "@mui/icons-material/Description";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
+import ImageIcon from "@mui/icons-material/Image";
 import toast from "react-hot-toast";
 function RoomAllocation() {
   const inputRef = useRef();
@@ -36,6 +37,7 @@ function RoomAllocation() {
   const [hostelName, setHostelName] = useState("");
   const [loading, setLoading] = useState(true);
   const [addHostelModel, setAddHostelModel] = useState(false);
+  const [addHostelImagesModel, setAddHostelImagesModel] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("select");
@@ -44,6 +46,7 @@ function RoomAllocation() {
     location: "",
     description: "",
   });
+  const [currentHostelName, setCurrentHostelName] = useState("");
 
   const onChangeHandlerForAddNewHostelFormData = (event) => {
     const { name, value } = event.target;
@@ -59,9 +62,16 @@ function RoomAllocation() {
     try {
       const response = await axios.post(`${URL}/hostel`, newAddHostelFormData);
       if (response) {
-        toast.success("yehh new hostel created successfully 🎉", 6000);
+        setTimeout(() => {
+          toast.success("New hostel created successfully 🎉", 3000);
+        }, 1000);
         // console.log("new hostel -->",response?.data);
         setAddHostelModel(false);
+        setNewAddHostelFormData({
+          name: "",
+          location: "",
+          description: "",
+        });
       }
     } catch (error) {
       toast.error(error.message);
@@ -89,19 +99,20 @@ function RoomAllocation() {
   const handleUpload = async () => {
     if (uploadStatus === "done") {
       clearFileInput();
+
       return;
     }
 
     try {
       setUploadStatus("uploading");
-
+      console.log(currentHostelName);
       const formData = new FormData();
-      formData.append("files", selectedFile); // Change the key to "files"
-      formData.append("hostel_name", hostelName);
-      console.log("dddddd", formData);
+      formData.append("files", selectedFile);
+      formData.append("hostel_name", currentHostelName);
+      // console.log("dddddd", formData);
 
       const response = await axios.post(
-        "https://admin-api.narayanahouse.com/hostel/upload_images",
+        `${URL}/hostel/upload_images`,
         formData,
         {
           onUploadProgress: (progressEvent) => {
@@ -114,6 +125,9 @@ function RoomAllocation() {
       );
 
       console.log("api response---", response);
+      if (response) {
+        toast.success("image uploaded successfully ✅");
+      }
 
       setUploadStatus("done");
     } catch (error) {
@@ -133,13 +147,20 @@ function RoomAllocation() {
   };
 
   const getRoomByHostelName = async () => {
+    // console.log("hostel name--->", hostelName);
     try {
       const response = await axios.get(
         `${URL}/room/get_rooms_by_hostel?hostel_name=${hostelName}`
       );
-      console.log("rooms", response?.data);
-      setRoomByHostelName(response?.data);
-      setLoading(false);
+      if (response) {
+        console.log("rooms", response?.data);
+        if (response.data.length === 0) {
+          setRoomByHostelName([]);
+        } else {
+          setRoomByHostelName(response?.data);
+        }
+        setHostelName("");
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -161,15 +182,20 @@ function RoomAllocation() {
   const HandleAddHostell = () => {
     setAddHostelModel(true);
   };
+
+  const HandleAddHostellImages = () => {
+    setAddHostelImagesModel(true);
+  };
+
   useEffect(() => {
     getRoomByHostelName();
-  }, [expanded, loading]);
+  }, [expanded]);
   useEffect(() => {
     getAllHostels();
   }, []);
   return (
     <>
-      <Box bgcolor={"#EEEEFF"} height={"100vh"}>
+      <Box bgcolor={"#EEEEFF"}>
         <Box
           sx={{
             [theme.breakpoints.up("xs")]: {
@@ -383,11 +409,38 @@ function RoomAllocation() {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Box sx={{ borderBottom: "3px solid #CFCDCD" }}></Box>
-                      {loading && <LinearProgress color="primary" />}
+                      <Box className="d-flex justify-content-between my-2 gap-2">
+                        <Box className=" w-100"></Box>
+                        <Box className=" w-100 px-3">
+                          <Box className="d-flex justify-content-end gap-4  align-items-center">
+                            <Box className="">
+                              <BorderColorIcon
+                                className=" d-block mx-auto"
+                                style={{ cursor: "pointer", color: "#1466b7" }}
+                              />
+                            </Box>
+                            <Box className="">
+                              <ImageIcon
+                                className=" d-block mx-auto"
+                                style={{ cursor: "pointer ", color: "#1466b7" }}
+                                onClick={() => {
+                                  setAddHostelImagesModel(true);
+                                  setCurrentHostelName(hostelObj.name);
+                                }}
+                              />
+                            </Box>
+                          </Box>
+                        </Box>
+                      </Box>
+
+                      <Box
+                        className="mb-2"
+                        sx={{ borderBottom: "3px solid #CFCDCD" }}
+                      ></Box>
 
                       <Box sx={{ p: { xs: "0px", md: "10px" } }}>
                         <Grid container spacing={2}>
-                          {sortedRoomData?.map((data, i) => (
+                          {sortedRoomData.map((data, i) => (
                             <Grid
                               item
                               key={i}
@@ -668,14 +721,25 @@ function RoomAllocation() {
               [theme.breakpoints.up("md")]: {},
             }}
           >
-            <Typography variant="h5">Add New Hostel</Typography>
+            <Typography variant="h5">
+              {/* {!canUploadImage ? (
+                "Add Hostel Name"
+              ) : (
+                <div>
+                  Add <span style={{ fontWeight: "bold" }}>Images</span> for{" "}
+                  <span style={{ fontWeight: "bold" }}>
+                    {newAddHostelFormData.name}
+                  </span>
+                </div>
+              )} */}
+            </Typography>
           </Box>
           <Grid container>
             <Grid
               item
               xs={12}
-              md={6}
-              className="justify-content-center  d-flex align-items-center"
+              md={12}
+              className={`justify-content-center d-flex align-items-center `}
             >
               <Box
                 sx={{
@@ -684,7 +748,6 @@ function RoomAllocation() {
                     padding: "10px 20px",
                     margin: "10px",
                     height: "auto ",
-                    border: "1px solid black",
                     cursor: "pointer",
                   },
                 }}
@@ -702,7 +765,7 @@ function RoomAllocation() {
                         </label>
                         <input
                           type="text"
-                          className="form-control py-2"
+                          className="form-control shadow-sm py-2"
                           id="hostel_name"
                           placeholder="Enter hostel name"
                           name="name"
@@ -715,14 +778,14 @@ function RoomAllocation() {
                       <div className="m-2">
                         <label
                           htmlFor="hostel_address"
-                          className="form-label fw-bold mb-2"
+                          className="form-label fw-bold -mb-2"
                           style={{ color: "#384D6C", fontSize: "20px" }}
                         >
                           Hostel Address
                         </label>
                         <input
                           type="text"
-                          className="form-control py-2"
+                          className="form-control py-2 shadow-sm"
                           id="hostel_address"
                           placeholder="Enter hostel address"
                           name="location"
@@ -742,7 +805,7 @@ function RoomAllocation() {
                         </label>
                         <div className="form-floating">
                           <textarea
-                            className="form-control"
+                            className="form-control shadow-sm"
                             placeholder="Leave a comment here"
                             id="floatingTextarea"
                             name="description"
@@ -791,11 +854,12 @@ function RoomAllocation() {
                 </form>
               </Box>
             </Grid>
-            <Grid
+            {/* <Grid
               item
               xs={12}
-              md={6}
-              className="justify-content-center  d-flex align-items-center"
+              md={12}
+              className={`justify-content-center d-flex align-items-center 
+              `}
             >
               <div className="m-3">
                 <input
@@ -805,21 +869,137 @@ function RoomAllocation() {
                   style={{ display: "none" }}
                 />
 
-                {/* Input field for hostel name */}
-                {/* <input
-        type="text"
-        placeholder="Enter hostel name"
-        value={hostelName}
-        onChange={(e) => setHostelName(e.target.value)}
-      /> */}
+                <input
+                  type="text"
+                  placeholder="Enter hostel name"
+                  value={hostelName}
+                  onChange={(e) => setHostelName(e.target.value)}
+                />
 
-                {/* Button to trigger the file input dialog */}
                 {!selectedFile && (
                   <button className="file-btn" onClick={onChooseFile}>
                     <span className="material-symbols-outlined">
                       <CloudUploadIcon />
                     </span>{" "}
-                    Upload Image
+                  </button>
+                )}
+
+                {selectedFile && (
+                  <>
+                    <div className="file-card">
+                      <span className="material-symbols-outlined icon">
+                        <DescriptionIcon />
+                      </span>
+
+                      <div className="file-info">
+                        <div style={{ flex: 1 }}>
+                          <h6>{selectedFile?.name}</h6>
+
+                          <div className="progress-bg">
+                            <div
+                              className="progress"
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        {uploadStatus === "select" ? (
+                          <button onClick={clearFileInput}>
+                            <span className="material-symbols-outlined close-icon">
+                              <CloseIcon />
+                            </span>
+                          </button>
+                        ) : (
+                          <div className="check-circle">
+                            {uploadStatus === "uploading" ? (
+                              `${progress}%`
+                            ) : uploadStatus === "done" ? (
+                              <span
+                                className="material-symbols-outlined"
+                                style={{ fontSize: "20px" }}
+                              >
+                                <CheckIcon />
+                              </span>
+                            ) : null}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <button className="upload-btn" onClick={handleUpload}>
+                      {uploadStatus === "select" || uploadStatus === "uploading"
+                        ? "Upload"
+                        : "Done"}
+                    </button>
+                  </>
+                )}
+              </div>
+            </Grid> */}
+          </Grid>
+        </Box>
+      </Modal>
+
+      <Modal
+        onClose={() => setAddHostelImagesModel(false)}
+        open={addHostelImagesModel}
+      >
+        <Box
+          sx={{
+            [theme.breakpoints.up("xs")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 1,
+              borderRadius: "8px",
+              width: "95%",
+            },
+            [theme.breakpoints.up("md")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 2,
+              borderRadius: "8px",
+              width: "80%",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              [theme.breakpoints.up("xs")]: {
+                marginY: "10px",
+                marginX: "20px",
+              },
+              [theme.breakpoints.up("md")]: {},
+            }}
+          >
+            <Typography variant="h5">Add Hostel Images</Typography>
+          </Box>
+          <Grid container>
+            <Grid
+              item
+              xs={12}
+              md={12}
+              className={`justify-content-center d-flex  
+              `}
+            >
+              <div className="m-3">
+                <input
+                  ref={inputRef}
+                  type="file"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+
+                {!selectedFile && (
+                  <button className="file-btn" onClick={onChooseFile}>
+                    <span className="material-symbols-outlined">
+                      <CloudUploadIcon />
+                    </span>{" "}
                   </button>
                 )}
 
