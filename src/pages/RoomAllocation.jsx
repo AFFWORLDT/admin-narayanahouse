@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import {
   Box,
@@ -8,7 +8,9 @@ import {
   AccordionDetails,
   Paper,
   Grid,
+  Modal,
   LinearProgress,
+  Button,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -17,7 +19,15 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import PersonIcon from "@mui/icons-material/Person";
 import HotelIcon from "@mui/icons-material/Hotel";
 import axios from "axios";
+import AddIcon from "@mui/icons-material/Add";
+import "./../styles/FileUpload.css";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import DescriptionIcon from "@mui/icons-material/Description";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
+import toast from "react-hot-toast";
 function RoomAllocation() {
+  const inputRef = useRef();
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
   const theme = useTheme();
   const [expanded, setExpanded] = useState(null);
@@ -25,6 +35,91 @@ function RoomAllocation() {
   const [roomByHostelName, setRoomByHostelName] = useState([]);
   const [hostelName, setHostelName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [addHostelModel, setAddHostelModel] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState("select");
+  const [newAddHostelFormData, setNewAddHostelFormData] = useState({
+    name: "",
+    location: "",
+    description: "",
+  });
+
+  const onChangeHandlerForAddNewHostelFormData = (event) => {
+    const { name, value } = event.target;
+    setNewAddHostelFormData({
+      ...newAddHostelFormData,
+      [name]: value,
+    });
+  };
+
+  const handleNewAddHostellSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(`${URL}/hostel`, newAddHostelFormData);
+      if (response) {
+        toast.success("yehh new hostel created successfully 🎉", 6000);
+        // console.log("new hostel -->",response?.data);
+        setAddHostelModel(false);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    // console.log("newAddHostelFormData->", newAddHostelFormData);
+  };
+
+  const handleFileChange = (event) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const onChooseFile = () => {
+    inputRef.current.click();
+  };
+
+  const clearFileInput = () => {
+    inputRef.current.value = "";
+    setSelectedFile(null);
+    setProgress(0);
+    setUploadStatus("select");
+  };
+
+  const handleUpload = async () => {
+    if (uploadStatus === "done") {
+      clearFileInput();
+      return;
+    }
+
+    try {
+      setUploadStatus("uploading");
+
+      const formData = new FormData();
+      formData.append("files", selectedFile); // Change the key to "files"
+      formData.append("hostel_name", hostelName);
+      console.log("dddddd", formData);
+
+      const response = await axios.post(
+        "https://admin-api.narayanahouse.com/hostel/upload_images",
+        formData,
+        {
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentCompleted);
+          },
+        }
+      );
+
+      console.log("api response---", response);
+
+      setUploadStatus("done");
+    } catch (error) {
+      setUploadStatus("select");
+    }
+  };
 
   const getAllHostels = async () => {
     try {
@@ -63,6 +158,9 @@ function RoomAllocation() {
     return 0;
   });
 
+  const HandleAddHostell = () => {
+    setAddHostelModel(true);
+  };
   useEffect(() => {
     getRoomByHostelName();
   }, [expanded, loading]);
@@ -90,7 +188,7 @@ function RoomAllocation() {
               className="mt-3"
               sx={{ color: "#384D6C", marginLeft: { xs: "20px", md: "40px" } }}
             >
-              Room Allocaton
+              Room Allocation
             </Typography>
           </Box>
           <Box sx={{ px: 5, py: 3 }}>
@@ -288,12 +386,7 @@ function RoomAllocation() {
                       {loading && <LinearProgress color="primary" />}
 
                       <Box sx={{ p: { xs: "0px", md: "10px" } }}>
-                        <Grid
-                          container
-                          spacing={2}
-                          justifyContent="center"
-                          alignItems="center"
-                        >
+                        <Grid container spacing={2}>
                           {sortedRoomData?.map((data, i) => (
                             <Grid
                               item
@@ -430,6 +523,36 @@ function RoomAllocation() {
                               </Paper>
                             </Grid>
                           ))}
+
+                          <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
+                            display={"flex"}
+                            justifyContent="center"
+                            alignItems="center"
+                          >
+                            <Paper
+                              elevation={3}
+                              sx={{
+                                width: { xs: "280px", md: "260px" },
+                                height: "199px",
+                                padding: "20px",
+                                margin: "5px",
+                                bgcolor: "#EFEFEF",
+                                color: "dark",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <AddIcon
+                                style={{ fontSize: "80px", color: "#1976d2" }}
+                              />
+                            </Paper>
+                          </Grid>
                         </Grid>
                       </Box>
                     </AccordionDetails>
@@ -437,9 +560,322 @@ function RoomAllocation() {
                 </div>
               );
             })}
+
+            <Box
+              className="mt-3"
+              component={"div"}
+              onClick={HandleAddHostell}
+              sx={{
+                [theme.breakpoints.up("xs")]: {
+                  width: "100%",
+                  padding: "10px",
+                  height: "100px ",
+                  border: "1px solid black",
+                  bgcolor: "transparent",
+                  cursor: "pointer",
+                },
+                [theme.breakpoints.up("md")]: {
+                  width: "100%",
+                  padding: "10px",
+                  height: "100px ",
+                  border: "1px solid black",
+                  bgcolor: "transparent",
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <Grid container spacing={1}>
+                {/* First Box */}
+                <Grid
+                  item
+                  xs={12}
+                  md={4}
+                  className="d-flex justify-content-center align-items-center"
+                >
+                  <Box
+                    sx={{
+                      padding: "10px",
+                      textAlign: "",
+                      widthl: "100%",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Box className=" mx-auto">
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          [theme.breakpoints.up("xs")]: {
+                            fontSize: "16px",
+                            color: "#384D6C",
+                            fontWeight: "700",
+                            marginLeft: "10px",
+                            textAlign: "center",
+                            marginTop: "10px",
+                          },
+                          [theme.breakpoints.up("md")]: {
+                            fontSize: "16px",
+                            color: "#384D6C",
+                            fontWeight: "700",
+                            marginLeft: "40px",
+                            textAlign: "center",
+                            marginTop: "20px",
+                          },
+                        }}
+                      >
+                        Add Hostel <AddIcon />
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
           </Box>
         </Box>
       </Box>
+      <Modal onClose={() => setAddHostelModel(false)} open={addHostelModel}>
+        <Box
+          sx={{
+            [theme.breakpoints.up("xs")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 1,
+              borderRadius: "8px",
+              width: "95%",
+            },
+            [theme.breakpoints.up("md")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 2,
+              borderRadius: "8px",
+              width: "80%",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              [theme.breakpoints.up("xs")]: {
+                marginY: "10px",
+                marginX: "20px",
+              },
+              [theme.breakpoints.up("md")]: {},
+            }}
+          >
+            <Typography variant="h5">Add New Hostel</Typography>
+          </Box>
+          <Grid container>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              className="justify-content-center  d-flex align-items-center"
+            >
+              <Box
+                sx={{
+                  [theme.breakpoints.up("xs")]: {
+                    width: "100%",
+                    padding: "10px 20px",
+                    margin: "10px",
+                    height: "auto ",
+                    border: "1px solid black",
+                    cursor: "pointer",
+                  },
+                }}
+              >
+                <form onSubmit={handleNewAddHostellSubmit}>
+                  <Grid container spacing={0}>
+                    <Grid item xs={12} md={12}>
+                      <div className="m-2">
+                        <label
+                          htmlFor="hostel_name"
+                          className="form-label fw-bold mb-2"
+                          style={{ color: "#384D6C", fontSize: "20px" }}
+                        >
+                          Hostel Name
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control py-2"
+                          id="hostel_name"
+                          placeholder="Enter hostel name"
+                          name="name"
+                          value={newAddHostelFormData.name}
+                          onChange={onChangeHandlerForAddNewHostelFormData}
+                        />
+                      </div>
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                      <div className="m-2">
+                        <label
+                          htmlFor="hostel_address"
+                          className="form-label fw-bold mb-2"
+                          style={{ color: "#384D6C", fontSize: "20px" }}
+                        >
+                          Hostel Address
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control py-2"
+                          id="hostel_address"
+                          placeholder="Enter hostel address"
+                          name="location"
+                          value={newAddHostelFormData.location}
+                          onChange={onChangeHandlerForAddNewHostelFormData}
+                        />
+                      </div>
+                    </Grid>{" "}
+                    <Grid item xs={12} md={12}>
+                      <div className="m-2">
+                        <label
+                          htmlFor="floatingTextarea"
+                          className="form-label fw-bold mb-2"
+                          style={{ color: "#384D6C", fontSize: "20px" }}
+                        >
+                          Description
+                        </label>
+                        <div className="form-floating">
+                          <textarea
+                            className="form-control"
+                            placeholder="Leave a comment here"
+                            id="floatingTextarea"
+                            name="description"
+                            value={newAddHostelFormData.description}
+                            onChange={onChangeHandlerForAddNewHostelFormData}
+                          ></textarea>
+                          <label htmlFor="floatingTextarea">Description</label>
+                        </div>
+                      </div>
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                      <div className="m-2 py-3">
+                        <div className="d-flex gap-3 justify-content-evenly  align-items-center">
+                          <button
+                            onClick={() => {
+                              setAddHostelModel(false);
+                            }}
+                            className="btn"
+                            variant="outlined"
+                            style={{
+                              background: "#ffff",
+                              color: "black",
+                              width: "180px",
+                              fontWeight: "400",
+                              border: "1px solid #384D6C",
+                            }}
+                          >
+                            Cancle
+                          </button>
+                          <button
+                            className="btn"
+                            variant="outlined"
+                            style={{
+                              background: "#384D6C",
+                              color: "#fff",
+                              width: "180px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </div>
+                    </Grid>
+                  </Grid>
+                </form>
+              </Box>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              className="justify-content-center  d-flex align-items-center"
+            >
+              <div className="m-3">
+                <input
+                  ref={inputRef}
+                  type="file"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+
+                {/* Input field for hostel name */}
+                {/* <input
+        type="text"
+        placeholder="Enter hostel name"
+        value={hostelName}
+        onChange={(e) => setHostelName(e.target.value)}
+      /> */}
+
+                {/* Button to trigger the file input dialog */}
+                {!selectedFile && (
+                  <button className="file-btn" onClick={onChooseFile}>
+                    <span className="material-symbols-outlined">
+                      <CloudUploadIcon />
+                    </span>{" "}
+                    Upload Image
+                  </button>
+                )}
+
+                {selectedFile && (
+                  <>
+                    <div className="file-card">
+                      <span className="material-symbols-outlined icon">
+                        <DescriptionIcon />
+                      </span>
+
+                      <div className="file-info">
+                        <div style={{ flex: 1 }}>
+                          <h6>{selectedFile?.name}</h6>
+
+                          <div className="progress-bg">
+                            <div
+                              className="progress"
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        {uploadStatus === "select" ? (
+                          <button onClick={clearFileInput}>
+                            <span className="material-symbols-outlined close-icon">
+                              <CloseIcon />
+                            </span>
+                          </button>
+                        ) : (
+                          <div className="check-circle">
+                            {uploadStatus === "uploading" ? (
+                              `${progress}%`
+                            ) : uploadStatus === "done" ? (
+                              <span
+                                className="material-symbols-outlined"
+                                style={{ fontSize: "20px" }}
+                              >
+                                <CheckIcon />
+                              </span>
+                            ) : null}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <button className="upload-btn" onClick={handleUpload}>
+                      {uploadStatus === "select" || uploadStatus === "uploading"
+                        ? "Upload"
+                        : "Done"}
+                    </button>
+                  </>
+                )}
+              </div>
+            </Grid>
+          </Grid>
+        </Box>
+      </Modal>
     </>
   );
 }
