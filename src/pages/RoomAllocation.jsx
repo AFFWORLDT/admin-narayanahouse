@@ -48,6 +48,19 @@ function RoomAllocation() {
   });
   const [currentHostelName, setCurrentHostelName] = useState("");
   const [editHostelInfoModel, setEditHostelInfoModel] = useState(false);
+  const [getAllHostelImages, setGetAllHostelImages] = useState([]);
+
+  const getAllHostelImagesByHostelName = async (name) => {
+    try {
+      const response = await axios.get(
+        `${URL}/hostel/get_images?hostel_name=${name}`
+      );
+
+      setGetAllHostelImages(response.data);
+    } catch (error) {
+      console.error("Error fetching hostel images:", error);
+    }
+  };
 
   const onChangeHandlerForAddNewHostelFormData = (event) => {
     const { name, value } = event.target;
@@ -161,6 +174,7 @@ function RoomAllocation() {
       console.log("api response---", response);
       if (response) {
         toast.success("image uploaded successfully ✅");
+        getAllHostelImagesByHostelName(currentHostelName);
       }
 
       setUploadStatus("done");
@@ -212,6 +226,11 @@ function RoomAllocation() {
 
   const HandleAddHostell = () => {
     setAddHostelModel(true);
+    setNewAddHostelFormData({
+      name: "",
+      full_address: "",
+      description: "",
+    });
   };
 
   useEffect(() => {
@@ -451,7 +470,7 @@ function RoomAllocation() {
                                 onClick={() => {
                                   setEditHostelInfoModel(true);
                                   setCurrentHostelName(hostelObj.name);
-                                  getHostelByName(name)
+                                  getHostelByName(name);
                                 }}
                               />
                             </Box>
@@ -463,6 +482,7 @@ function RoomAllocation() {
                                 onClick={() => {
                                   setAddHostelImagesModel(true);
                                   setCurrentHostelName(hostelObj.name);
+                                  getAllHostelImagesByHostelName(name);
                                 }}
                               />
                             </Box>
@@ -930,6 +950,49 @@ function RoomAllocation() {
           >
             <Typography variant="h5">Add Hostel Images</Typography>
           </Box>
+          <Grid
+            container
+            spacing={2}
+            mt={2}
+            sx={{ height: { xs: "300px", md: "400px" }, overflowY: "scroll" }}
+          >
+            {getAllHostelImages.map((imgObj, i) => {
+              const { image_url, image_id } = imgObj;
+              return (
+                <Grid
+                  key={i}
+                  item
+                  md={3}
+                  xs={12}
+                  className="d-flex justify-content-center"
+                >
+                  <Paper
+                    component={"div"}
+                    sx={{
+                      width: "200px",
+                      height: "100px",
+                      margin: "5px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img
+                      src={image_url}
+                      alt={image_url}
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        width: "auto",
+                        height: "auto",
+                      }}
+                    />
+                  </Paper>
+                </Grid>
+              );
+            })}
+          </Grid>
+
           <Grid container>
             <Grid
               item
