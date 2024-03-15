@@ -8,6 +8,9 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  IconButton,
+  Menu,
+  Divider,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import Modal from "react-bootstrap/Modal";
@@ -25,10 +28,11 @@ import PauseIcon from "@mui/icons-material/Pause";
 import { fontWeight } from "@mui/system";
 import toast, { Toaster } from "react-hot-toast";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-
+import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from "@mui/icons-material/Add";
-
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import TextField from "@mui/material/TextField";
+import CropSquareIcon from '@mui/icons-material/CropSquare';
 const Students = () => {
   const [student, setStudent] = useState([]);
   const [pageNo, setPageNo] = useState(1);
@@ -65,6 +69,17 @@ const Students = () => {
     setPage(0);
   };
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const opendropdown = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloses = () => {
+    setAnchorEl(null);
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -94,8 +109,24 @@ const Students = () => {
     }
   };
 
+  const url = process.env.REACT_APP_PROD_ADMIN_API;
+
+
+  const [studentData, setStudentData] = useState([]);
+
+  const loadData = async () => {
+    try {
+      const responce = await axios.get(`${url}/student/allocation-info`)
+      setStudentData(responce?.data)
+      console.log(studentData)
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+
   useEffect(() => {
     getStudents();
+    loadData();
   }, []);
 
   useEffect(() => {
@@ -103,7 +134,10 @@ const Students = () => {
   }, [pageNo]);
   useEffect(() => {
     const startIndex = page * rowsPerPage;
-    const dataForPage = student?.slice(startIndex, startIndex + rowsPerPage);
+    const dataForPage = student?.slice(
+      startIndex,
+      startIndex + rowsPerPage
+    );
     setPageData(dataForPage);
   }, [page, rowsPerPage]);
 
@@ -124,9 +158,8 @@ const Students = () => {
   const updatestatus = async (data) => {
     const studentId = data?.student_id;
     const verified = data?.verified;
-    const url = `${URL}/student/${studentId}/update-verification?verified=${
-      verified === true ? 0 : 1
-    }`;
+    const url = `${URL}/student/${studentId}/update-verification?verified=${verified === true ? 0 : 1
+      }`;
 
     try {
       const config = {
@@ -244,31 +277,29 @@ const Students = () => {
   };
 
   return (
-    <div className=" h-100 p-3 " style={{ marginLeft: "265px" }}>
-      <h2 className="text-center">All Students </h2>
-      <div className="d-flex justify-content-end">
-        <h4 className="text-center ">Page No : {pageNo}</h4>
+    <div className=" h-100 " style={{ marginLeft: "16%", backgroundColor: "#EEEEFF"}}>
+      <p className="ms-5 pt-3 fs-5" style={{ fontWeight: "bold", color: "#384D6C" }}>Students</p>
+      <div className="d-flex w-100 pb-4" style={{ backgroundColor: "#EEEEFF", marginLeft: "5px", paddingTop: "25px" }}>
+
+        <div className="w-100" style={{ position: 'relative' }}>
+          <input
+            className="p-2 ms-4 w-25 ps-3"
+            style={{ backgroundColor: "#EEEEFF", border: "2px solid black", borderRadius: "25px", color: "black", fontWeight: "bold" }}
+            type="text"
+            placeholder="Search"
+          />
+          <span style={{ position: 'absolute', top: '50%', right: '965px', transform: 'translateY(-50%)', color: '#888' }}><SearchIcon /></span>
+        </div>
+
       </div>
-      <div className="d-flex justify-content-between mb-3 ">
-        <Button
-          variant="contained"
-          sx={{ marginBottom: "10px" }}
-          onClick={handlePreviousPage}
-          color="error"
-        >
-          Previous Page{" "}
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => setPageNo(pageNo + 1)}
-          color="success"
-        >
-          Next Page
-        </Button>
+      <div className="d-flex justify-content-between mb-3" style={{ backgroundColor: "#EEEEFF" }}>
+
+
       </div>
       {/* </div> */}
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} style={{ color: "#384D6C", backgroundColor: "#EEEEFF" }}>
+
         {loading ? (
           <LinearProgress />
         ) : (
@@ -280,82 +311,103 @@ const Students = () => {
             >
               <TableHead>
                 <TableRow
-                  sx={{ fontWeight: "bold", backgroundColor: "#f5f5f5" }}
+                  sx={{ fontWeight: "bold" }}
                 >
-                  <TableCell align="center">No.</TableCell>
-                  <TableCell align="center">Name</TableCell>
-                  <TableCell align="center">Bio</TableCell>
-                  <TableCell align="center">Email</TableCell>
-                  <TableCell align="center">Students_id</TableCell>
-                  {/* <TableCell align="center">Level</TableCell> */}
-                  <TableCell align="center">Status</TableCell>
-                  <TableCell align="center">Verified</TableCell>
-                  <TableCell align="center">Edit</TableCell>
-                  <TableCell align="center">Remarks</TableCell>
+                  <TableCell className="ms-5" style={{ color: "#384D6C", fontSize: "16px" }} align="left"> &nbsp;  &nbsp; No.</TableCell>
+                  <TableCell style={{ color: "#384D6C", fontSize: "16px", fontWeight: "bold", textAlign: "left" }} align="center">Name</TableCell>
+
+                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Hostel</TableCell>
+                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Room No</TableCell>
+                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Status</TableCell>
+                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Payment due on</TableCell>
+                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {student?.length > 0 ? (
                   <>
-                    {student?.map((row, index) => (
+                    {studentData?.map((row, index) => (
                       <TableRow
                         key={row?.affiliate_id}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
                       >
-                        <TableCell align="center">{index + 1}</TableCell>
-                        <TableCell align="center">{row.name}</TableCell>
-                        <TableCell align="center">
-                          {row?.bio === null ? "N/A" : row?.bio}
+                        <TableCell align="left" style={{ color: "#384D6C", fontWeight: "bold" }}> &nbsp; &nbsp; &nbsp;{index + 1} &nbsp; &nbsp; &nbsp;<CropSquareIcon /></TableCell>
+                        <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold" }}> <div className="d-flex"><div style={{ backgroundColor: '#D9D9D9', height: "50px", width: "46px", borderRadius: "26px", marginLeft: "0px" }}>
+                          <img style={{ height: "40px", height: "50px", width: "46px", borderRadius: "26px" }} src={row.profile_image} alt="pic" /></div><div className="ms-2 mt-1">{row?.name}<br /><span style={{ color: 'gray', fontSize: '12px' }}><LocalPhoneIcon sx={{ height: "13px", color: "#384D6C" }} />{row?.contact_no}</span></div></div></TableCell>
+                        <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold" }}>
+                          {row?.bio === null ? "N/A" : row?.hostel_name}
                         </TableCell>
-                        <TableCell align="center">
-                          {row?.email === null ? "N/A" : row?.email}
+                        <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold" }}>
+                          {row?.email === null ? "N/A" : row?.room_name}
                         </TableCell>
-                        <TableCell align="center">
-                          {row?.student_id === null ? "N/A" : row?.student_id}
-                        </TableCell>
-                        {/* <TableCell align="center">
-                          {row?.level === null ? "N/A" : row?.level}
-                        </TableCell> */}
-                        <TableCell align="center">
-                          {row?.verified === true ? (
-                            <CloudDoneIcon sx={{ color: "green" }} />
-                          ) : (
-                            <PauseIcon sx={{ color: "red" }} />
-                          )}
-                        </TableCell>
-
                         <TableCell align="center">
                           <Button
                             variant="contained"
-                            color={
-                              row?.verified === true ? "warning" : "success"
-                            }
+                            color={row?.verification_status === true ? "warning" : "primary"}
                             onClick={() => {
                               updatestatus(row);
                             }}
+                            style={{
+                              height: "34px",
+                              fontSize: "16px",
+                              borderRadius: "25px",
+                              backgroundColor: row?.verification_status === true ? "#C9D8FF" : "#CBFDB3",
+                              color: row?.verification_status === true ? "#264C95" : "#248A00"
+                            }}
                           >
-                            {row?.verified === true ? "Pending" : "Approve"}
+                            {row?.verification_status === false ? (
+                              <CloudDoneIcon />
+                            ) : (
+                              <PauseIcon />
+                            )} &nbsp; {row?.verification_status === true ? "Pending" : "Verified"}
                           </Button>
                         </TableCell>
 
-                        <TableCell align="center">
-                          <Button
-                            variant="contained"
-                            onClick={() => handleEdit(row)}
-                          >
-                            Edit
-                          </Button>
+                        <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold" }}>
+                          <Button className="bg-primary ps-3 pe-3" style={{ color: "white", borderRadius: "20px" }}>{row?.student_id === null ? "N/A" : new Date(row?.payment_due_on).toLocaleDateString('en-IN')}</Button>
                         </TableCell>
-                        <TableCell align="center">
-                          <Button
-                            variant="contained"
-                            color="error"
-                            onClick={() => handleDelete(row?.student_id)}
+                        <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold", fontSize: "25px", cursor: "pointer" }}>
+
+                          <IconButton
+
+                            aria-label="open menu"
+                            aria-controls="account-menu"
+                            aria-haspopup="true"
+                            onClick={handleClick}
+                            edge="end"
+                            sx={{ ml: "auto" }}
+                          >...</IconButton>
+                          <Menu
+                            onClick={handleCloses}
+                            anchorEl={anchorEl}
+                            id="account-menu"
+                            open={opendropdown}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                              vertical: "top",
+                              horizontal: "right",
+                            }}
+                            transformOrigin={{
+                              vertical: "top",
+                              horizontal: "right",
+                            }}
+                            PaperProps={{
+                              style: {
+                                boxShadow: "none",
+                              },
+                            }}
                           >
-                            Delete
-                          </Button>
+                            <h6 style={{ textAlign: "center" }}>Take Action</h6>
+                            <Divider />
+                            <MenuItem sx={{ backgroundColor: "#FFC2C2", margin: "5px 10px", borderRadius: "25px" }}>Room Allocation</MenuItem>
+                            <MenuItem sx={{ backgroundColor: "#FFC2C2", margin: "5px 10px", borderRadius: "25px" }} onClick={handleCloses}>&nbsp; View Payments</MenuItem>
+                            <MenuItem sx={{ backgroundColor: "#FFC2C2", margin: "5px 10px", borderRadius: "25px", paddingLeft: "20px" }}> &nbsp; &nbsp; View Profile</MenuItem>
+                          </Menu>
+
+
+
                         </TableCell>
                       </TableRow>
                     ))}
