@@ -202,19 +202,21 @@ function RoomAllocation() {
   };
 
   const getRoomByHostelName = async (name) => {
-    // console.log("hostel name--->", hostelName);
     try {
       const response = await axios.get(
         `${URL}/room/get_rooms_by_hostel?hostel_name=${name}`
       );
-      if (response) {
-        setRoomByHostelName(response?.data);
+
+      if (response && response.data.length > 0) {
+        setRoomByHostelName(response.data);
         setHostelName("");
       } else {
         setRoomByHostelName([]);
       }
     } catch (error) {
       console.log(error.message);
+toast.error("rooms not found");
+      setRoomByHostelName([]);
     }
   };
 
