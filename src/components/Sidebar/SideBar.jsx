@@ -33,6 +33,7 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
+import logo from "./../../assets/img/logonarayana.png"
 
 const drawerWidth = 265;
 
@@ -183,7 +184,7 @@ function SideBar(props) {
       >
         <Avatar
           alt="Remy Sharp"
-          src={""}
+          src={logo}
           sx={{
             width: 120,
             height: 120,
