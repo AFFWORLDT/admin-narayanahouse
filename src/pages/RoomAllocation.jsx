@@ -27,6 +27,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import ImageIcon from "@mui/icons-material/Image";
 import toast from "react-hot-toast";
+import DeleteIcon from "@mui/icons-material/Delete";
 function RoomAllocation() {
   const inputRef = useRef();
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
@@ -55,10 +56,25 @@ function RoomAllocation() {
       const response = await axios.get(
         `${URL}/hostel/get_images?hostel_name=${name}`
       );
-
+      setCurrentHostelName(name);
       setGetAllHostelImages(response.data);
     } catch (error) {
       console.error("Error fetching hostel images:", error);
+      setCurrentHostelName("");
+    }
+  };
+
+  const deteleHostelImageById = async (id) => {
+    try {
+      const response = await axios.delete(
+        `${URL}/hostel/delete_image?image_id=${id}`
+      );
+      if (response) {
+        toast.success("Image deleted successfully");
+        getAllHostelImagesByHostelName(currentHostelName);
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -215,7 +231,6 @@ function RoomAllocation() {
       }
     } catch (error) {
       console.log(error.message);
-toast.error("rooms not found");
       setRoomByHostelName([]);
     }
   };
@@ -979,22 +994,41 @@ toast.error("rooms not found");
                   <Paper
                     component={"div"}
                     sx={{
-                      width: "200px",
-                      height: "100px",
+                      width: "220px",
+                      height: "160px",
                       margin: "5px",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      position: "relative",
                     }}
                   >
                     <img
                       src={image_url}
                       alt={image_url}
+                      className=" rounded-md"
                       style={{
                         maxWidth: "100%",
                         maxHeight: "100%",
                         width: "auto",
                         height: "auto",
+                        borderRadius: "5px",
+                      }}
+                    />
+                    <DeleteIcon
+                      style={{
+                        position: "absolute",
+                        borderRadius: "50%",
+                        fontSize: "40px",
+                        color: "red",
+                        backgroundColor: "#c4a9e9d1",
+                        padding: "5px",
+                        top: "8px",
+                        right: "8px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        deteleHostelImageById(image_id);
                       }}
                     />
                   </Paper>
