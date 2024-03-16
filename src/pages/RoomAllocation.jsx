@@ -105,6 +105,13 @@ function RoomAllocation() {
 
   const handleNewAddHostellSubmit = async (event) => {
     event.preventDefault();
+    const { name, full_address, description } = newAddHostelFormData;
+
+    // Check if any required field is empty
+    if (!name || !full_address || !description) {
+      toast.error("Please fill in all the required fields");
+      return;
+    }
 
     try {
       const response = await axios.post(`${URL}/hostel`, newAddHostelFormData);
@@ -194,11 +201,11 @@ function RoomAllocation() {
     }
   };
 
-  const getRoomByHostelName = async () => {
+  const getRoomByHostelName = async (name) => {
     // console.log("hostel name--->", hostelName);
     try {
       const response = await axios.get(
-        `${URL}/room/get_rooms_by_hostel?hostel_name=${hostelName}`
+        `${URL}/room/get_rooms_by_hostel?hostel_name=${name}`
       );
       if (response) {
         setRoomByHostelName(response?.data);
@@ -233,9 +240,9 @@ function RoomAllocation() {
     });
   };
 
-  useEffect(() => {
-    getRoomByHostelName();
-  }, [expanded]);
+  // useEffect(() => {
+  //   getRoomByHostelName();
+  // }, [expanded]);
   useEffect(() => {
     getAllHostels();
   }, [addHostelModel, editHostelInfoModel]);
@@ -278,6 +285,7 @@ function RoomAllocation() {
                     onChange={() => {
                       setExpanded(expanded === i ? null : i);
                       setHostelName(name);
+                      getRoomByHostelName(name);
                     }}
                     sx={{
                       backgroundColor: expanded === i ? "#F5F5F5" : "#EEEEFF",
