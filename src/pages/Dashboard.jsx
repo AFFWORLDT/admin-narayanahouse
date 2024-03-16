@@ -5,6 +5,7 @@ import { useTheme } from "@mui/material/styles";
 import axios from "axios";
 import logo from "./../assets/img/logonarayana.png";
 import toast, { Toaster } from "react-hot-toast";
+import { Link } from "react-router-dom";
 const Dashboard = () => {
   const [Student, setStudent] = useState([]);
   const [hostel, setHostel] = useState([]);
@@ -392,22 +393,24 @@ const Dashboard = () => {
                     </Typography>
                   </Box>
                   <Box component={"div"} sx={{ margin: "20px 80px" }}>
-                    <button
-                      style={{
-                        width: "350px",
-                        border: "1.5px solid black",
-                        height: "35px",
-                        borderRadius: "10px",
-                        color: "#384D6C",
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        background: "#fff",
-                        margin: "10px 30px",
-                        display: "block",
-                      }}
-                    >
-                      View Student Profile
-                    </button>
+                    <Link to={`/studentprofile/${student_id}`}>
+                      <button
+                        style={{
+                          width: "350px",
+                          border: "1.5px solid black",
+                          height: "35px",
+                          borderRadius: "10px",
+                          color: "#384D6C",
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          background: "#fff",
+                          margin: "10px 30px",
+                          display: "block",
+                        }}
+                      >
+                        View Student Profile
+                      </button>
+                    </Link>
                     <button
                       style={{
                         width: "350px",
@@ -457,7 +460,9 @@ const Dashboard = () => {
                         margin: "10px 30px",
                         display: "block",
                       }}
-                      onClick={()=>{handelApprov(order_id)}}
+                      onClick={() => {
+                        handelApprov(order_id);
+                      }}
                     >
                       Approve Room Allocation Request
                     </button>
