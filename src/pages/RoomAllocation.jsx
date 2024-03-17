@@ -28,6 +28,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import ImageIcon from "@mui/icons-material/Image";
 import toast from "react-hot-toast";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { editableInputTypes } from "@testing-library/user-event/dist/utils";
 function RoomAllocation() {
   const inputRef = useRef();
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
@@ -42,14 +43,132 @@ function RoomAllocation() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("select");
+
   const [newAddHostelFormData, setNewAddHostelFormData] = useState({
-    name: "",
     full_address: "",
     description: "",
   });
   const [currentHostelName, setCurrentHostelName] = useState("");
   const [editHostelInfoModel, setEditHostelInfoModel] = useState(false);
   const [getAllHostelImages, setGetAllHostelImages] = useState([]);
+
+  const [addNewRoomModel, setAddNewRoomModel] = useState(false);
+  const [addNewRoomFormData, setAddNewRoomData] = useState({
+    hostel_name: "",
+    room_name: "",
+    room_type: "",
+    room_description: "",
+    room_rent: 0,
+    availibility: true,
+    beds: 0,
+  });
+  const [editRoomInfoModel, setEditRoomInfoModel] = useState(false);
+  const [currentRoomName, setCurrentRoomName] = useState("");
+  const [addRoomImagesModel, setAddRoomImagesModel] = useState(false);
+  const [getAllRoomImages, setGetAllRoomImages] = useState({});
+
+  const deteleRoomImageById = async (id, hostelName, roomName) => {
+    try {
+      const response = await axios.delete(
+        `${URL}/room/delete_room_image?image_id=${id}`
+      );
+      if (response) {
+        toast.success("Image deleted successfully");
+        await getAllRooms(hostelName, roomName);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const getAllRooms = async (hostelName, roomName) => {
+    // alert(`${hostelName} is ${roomName}`);
+    try {
+      const response = await axios.get(
+        `${URL}/room/get_all_room_images?hostel_name=${hostelName}&room_name=${roomName}`
+      );
+      if (response) {
+        setGetAllRoomImages(response.data);
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const onChangeHandlerForAddNewRoomFormData = (event) => {
+    setAddNewRoomData({
+      ...addNewRoomFormData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleEditRoomSubmit = async (event) => {
+    event.preventDefault();
+    const { room_description, availibility, room_rent, beds } =
+      addNewRoomFormData;
+
+    alert(`room ${currentRoomName} and hostel ${currentHostelName}`);
+
+    try {
+      const response = await axios.put(
+        `${URL}/room/update_room?room_name=${currentRoomName}&hostel_name=${currentHostelName}`,
+        {
+          room_description,
+          availibility,
+          room_rent,
+          beds,
+        }
+      );
+      if (response) {
+        toast.success("Room updated successfully", 3000);
+        setAddNewRoomData({
+          hostel_name: "",
+          room_name: "",
+          room_type: "",
+          room_description: "",
+          room_rent: 0,
+          availibility: true,
+          beds: 0,
+        });
+        await getRoomByHostelName(currentHostelName);
+        setEditRoomInfoModel(false);
+        setCurrentHostelName("");
+        setCurrentRoomName("");
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message, 3000);
+    }
+  };
+
+  const handleAddNewRoomSubmit = async (event) => {
+    event.preventDefault();
+    console.log("...........", currentHostelName);
+    let data = { ...addNewRoomFormData, hostel_name: currentHostelName };
+    console.log(data);
+    try {
+      const response = await axios.post(`${URL}/room/add_room`, data);
+      if (response) {
+        toast.success("Room added successfully", 3000);
+        setAddNewRoomData({
+          hostel_name: "",
+          room_name: "",
+          room_type: "",
+          room_description: "",
+          room_rent: 0,
+          availibility: true,
+          beds: 0,
+        });
+        await getRoomByHostelName(currentHostelName);
+        setAddNewRoomModel(false);
+        setCurrentHostelName("");
+      }
+    } catch (error) {
+      console.log(error.message);
+      setCurrentHostelName("");
+    }
+  };
 
   const getAllHostelImagesByHostelName = async (name) => {
     try {
@@ -98,20 +217,21 @@ function RoomAllocation() {
   const handleEditHostellSubmit = async (e) => {
     e.preventDefault();
     console.log(currentHostelName);
-    let data = { ...newAddHostelFormData, name: currentHostelName };
-    console.log(data);
+    // Encode the hostel name for the URL
+    const encodedHostelName = encodeURIComponent(currentHostelName);
+
     try {
       const response = await axios.put(
-        `${URL}/hostel/${currentHostelName}`,
-        data
+        `${URL}/hostel/${encodedHostelName}`,
+        newAddHostelFormData
       );
       if (response) {
-        toast.success(" Hostel updated successfully ", 5000);
+        toast.success("Hostel updated successfully", 5000);
         setNewAddHostelFormData({
-          name: "",
           full_address: "",
           description: "",
         });
+        setCurrentHostelName("");
         setEditHostelInfoModel(false);
       }
     } catch (error) {
@@ -175,7 +295,7 @@ function RoomAllocation() {
 
     try {
       setUploadStatus("uploading");
-      console.log(currentHostelName);
+      // console.log(currentHostelName);
       const formData = new FormData();
       formData.append("files", selectedFile);
       formData.append("hostel_name", currentHostelName);
@@ -198,6 +318,50 @@ function RoomAllocation() {
       if (response) {
         toast.success("image uploaded successfully ✅");
         getAllHostelImagesByHostelName(currentHostelName);
+      }
+
+      setUploadStatus("done");
+    } catch (error) {
+      setUploadStatus("select");
+    }
+  };
+
+  const handleUploadRoomImages = async () => {
+    if (uploadStatus === "done") {
+      clearFileInput();
+
+      return;
+    }
+
+    try {
+      setUploadStatus("uploading");
+      console.log(currentRoomName);
+      console.log(currentHostelName);
+      const formData = new FormData();
+      formData.append("files", selectedFile);
+      formData.append("hostel_name", currentHostelName);
+      formData.append("room_name", currentRoomName);
+      console.log("dddddd", formData);
+
+      const response = await axios.post(
+        `${URL}/room/upload_room_images`,
+        formData,
+        {
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentCompleted);
+          },
+        }
+      );
+
+      console.log("api response---", response);
+      if (response) {
+        toast.success("room image uploaded successfully ✅");
+        await getAllRooms(currentHostelName, currentRoomName);
+        currentHostelName("");
+        setCurrentRoomName("");
       }
 
       setUploadStatus("done");
@@ -263,8 +427,6 @@ function RoomAllocation() {
   useEffect(() => {
     getAllHostels();
   }, [addHostelModel, editHostelInfoModel]);
-
-  console.log(currentHostelName);
 
   return (
     <>
@@ -559,18 +721,46 @@ function RoomAllocation() {
                                       <AcUnitIcon fontSize="15px" /> AC
                                     </Typography>
                                   </Box>
-                                  <Box component={"div"}>
-                                    <Typography
-                                      fontSize="15px"
-                                      color={"primary"}
-                                    >
+                                  <Box
+                                    component={"div"}
+                                    className="d-flex justify-content-evenly  gap-3"
+                                  >
+                                    <Box>
                                       {" "}
                                       <BorderColorIcon
                                         fontSize="15px"
                                         color={"primary"}
+                                        style={{
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          setEditRoomInfoModel(true);
+                                          setCurrentHostelName(name);
+                                          setCurrentRoomName(data.room_name);
+                                        }}
                                       />{" "}
-                                      {data.room_name}
-                                    </Typography>
+                                    </Box>
+                                    <Box>
+                                      <ImageIcon
+                                        fontSize="20px"
+                                        color={"primary"}
+                                        onClick={() => {
+                                          setAddRoomImagesModel(true);
+                                          setCurrentRoomName(data.room_name);
+                                          setCurrentHostelName(name);
+                                          getAllRooms(name, data.room_name);
+                                        }}
+                                      />
+                                    </Box>
+                                    <Box>
+                                      <Typography
+                                        fontSize="15px"
+                                        color={"primary"}
+                                      >
+                                        {" "}
+                                        {data.room_name}
+                                      </Typography>
+                                    </Box>
                                   </Box>
                                 </Box>
 
@@ -681,6 +871,19 @@ function RoomAllocation() {
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
+                              }}
+                              onClick={() => {
+                                setAddNewRoomModel(true);
+                                setCurrentHostelName(name);
+                                setAddNewRoomData({
+                                  hostel_name: "",
+                                  room_name: "",
+                                  room_type: "",
+                                  room_description: "",
+                                  room_rent: 0,
+                                  availibility: true,
+                                  beds: 0,
+                                });
                               }}
                             >
                               <AddIcon
@@ -1153,7 +1356,7 @@ function RoomAllocation() {
               [theme.breakpoints.up("md")]: {},
             }}
           >
-            <Typography variant="h5"></Typography>
+            <Typography variant="h5">Edit Hostel Information</Typography>
           </Box>
           <Grid container>
             <Grid
@@ -1259,6 +1462,597 @@ function RoomAllocation() {
                   </Grid>
                 </form>
               </Box>
+            </Grid>
+          </Grid>
+        </Box>
+      </Modal>
+      <Modal onClose={() => setAddNewRoomModel(false)} open={addNewRoomModel}>
+        <Box
+          sx={{
+            [theme.breakpoints.up("xs")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 1,
+              borderRadius: "8px",
+              width: "95%",
+            },
+            [theme.breakpoints.up("md")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 2,
+              borderRadius: "8px",
+              width: "60%",
+            },
+          }}
+        >
+          <Typography variant="h6" className="my-1">
+            Add new Room for
+          </Typography>
+
+          <form onSubmit={handleAddNewRoomSubmit}>
+            <Grid container>
+              <Grid item xs={12} md={6}>
+                <div className="m-2">
+                  <label
+                    htmlFor="room_name"
+                    className="form-label fw-bold mb-2"
+                    style={{ color: "#384D6C", fontSize: "20px" }}
+                  >
+                    Room Name
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control shadow-sm py-2"
+                    id="room_name"
+                    placeholder="Enter room name"
+                    name="room_name"
+                    value={addNewRoomFormData.room_name}
+                    onChange={onChangeHandlerForAddNewRoomFormData}
+                  />
+                </div>
+              </Grid>{" "}
+              <Grid item xs={12} md={6}>
+                <div className="m-2">
+                  <label
+                    htmlFor="availability"
+                    className="form-label fw-bold mb-2"
+                    style={{ color: "#384D6C", fontSize: "20px" }}
+                  >
+                    Room Availability
+                  </label>
+                  <div className="form-check">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="availability"
+                      name="availability"
+                      checked={addNewRoomFormData.availibility}
+                      onChange={(event) =>
+                        setAddNewRoomData({
+                          ...addNewRoomFormData,
+                          availibility: event.target.checked,
+                        })
+                      }
+                    />
+                    <label className="form-check-label" htmlFor="availability">
+                      Available
+                    </label>
+                  </div>
+                </div>
+              </Grid>{" "}
+              <Grid item xs={12} md={6}>
+                <div className="m-2">
+                  <label
+                    htmlFor="room_rent"
+                    className="form-label fw-bold mb-2"
+                    style={{ color: "#384D6C", fontSize: "20px" }}
+                  >
+                    Room Rent
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control shadow-sm py-2"
+                    id="room_rent"
+                    placeholder="Enter room rent"
+                    name="room_rent"
+                    value={addNewRoomFormData.room_rent}
+                    onChange={onChangeHandlerForAddNewRoomFormData}
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <div className="m-2">
+                  <label
+                    htmlFor="beds"
+                    className="form-label fw-bold mb-2"
+                    style={{ color: "#384D6C", fontSize: "20px" }}
+                  >
+                    Beds
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control shadow-sm py-2"
+                    id="beds"
+                    placeholder="Enter number of beds"
+                    name="beds"
+                    value={addNewRoomFormData.beds}
+                    onChange={onChangeHandlerForAddNewRoomFormData}
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <div className="m-2">
+                  <label
+                    htmlFor="floatingTextarea"
+                    className="form-label fw-bold mb-2"
+                    style={{ color: "#384D6C", fontSize: "20px" }}
+                  >
+                    Room Description
+                  </label>
+                  <div className="form-floating">
+                    <textarea
+                      className="form-control shadow-sm"
+                      placeholder="Leave a comment here"
+                      id="floatingTextarea"
+                      name="room_description"
+                      value={addNewRoomFormData.room_description}
+                      onChange={onChangeHandlerForAddNewRoomFormData}
+                    ></textarea>
+                    <label htmlFor="floatingTextarea">Description</label>
+                  </div>
+                </div>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <div className="m-2 py-3">
+                  <div className="d-flex gap-3 justify-content-evenly  align-items-center">
+                    <button
+                      onClick={() => {
+                        setAddNewRoomModel(false);
+                        setCurrentHostelName("");
+                        setAddNewRoomData({
+                          room_name: "",
+                          availibility: false,
+                          room_rent: 0,
+                          beds: 0,
+                          room_description: "",
+                        });
+                      }}
+                      className="btn"
+                      variant="outlined"
+                      style={{
+                        background: "#ffff",
+                        color: "black",
+                        width: "180px",
+                        fontWeight: "400",
+                        border: "1px solid #384D6C",
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="btn"
+                      variant="outlined"
+                      style={{
+                        background: "#384D6C",
+                        color: "#fff",
+                        width: "180px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
+      </Modal>
+
+      <Modal
+        onClose={() => setEditRoomInfoModel(false)}
+        open={editRoomInfoModel}
+      >
+        <Box
+          sx={{
+            [theme.breakpoints.up("xs")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 1,
+              borderRadius: "8px",
+              width: "95%",
+            },
+            [theme.breakpoints.up("md")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 2,
+              borderRadius: "8px",
+              width: "60%",
+            },
+          }}
+        >
+          <Typography variant="h6" className="my-1">
+            Edit Room Information
+          </Typography>
+
+          <form onSubmit={handleEditRoomSubmit}>
+            <Grid container>
+              {/* <Grid item xs={12} md={6}>
+                <div className="m-2">
+                  <label
+                    htmlFor="room_name"
+                    className="form-label fw-bold mb-2"
+                    style={{ color: "#384D6C", fontSize: "20px" }}
+                  >
+                    Room Name
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control shadow-sm py-2"
+                    id="room_name"
+                    placeholder="Enter room name"
+                    name="room_name"
+                    value={addNewRoomFormData.room_name}
+                    onChange={onChangeHandlerForAddNewRoomFormData}
+                  />
+                </div>
+              </Grid> */}
+              {/* <Grid item xs={12} md={6}>
+                  <div className="m-2">
+                    <label
+                      htmlFor="room_type"
+                      className="form-label fw-bold mb-2"
+                      style={{ color: "#384D6C", fontSize: "20px" }}
+                    >
+                      Room Type
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control shadow-sm py-2"
+                      id="room_type"
+                      placeholder="Enter Room Type"
+                      name="room_type"
+                      value={addNewRoomFormData.room_type}
+                      onChange={onChangeHandlerForAddNewRoomFormData}
+                    />
+                  </div>
+                </Grid> */}
+              <Grid item xs={12} md={6}>
+                <div className="m-2">
+                  <label
+                    htmlFor="room_rent"
+                    className="form-label fw-bold mb-2"
+                    style={{ color: "#384D6C", fontSize: "20px" }}
+                  >
+                    Room Rent
+                  </label>
+                  <input
+                    min={0}
+                    type="number"
+                    className="form-control shadow-sm py-2"
+                    id="room_rent"
+                    placeholder="Enter room rent"
+                    name="room_rent"
+                    value={addNewRoomFormData.room_rent}
+                    onChange={onChangeHandlerForAddNewRoomFormData}
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <div className="m-2">
+                  <label
+                    htmlFor="beds"
+                    className="form-label fw-bold mb-2"
+                    style={{ color: "#384D6C", fontSize: "20px" }}
+                  >
+                    Beds
+                  </label>
+                  <input
+                    min={0}
+                    max={3}
+                    type="number"
+                    className="form-control shadow-sm py-2"
+                    id="beds"
+                    placeholder="Enter number of beds"
+                    name="beds"
+                    value={addNewRoomFormData.beds}
+                    onChange={onChangeHandlerForAddNewRoomFormData}
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <div className="m-2">
+                  <label
+                    htmlFor="floatingTextarea"
+                    className="form-label fw-bold mb-2"
+                    style={{ color: "#384D6C", fontSize: "20px" }}
+                  >
+                    Room Description
+                  </label>
+                  <div className="form-floating">
+                    <textarea
+                      className="form-control shadow-sm"
+                      placeholder="Leave a comment here"
+                      id="floatingTextarea"
+                      name="room_description"
+                      value={addNewRoomFormData.room_description}
+                      onChange={onChangeHandlerForAddNewRoomFormData}
+                    ></textarea>
+                    <label htmlFor="floatingTextarea">Description</label>
+                  </div>
+                </div>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <div className="m-2">
+                  <label
+                    htmlFor="availability"
+                    className="form-label fw-bold mb-2"
+                    style={{ color: "#384D6C", fontSize: "20px" }}
+                  >
+                    Room Availability
+                  </label>
+                  <div className="form-check">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="availability"
+                      name="availability"
+                      checked={addNewRoomFormData.availibility}
+                      onChange={(event) =>
+                        setAddNewRoomData({
+                          ...addNewRoomFormData,
+                          availibility: event.target.checked,
+                        })
+                      }
+                    />
+                    <label className="form-check-label" htmlFor="availability">
+                      Available
+                    </label>
+                  </div>
+                </div>
+              </Grid>{" "}
+              <Grid item xs={12} md={12}>
+                <div className="m-2 py-3">
+                  <div className="d-flex gap-3 justify-content-evenly  align-items-center">
+                    <button
+                      onClick={() => {
+                        setEditRoomInfoModel(false);
+                        setCurrentHostelName("");
+                        setAddNewRoomData({
+                          room_name: "",
+                          availibility: false,
+                          room_rent: 0,
+                          beds: 0,
+                          room_description: "",
+                        });
+                      }}
+                      className="btn"
+                      variant="outlined"
+                      style={{
+                        background: "#ffff",
+                        color: "black",
+                        width: "180px",
+                        fontWeight: "400",
+                        border: "1px solid #384D6C",
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="btn"
+                      variant="outlined"
+                      style={{
+                        background: "#384D6C",
+                        color: "#fff",
+                        width: "180px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
+      </Modal>
+
+      <Modal
+        onClose={() => setAddRoomImagesModel(false)}
+        open={addRoomImagesModel}
+      >
+        <Box
+          sx={{
+            [theme.breakpoints.up("xs")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 1,
+              borderRadius: "8px",
+              width: "95%",
+            },
+            [theme.breakpoints.up("md")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 2,
+              borderRadius: "8px",
+              width: "60%",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              [theme.breakpoints.up("xs")]: {
+                marginY: "10px",
+                marginX: "20px",
+              },
+              [theme.breakpoints.up("md")]: {},
+            }}
+          >
+            <Typography variant="h5">Add Room Images</Typography>
+          </Box>
+          <Grid
+            container
+            spacing={2}
+            mt={2}
+            sx={{ height: { xs: "300px", md: "400px" }, overflowY: "scroll" }}
+          >
+            {getAllRoomImages.room_pictures?.map((imgObj, i) => {
+              const { image_url, image_id, hostel_name, room_name } = imgObj;
+              return (
+                <Grid
+                  key={i}
+                  item
+                  md={3}
+                  xs={12}
+                  className="d-flex justify-content-center"
+                >
+                  <Paper
+                    component={"div"}
+                    sx={{
+                      width: "220px",
+                      height: "160px",
+                      margin: "5px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      position: "relative",
+                    }}
+                  >
+                    <img
+                      src={image_url}
+                      alt={image_url}
+                      className=" rounded-md"
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        width: "auto",
+                        height: "auto",
+                        borderRadius: "5px",
+                      }}
+                    />
+                    <DeleteIcon
+                      style={{
+                        position: "absolute",
+                        borderRadius: "50%",
+                        fontSize: "40px",
+                        color: "red",
+                        backgroundColor: "#c4a9e9d1",
+                        padding: "5px",
+                        top: "8px",
+                        right: "8px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        deteleRoomImageById(image_id, hostel_name, room_name);
+                      }}
+                    />
+                  </Paper>
+                </Grid>
+              );
+            })}
+          </Grid>
+
+          <Grid container>
+            <Grid
+              item
+              xs={12}
+              md={12}
+              className={`justify-content-center d-flex  
+              `}
+            >
+              <div className="m-3">
+                <input
+                  ref={inputRef}
+                  type="file"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+
+                {!selectedFile && (
+                  <button className="file-btn" onClick={onChooseFile}>
+                    <span className="material-symbols-outlined">
+                      <CloudUploadIcon />
+                    </span>{" "}
+                  </button>
+                )}
+
+                {selectedFile && (
+                  <>
+                    <div className="file-card">
+                      <span className="material-symbols-outlined icon">
+                        <DescriptionIcon />
+                      </span>
+
+                      <div className="file-info">
+                        <div style={{ flex: 1 }}>
+                          <h6>{selectedFile?.name}</h6>
+
+                          <div className="progress-bg">
+                            <div
+                              className="progress"
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        {uploadStatus === "select" ? (
+                          <button onClick={clearFileInput}>
+                            <span className="material-symbols-outlined close-icon">
+                              <CloseIcon />
+                            </span>
+                          </button>
+                        ) : (
+                          <div className="check-circle">
+                            {uploadStatus === "uploading" ? (
+                              `${progress}%`
+                            ) : uploadStatus === "done" ? (
+                              <span
+                                className="material-symbols-outlined"
+                                style={{ fontSize: "20px" }}
+                              >
+                                <CheckIcon />
+                              </span>
+                            ) : null}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      className="upload-btn"
+                      onClick={handleUploadRoomImages}
+                    >
+                      {uploadStatus === "select" || uploadStatus === "uploading"
+                        ? "Upload"
+                        : "Done"}
+                    </button>
+                  </>
+                )}
+              </div>
             </Grid>
           </Grid>
         </Box>
