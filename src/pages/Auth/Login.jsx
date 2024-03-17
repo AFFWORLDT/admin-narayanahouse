@@ -18,6 +18,7 @@ import loginGif from "../../assets/img/login.gif";
 import { useAuth } from '../../context/User';
 import toast, { Toaster } from 'react-hot-toast';
 import adminIcon from "../../assets/img/affworld.ico"
+import { useEffect } from 'react';
 
 
 
@@ -86,6 +87,19 @@ export default function SignInSide() {
     }
   }
 
+
+  useEffect(() => {
+    if (!localStorage.getItem('reloaded')) {
+      localStorage.setItem('reloaded', 'true');
+      window.location.reload();
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     window.location.reload();
+  //   }, 1000)
+  // }, []);
 
 
 

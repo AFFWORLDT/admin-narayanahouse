@@ -148,6 +148,15 @@ function ResponsiveAppBar() {
               </MenuItem>
             ))}
           </Menu>
+
+          Logout Button
+          <Button
+            onClick={() => handleMenuItemClick("Logout")}
+            color="inherit"
+            sx={{ mx: 2 }}
+          >
+            Logout
+          </Button>
         </Box>
 
         <InsightsIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -169,6 +178,7 @@ function ResponsiveAppBar() {
         >
           Admin Narayana House
         </Typography>
+
         <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
           {pages.map((page) => (
             <Button
@@ -180,13 +190,17 @@ function ResponsiveAppBar() {
             </Button>
           ))}
         </Box>
+        
         <NotificationDrawer />
+        
         <Box sx={{ flexGrow: 0, margin: "10px 15px" }}>
           <Tooltip title="Admin settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mr: 2 }}>
-              <Avatar alt="Rahul" src={avtarAdmin} />
+              <Avatar alt="Rahul" src={""} />
             </IconButton>
+            
           </Tooltip>
+          
           <Menu
             sx={{ mt: "45px" }}
             id="menu-appbar"
@@ -212,6 +226,8 @@ function ResponsiveAppBar() {
               </MenuItem>
             ))}
           </Menu>
+
+          <Box></Box>
         </Box>
       </Toolbar>
     </AppBar>
