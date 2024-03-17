@@ -67,6 +67,20 @@ function RoomAllocation() {
   const [addRoomImagesModel, setAddRoomImagesModel] = useState(false);
   const [getAllRoomImages, setGetAllRoomImages] = useState({});
 
+  const deteleRoomImageById = async (id, hostelName, roomName) => {
+    try {
+      const response = await axios.delete(
+        `${URL}/room/delete_room_image?image_id=${id}`
+      );
+      if (response) {
+        toast.success("Image deleted successfully");
+        await getAllRooms(hostelName, roomName);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const getAllRooms = async (hostelName, roomName) => {
     // alert(`${hostelName} is ${roomName}`);
     try {
@@ -1908,7 +1922,7 @@ function RoomAllocation() {
             sx={{ height: { xs: "300px", md: "400px" }, overflowY: "scroll" }}
           >
             {getAllRoomImages.room_pictures?.map((imgObj, i) => {
-              const { image_url, image_id } = imgObj;
+              const { image_url, image_id, hostel_name, room_name } = imgObj;
               return (
                 <Grid
                   key={i}
@@ -1954,7 +1968,7 @@ function RoomAllocation() {
                         cursor: "pointer",
                       }}
                       onClick={() => {
-                        deteleHostelImageById(image_id);
+                        deteleRoomImageById(image_id, hostel_name, room_name);
                       }}
                     />
                   </Paper>
