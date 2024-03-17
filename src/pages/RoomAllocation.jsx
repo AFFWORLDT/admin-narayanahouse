@@ -44,8 +44,6 @@ function RoomAllocation() {
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("select");
 
-
-
   const [newAddHostelFormData, setNewAddHostelFormData] = useState({
     full_address: "",
     description: "",
@@ -67,6 +65,22 @@ function RoomAllocation() {
   const [editRoomInfoModel, setEditRoomInfoModel] = useState(false);
   const [currentRoomName, setCurrentRoomName] = useState("");
   const [addRoomImagesModel, setAddRoomImagesModel] = useState(false);
+  const [getAllRoomImages, setGetAllRoomImages] = useState({});
+
+  const getAllRooms = async (hostelName, roomName) => {
+    // alert(`${hostelName} is ${roomName}`);
+    try {
+      const response = await axios.get(
+        `${URL}/room/get_all_room_images?hostel_name=${hostelName}&room_name=${roomName}`
+      );
+      if (response) {
+        setGetAllRoomImages(response.data);
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const onChangeHandlerForAddNewRoomFormData = (event) => {
     setAddNewRoomData({
@@ -311,23 +325,27 @@ function RoomAllocation() {
       console.log(currentHostelName);
       const formData = new FormData();
       formData.append("files", selectedFile);
-      formData.append("hostel_name",currentHostelName);
-      formData.append("room_name",currentRoomName);
+      formData.append("hostel_name", currentHostelName);
+      formData.append("room_name", currentRoomName);
       console.log("dddddd", formData);
 
-      const response = await axios.post(`${URL}/room/upload_room_images`, formData, {
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setProgress(percentCompleted);
-        },
-      });
+      const response = await axios.post(
+        `${URL}/room/upload_room_images`,
+        formData,
+        {
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentCompleted);
+          },
+        }
+      );
 
       console.log("api response---", response);
       if (response) {
         toast.success("room image uploaded successfully ✅");
-        getAllHostelImagesByHostelName(currentHostelName);
+        await getAllRooms(currentHostelName, currentRoomName);
         currentHostelName("");
         setCurrentRoomName("");
       }
@@ -716,6 +734,7 @@ function RoomAllocation() {
                                           setAddRoomImagesModel(true);
                                           setCurrentRoomName(data.room_name);
                                           setCurrentHostelName(name);
+                                          getAllRooms(name, data.room_name);
                                         }}
                                       />
                                     </Box>
@@ -1882,67 +1901,67 @@ function RoomAllocation() {
           >
             <Typography variant="h5">Add Room Images</Typography>
           </Box>
-          {/* <Grid
-              container
-              spacing={2}
-              mt={2}
-              sx={{ height: { xs: "300px", md: "400px" }, overflowY: "scroll" }}
-            >
-              {getAllHostelImages.map((imgObj, i) => {
-                const { image_url, image_id } = imgObj;
-                return (
-                  <Grid
-                    key={i}
-                    item
-                    md={3}
-                    xs={12}
-                    className="d-flex justify-content-center"
+          <Grid
+            container
+            spacing={2}
+            mt={2}
+            sx={{ height: { xs: "300px", md: "400px" }, overflowY: "scroll" }}
+          >
+            {getAllRoomImages.room_pictures?.map((imgObj, i) => {
+              const { image_url, image_id } = imgObj;
+              return (
+                <Grid
+                  key={i}
+                  item
+                  md={3}
+                  xs={12}
+                  className="d-flex justify-content-center"
+                >
+                  <Paper
+                    component={"div"}
+                    sx={{
+                      width: "220px",
+                      height: "160px",
+                      margin: "5px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      position: "relative",
+                    }}
                   >
-                    <Paper
-                      component={"div"}
-                      sx={{
-                        width: "220px",
-                        height: "160px",
-                        margin: "5px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "relative",
+                    <img
+                      src={image_url}
+                      alt={image_url}
+                      className=" rounded-md"
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        width: "auto",
+                        height: "auto",
+                        borderRadius: "5px",
                       }}
-                    >
-                      <img
-                        src={image_url}
-                        alt={image_url}
-                        className=" rounded-md"
-                        style={{
-                          maxWidth: "100%",
-                          maxHeight: "100%",
-                          width: "auto",
-                          height: "auto",
-                          borderRadius: "5px",
-                        }}
-                      />
-                      <DeleteIcon
-                        style={{
-                          position: "absolute",
-                          borderRadius: "50%",
-                          fontSize: "40px",
-                          color: "red",
-                          backgroundColor: "#c4a9e9d1",
-                          padding: "5px",
-                          top: "8px",
-                          right: "8px",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          deteleHostelImageById(image_id);
-                        }}
-                      />
-                    </Paper>
-                  </Grid>
-                );
-              })}
-            </Grid> */}
+                    />
+                    <DeleteIcon
+                      style={{
+                        position: "absolute",
+                        borderRadius: "50%",
+                        fontSize: "40px",
+                        color: "red",
+                        backgroundColor: "#c4a9e9d1",
+                        padding: "5px",
+                        top: "8px",
+                        right: "8px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        deteleHostelImageById(image_id);
+                      }}
+                    />
+                  </Paper>
+                </Grid>
+              );
+            })}
+          </Grid>
 
           <Grid container>
             <Grid
