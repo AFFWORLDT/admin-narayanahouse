@@ -43,6 +43,9 @@ function RoomAllocation() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("select");
+
+
+
   const [newAddHostelFormData, setNewAddHostelFormData] = useState({
     full_address: "",
     description: "",
@@ -63,6 +66,7 @@ function RoomAllocation() {
   });
   const [editRoomInfoModel, setEditRoomInfoModel] = useState(false);
   const [currentRoomName, setCurrentRoomName] = useState("");
+  const [addRoomImagesModel, setAddRoomImagesModel] = useState(false);
 
   const onChangeHandlerForAddNewRoomFormData = (event) => {
     setAddNewRoomData({
@@ -263,7 +267,7 @@ function RoomAllocation() {
 
     try {
       setUploadStatus("uploading");
-      console.log(currentHostelName);
+      // console.log(currentHostelName);
       const formData = new FormData();
       formData.append("files", selectedFile);
       formData.append("hostel_name", currentHostelName);
@@ -286,6 +290,46 @@ function RoomAllocation() {
       if (response) {
         toast.success("image uploaded successfully ✅");
         getAllHostelImagesByHostelName(currentHostelName);
+      }
+
+      setUploadStatus("done");
+    } catch (error) {
+      setUploadStatus("select");
+    }
+  };
+
+  const handleUploadRoomImages = async () => {
+    if (uploadStatus === "done") {
+      clearFileInput();
+
+      return;
+    }
+
+    try {
+      setUploadStatus("uploading");
+      console.log(currentRoomName);
+      console.log(currentHostelName);
+      const formData = new FormData();
+      formData.append("files", selectedFile);
+      formData.append("hostel_name",currentHostelName);
+      formData.append("room_name",currentRoomName);
+      console.log("dddddd", formData);
+
+      const response = await axios.post(`${URL}/room/upload_room_images`, formData, {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setProgress(percentCompleted);
+        },
+      });
+
+      console.log("api response---", response);
+      if (response) {
+        toast.success("room image uploaded successfully ✅");
+        getAllHostelImagesByHostelName(currentHostelName);
+        currentHostelName("");
+        setCurrentRoomName("");
       }
 
       setUploadStatus("done");
@@ -668,6 +712,11 @@ function RoomAllocation() {
                                       <ImageIcon
                                         fontSize="20px"
                                         color={"primary"}
+                                        onClick={() => {
+                                          setAddRoomImagesModel(true);
+                                          setCurrentRoomName(data.room_name);
+                                          setCurrentHostelName(name);
+                                        }}
                                       />
                                     </Box>
                                     <Box>
@@ -1789,6 +1838,190 @@ function RoomAllocation() {
               </Grid>
             </Grid>
           </form>
+        </Box>
+      </Modal>
+
+      <Modal
+        onClose={() => setAddRoomImagesModel(false)}
+        open={addRoomImagesModel}
+      >
+        <Box
+          sx={{
+            [theme.breakpoints.up("xs")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 1,
+              borderRadius: "8px",
+              width: "95%",
+            },
+            [theme.breakpoints.up("md")]: {
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "#EEEEFF",
+              boxShadow: 24,
+              p: 2,
+              borderRadius: "8px",
+              width: "60%",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              [theme.breakpoints.up("xs")]: {
+                marginY: "10px",
+                marginX: "20px",
+              },
+              [theme.breakpoints.up("md")]: {},
+            }}
+          >
+            <Typography variant="h5">Add Room Images</Typography>
+          </Box>
+          {/* <Grid
+              container
+              spacing={2}
+              mt={2}
+              sx={{ height: { xs: "300px", md: "400px" }, overflowY: "scroll" }}
+            >
+              {getAllHostelImages.map((imgObj, i) => {
+                const { image_url, image_id } = imgObj;
+                return (
+                  <Grid
+                    key={i}
+                    item
+                    md={3}
+                    xs={12}
+                    className="d-flex justify-content-center"
+                  >
+                    <Paper
+                      component={"div"}
+                      sx={{
+                        width: "220px",
+                        height: "160px",
+                        margin: "5px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "relative",
+                      }}
+                    >
+                      <img
+                        src={image_url}
+                        alt={image_url}
+                        className=" rounded-md"
+                        style={{
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          width: "auto",
+                          height: "auto",
+                          borderRadius: "5px",
+                        }}
+                      />
+                      <DeleteIcon
+                        style={{
+                          position: "absolute",
+                          borderRadius: "50%",
+                          fontSize: "40px",
+                          color: "red",
+                          backgroundColor: "#c4a9e9d1",
+                          padding: "5px",
+                          top: "8px",
+                          right: "8px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          deteleHostelImageById(image_id);
+                        }}
+                      />
+                    </Paper>
+                  </Grid>
+                );
+              })}
+            </Grid> */}
+
+          <Grid container>
+            <Grid
+              item
+              xs={12}
+              md={12}
+              className={`justify-content-center d-flex  
+              `}
+            >
+              <div className="m-3">
+                <input
+                  ref={inputRef}
+                  type="file"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+
+                {!selectedFile && (
+                  <button className="file-btn" onClick={onChooseFile}>
+                    <span className="material-symbols-outlined">
+                      <CloudUploadIcon />
+                    </span>{" "}
+                  </button>
+                )}
+
+                {selectedFile && (
+                  <>
+                    <div className="file-card">
+                      <span className="material-symbols-outlined icon">
+                        <DescriptionIcon />
+                      </span>
+
+                      <div className="file-info">
+                        <div style={{ flex: 1 }}>
+                          <h6>{selectedFile?.name}</h6>
+
+                          <div className="progress-bg">
+                            <div
+                              className="progress"
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        {uploadStatus === "select" ? (
+                          <button onClick={clearFileInput}>
+                            <span className="material-symbols-outlined close-icon">
+                              <CloseIcon />
+                            </span>
+                          </button>
+                        ) : (
+                          <div className="check-circle">
+                            {uploadStatus === "uploading" ? (
+                              `${progress}%`
+                            ) : uploadStatus === "done" ? (
+                              <span
+                                className="material-symbols-outlined"
+                                style={{ fontSize: "20px" }}
+                              >
+                                <CheckIcon />
+                              </span>
+                            ) : null}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      className="upload-btn"
+                      onClick={handleUploadRoomImages}
+                    >
+                      {uploadStatus === "select" || uploadStatus === "uploading"
+                        ? "Upload"
+                        : "Done"}
+                    </button>
+                  </>
+                )}
+              </div>
+            </Grid>
+          </Grid>
         </Box>
       </Modal>
     </>
