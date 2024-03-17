@@ -139,6 +139,10 @@ main {
 ::-webkit-scrollbar {
   width: 0px;
 }
+.upload-aadhar {
+  display: flex;
+  flex-direction: row;
+}
 
 @media screen and (max-width: 768px) {
   .bars {

@@ -3,10 +3,11 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import {
+  Avatar,
   Box,
   Grid,
   IconButton,
@@ -25,11 +26,15 @@ import WcIcon from "@mui/icons-material/Wc";
 import PhoneEnabledIcon from "@mui/icons-material/PhoneEnabled";
 import EmailIcon from "@mui/icons-material/Email";
 import userImg from "./../assets/img/admin.webp";
+import toast, { Toaster } from "react-hot-toast";
 
 function StudentProfile() {
   const theme = useTheme();
   const { id } = useParams();
+  const navigate = useNavigate()
   const [studentDetails, setStudentDetails] = useState({});
+  const [order, setOrder] = useState([]);
+  const [orderDetails, setOrderDetails] = useState({});
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
 
   const getStudentdetails = async () => {
@@ -47,8 +52,68 @@ function StudentProfile() {
     }
   };
 
+  const getAllocationverification = async () => {
+    const url = `${URL}/allocation/allocation_requests`;
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const res = await axios.get(url, config);
+      setOrder(res?.data);
+    } catch (error) {
+      console.log(error?.message);
+    }
+  };
+
+  const handelDeny = async (orderId) => {
+    const url = `${URL}/allocation/verify_allocation?order_id=${orderId}&transaction_verification_status=false&allotted=false`;
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const res = await axios.put(url, config);
+      if (res?.status === 200) {
+        toast.success("Deny SuccessFully");
+        navigate("/")
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const handelApprov = async (orderId) => {
+    const url = `${URL}/allocation/verify_allocation?order_id=${orderId}&transaction_verification_status=true&allotted=true`;
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const res = await axios.put(url, config);
+      if (res?.status === 200) {
+        toast.success("Approv SuccessFully");
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    order?.forEach((obj) => {
+      if (obj?.student_id === id) {
+        setOrderDetails(obj);
+      }
+    });
+  }, [order]);
+
   useEffect(() => {
     getStudentdetails();
+    getAllocationverification();
   }, []);
 
   return (
@@ -100,7 +165,43 @@ function StudentProfile() {
                       }}
                     />
                   </Box>
-                  <Box className="d-flex justify-content-evenly  mx-auto mt-4 gap-2 gap-lg-0 gap-md-0 gap-sm-2"></Box>
+                  <Box className="d-flex justify-content-evenly  mx-auto mt-4 gap-2 gap-lg-0 gap-md-0 gap-sm-2">
+                    <button
+                      style={{
+                        width: "150px",
+                        backgroundColor: "#FFFFFF",
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "8px",
+                        fontWeight: "bold",
+                        color: "#384D6C",
+                        height: "33px",
+                      }}
+                      onClick={() => {
+                        handelApprov(orderDetails?.order_id);
+                      }}
+                    >
+                      {" "}
+                      Approve
+                    </button>
+                    <button
+                      style={{
+                        width: "150px",
+                        background: "#FF0404",
+
+                        border: "1px solid #D1D5DB",
+                        borderRadius: "8px",
+                        fontWeight: "bold",
+                        color: "#fff",
+                        height: "33px",
+                      }}
+                      onClick={() => {
+                        handelDeny(orderDetails?.order_id);
+                      }}
+                    >
+                      {" "}
+                      Deny
+                    </button>
+                  </Box>
                 </Box>
               </Box>
             </Grid>
@@ -680,6 +781,64 @@ function StudentProfile() {
             </form>
           </Box>
 
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: {
+                  xs: "wrap",
+                  sm: "wrap",
+                  lg: "nowrap",
+                  md: "wrap",
+                },
+                justifyContent: "space-between",
+              }}
+            >
+              <Box>
+                <h2 className="text-center"> Aadhar Front </h2>
+                <form className="notes-upload-form">
+                  <Avatar
+                    src={studentDetails?.aadharfront_pic}
+                    alt=""
+                    sx={{
+                      width: {
+                        xs: "350px",
+                        sm: "380px",
+                        lg: "500px",
+                        md: "700px",
+                      },
+                      height: 280,
+                      margin: { xs: "", sm: "20px 0px" },
+                      borderRadius: "5px",
+                    }}
+                  />
+                </form>
+              </Box>
+
+              <Box>
+                <h2 className="text-center"> Aadhar Back </h2>
+
+                <form>
+                  <Avatar
+                    src={studentDetails?.aadharback_pic}
+                    alt=""
+                    sx={{
+                      width: {
+                        xs: "350px",
+                        sm: "380px",
+                        lg: "500px",
+                        md: "700px",
+                      },
+                      height: { xs: 280, sm: 280, md: 400, lg: 280 },
+                      margin: { xs: "", sm: "20px 0px" },
+                      borderRadius: "5px",
+                    }}
+                  />
+                </form>
+              </Box>
+            </Box>
+          </>
+
           <Box
             container
             sx={{
@@ -688,7 +847,23 @@ function StudentProfile() {
               margin: "25px auto",
             }}
           ></Box>
+          {studentDetails?.verified === false && (
+            <ListItemText sx={{ textAlign: "center", color: "red" }}>
+              Rejected
+            </ListItemText>
+          )}
+          {studentDetails?.verified === null && (
+            <ListItemText sx={{ textAlign: "center", color: "#ff8c1a" }}>
+              Pending
+            </ListItemText>
+          )}
+          {studentDetails?.verified === true && (
+            <ListItemText sx={{ textAlign: "center", color: "Green" }}>
+              Verified
+            </ListItemText>
+          )}
         </Box>
+        <Toaster />
       </>
     </Box>
   );
