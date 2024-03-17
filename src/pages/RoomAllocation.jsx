@@ -44,7 +44,6 @@ function RoomAllocation() {
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("select");
   const [newAddHostelFormData, setNewAddHostelFormData] = useState({
-    name: "",
     full_address: "",
     description: "",
   });
@@ -63,7 +62,7 @@ function RoomAllocation() {
     beds: 0,
   });
   const [editRoomInfoModel, setEditRoomInfoModel] = useState(false);
-  const [currentRoomId, setCurrentRoomId] = useState("");
+  const [currentRoomName, setCurrentRoomName] = useState("");
 
   const onChangeHandlerForAddNewRoomFormData = (event) => {
     setAddNewRoomData({
@@ -74,21 +73,21 @@ function RoomAllocation() {
 
   const handleEditRoomSubmit = async (event) => {
     event.preventDefault();
+    const { room_description, availibility, room_rent, beds } =
+      addNewRoomFormData;
 
-    if (!validateForm()) {
-      return;
-    }
-
-    console.log("...........", currentRoomId);
-    let data = {
-      ...addNewRoomFormData,
-      hostel_name: currentHostelName,
-      room_id: currentRoomId,
-    };
-    console.log(data);
+    alert(`room ${currentRoomName} and hostel ${currentHostelName}`);
 
     try {
-      const response = await axios.put(`${URL}/room/update_room`, data);
+      const response = await axios.put(
+        `${URL}/room/update_room?room_name=${currentRoomName}&hostel_name=${currentHostelName}`,
+        {
+          room_description,
+          availibility,
+          room_rent,
+          beds,
+        }
+      );
       if (response) {
         toast.success("Room updated successfully", 3000);
         setAddNewRoomData({
@@ -103,34 +102,19 @@ function RoomAllocation() {
         await getRoomByHostelName(currentHostelName);
         setEditRoomInfoModel(false);
         setCurrentHostelName("");
-        setCurrentRoomId("");
+        setCurrentRoomName("");
       }
     } catch (error) {
       console.log(error.message);
-      setCurrentHostelName("");
-      setCurrentRoomId("");
+      toast.error(error.message, 3000);
     }
-  };
-
-  const validateForm = () => {
-    if (!addNewRoomFormData.room_name || !addNewRoomFormData.room_type) {
-      toast.error("Room name and type are required", 3000);
-      return false;
-    }
-
-    if (addNewRoomFormData.room_rent <= 0) {
-      toast.error("Room rent must be greater than zero", 3000);
-      return false;
-    }
-
-    return true;
   };
 
   const handleAddNewRoomSubmit = async (event) => {
     event.preventDefault();
-    // console.log("...........", currentHostelName);
-    let data = { ...addNewRoomFormData, name: currentHostelName };
-    // console.log(data);
+    console.log("...........", currentHostelName);
+    let data = { ...addNewRoomFormData, hostel_name: currentHostelName };
+    console.log(data);
     try {
       const response = await axios.post(`${URL}/room/add_room`, data);
       if (response) {
@@ -201,16 +185,17 @@ function RoomAllocation() {
   const handleEditHostellSubmit = async (e) => {
     e.preventDefault();
     console.log(currentHostelName);
-    let data = { ...newAddHostelFormData, name: currentHostelName };
+    // Encode the hostel name for the URL
+    const encodedHostelName = encodeURIComponent(currentHostelName);
+
     try {
       const response = await axios.put(
-        `${URL}/hostel/${currentHostelName}`,
-        data
+        `${URL}/hostel/${encodedHostelName}`,
+        newAddHostelFormData
       );
       if (response) {
-        toast.success(" Hostel updated successfully ", 5000);
+        toast.success("Hostel updated successfully", 5000);
         setNewAddHostelFormData({
-          name: "",
           full_address: "",
           description: "",
         });
@@ -219,7 +204,6 @@ function RoomAllocation() {
       }
     } catch (error) {
       console.log(error.message);
-      setCurrentHostelName("");
     }
   };
 
@@ -676,7 +660,7 @@ function RoomAllocation() {
                                         onClick={() => {
                                           setEditRoomInfoModel(true);
                                           setCurrentHostelName(name);
-                                          setCurrentRoomId(data.room_id);
+                                          setCurrentRoomName(data.room_name);
                                         }}
                                       />{" "}
                                     </Box>
@@ -1627,7 +1611,7 @@ function RoomAllocation() {
 
           <form onSubmit={handleEditRoomSubmit}>
             <Grid container>
-              <Grid item xs={12} md={6}>
+              {/* <Grid item xs={12} md={6}>
                 <div className="m-2">
                   <label
                     htmlFor="room_name"
@@ -1646,27 +1630,27 @@ function RoomAllocation() {
                     onChange={onChangeHandlerForAddNewRoomFormData}
                   />
                 </div>
-              </Grid>{" "}
-              <Grid item xs={12} md={6}>
-                <div className="m-2">
-                  <label
-                    htmlFor="room_type"
-                    className="form-label fw-bold mb-2"
-                    style={{ color: "#384D6C", fontSize: "20px" }}
-                  >
-                    Room Type
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control shadow-sm py-2"
-                    id="room_type"
-                    placeholder="Enter Room Type"
-                    name="room_type"
-                    value={addNewRoomFormData.room_type}
-                    onChange={onChangeHandlerForAddNewRoomFormData}
-                  />
-                </div>
-              </Grid>
+              </Grid> */}
+              {/* <Grid item xs={12} md={6}>
+                  <div className="m-2">
+                    <label
+                      htmlFor="room_type"
+                      className="form-label fw-bold mb-2"
+                      style={{ color: "#384D6C", fontSize: "20px" }}
+                    >
+                      Room Type
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control shadow-sm py-2"
+                      id="room_type"
+                      placeholder="Enter Room Type"
+                      name="room_type"
+                      value={addNewRoomFormData.room_type}
+                      onChange={onChangeHandlerForAddNewRoomFormData}
+                    />
+                  </div>
+                </Grid> */}
               <Grid item xs={12} md={6}>
                 <div className="m-2">
                   <label
