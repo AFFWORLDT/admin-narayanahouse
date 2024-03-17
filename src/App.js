@@ -32,7 +32,7 @@ function App() {
       <Router>
         {user ? <SideBar /> : null}
         <Routes>
-          <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
           <Route path="/" element={<PrivateRoute Component={Dashboard} />} />
           {/* <Route path="/advitisors" element={<PrivateRoute Component={Advitisors} />} /> */}
           <Route

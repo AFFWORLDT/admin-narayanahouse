@@ -33,7 +33,11 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
-import logo from "./../../assets/img/logonarayana.png"
+import logo from "./../../assets/img/logonarayana.png";
+import { Button } from "@mui/material";
+import { getResFromLocalStorage, removeUserFromLocalStorage } from "../../service/localstorage";
+import adminImg from "../../assets/img/logonarayana.png"
+import { toast } from "react-hot-toast";
 
 const drawerWidth = 265;
 
@@ -44,6 +48,8 @@ function SideBar(props) {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
+  const user  = getResFromLocalStorage();
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -67,6 +73,16 @@ function SideBar(props) {
     setSelectedItem(item);
   };
 
+  const handleLogout = () => {
+    console.log("Logging out...");
+    removeUserFromLocalStorage();
+    toast.success("Logged out successfully");
+    setTimeout(() => {
+      navigate("/login");
+      
+    }, 2000);
+  };
+
   const routes = [
     {
       path: "/",
@@ -88,16 +104,16 @@ function SideBar(props) {
       name: "Students",
       icon: <AssignmentIndIcon />,
     },
-    {
-      path: "/news",
-      name: "News",
-      icon: <MonetizationOnIcon />,
-    },
-    {
-      path: "/wallet",
-      name: "Wallet",
-      icon: <MonetizationOnIcon />,
-    },
+    // {
+    //   path: "/news",
+    //   name: "News",
+    //   icon: <MonetizationOnIcon />,
+    // },
+    // {
+    //   path: "/wallet",
+    //   name: "Wallet",
+    //   icon: <MonetizationOnIcon />,
+    // },
   ];
 
   return (
@@ -123,9 +139,12 @@ function SideBar(props) {
             edge="end"
             sx={{ ml: "auto" }}
           >
-            <Avatar src={""} alt="userImg" />
+            <Avatar src={adminImg} alt="adminImg " />
           </IconButton>
-          <Menu
+          <Button sx={{ marginLeft: "20px" }} onClick={handleLogout} variant="contained" color={user ? "error" : "primary"}>
+            {user ? "Logout" : "Login"}
+          </Button>
+          {/* <Menu
             anchorEl={anchorEl}
             id="account-menu"
             open={opendropdown}
@@ -158,7 +177,7 @@ function SideBar(props) {
               </ListItemIcon>
               Logout
             </MenuItem>
-          </Menu>
+          </Menu> */}
         </Toolbar>
       </AppBar>
       <Drawer
