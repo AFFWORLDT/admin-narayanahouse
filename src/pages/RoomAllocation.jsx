@@ -67,6 +67,23 @@ function RoomAllocation() {
   const [addRoomImagesModel, setAddRoomImagesModel] = useState(false);
   const [getAllRoomImages, setGetAllRoomImages] = useState({});
 
+  const getCurrentRoomDataByHostelandRoomNameQuery = async (
+    hostelName,
+    roomName
+  ) => {
+    try {
+      const response = await axios.get(
+        `${URL}/room/get_room?hostel_name=${hostelName}&room_name=${roomName}`
+      );
+
+      if(response){
+        setAddNewRoomData(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const deteleRoomImageById = async (id, hostelName, roomName) => {
     try {
       const response = await axios.delete(
@@ -737,6 +754,10 @@ function RoomAllocation() {
                                           setEditRoomInfoModel(true);
                                           setCurrentHostelName(name);
                                           setCurrentRoomName(data.room_name);
+                                          getCurrentRoomDataByHostelandRoomNameQuery(
+                                            name,
+                                            data.room_name
+                                          );
                                         }}
                                       />{" "}
                                     </Box>
