@@ -139,10 +139,6 @@ main {
 ::-webkit-scrollbar {
   width: 0px;
 }
-.upload-aadhar {
-  display: flex;
-  flex-direction: row;
-}
 
 @media screen and (max-width: 768px) {
   .bars {
@@ -151,5 +147,62 @@ main {
     position: fixed;
     margin: 10px;
     z-index: 100;
+  }
+}
+.main{
+  margin-left: 16%;
+}
+.input-searchfield{
+  background-color: #EEEEFF;
+  width: 320px;
+}
+.alignline{
+  display: inline;
+}
+.serchicon{
+  transform: 'translateY(-50%)'
+}
+@media only screen and (min-width: 868px) {
+  .main{
+    margin-left: 265px;
+  }
+  .serchicon{
+    position: absolute;
+    top: 50px;
+    left: 290px;
+  }
+}
+@media only screen and (max-width: 868px) {
+  .main{
+    margin-left: 265px;
+  }
+  .alignline{
+    display: inline-block;
+    margin-top: -35px;
+    margin-left: 50px;
+  }
+  .serchicon{
+    position: absolute;
+    top: 50px;
+    left: 290px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .main{
+      margin-left: 0px;
+  }
+  .input-searchfield{
+    width: 315px;
+  }
+  .alignline{
+    display: inline-block;
+    margin-top: -35px;
+    margin-left: 50px;
+  }
+  .serchicon{
+    position: absolute;
+    top: 50px;
+    left: 290px;
   }
 }
