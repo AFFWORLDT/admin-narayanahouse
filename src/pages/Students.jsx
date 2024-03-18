@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import "./../App.css"
 import {
   Button,
   Box,
@@ -277,24 +277,23 @@ const Students = () => {
   };
 
   return (
-    <div className=" h-100 " style={{ marginLeft: "16%", backgroundColor: "#EEEEFF"}}>
+    <div className=" h-100 main " style={{ backgroundColor: "#EEEEFF"}}>
+      
       <p className="ms-5 pt-3 fs-5" style={{ fontWeight: "bold", color: "#384D6C" }}>Students</p>
       <div className="d-flex w-100 pb-4" style={{ backgroundColor: "#EEEEFF", marginLeft: "5px", paddingTop: "25px" }}>
 
         <div className="w-100" style={{ position: 'relative' }}>
           <input
-            className="p-2 ms-4 w-25 ps-3"
-            style={{ backgroundColor: "#EEEEFF", border: "2px solid black", borderRadius: "25px", color: "black", fontWeight: "bold" }}
+            className="p-2 ms-4 ps-3 input-searchfield"
+            style={{ border: "2px solid black", borderRadius: "25px", color: "black", fontWeight: "bold" }}
             type="text"
             placeholder="Search"
           />
-          <span style={{ position: 'absolute', top: '50%', right: '965px', transform: 'translateY(-50%)', color: '#888' }}><SearchIcon /></span>
+          <span className="serchicon" style={{ position: 'absolute', top: '50%', right: '965px', transform: 'translateY(-50%)', color: '#888' }}><SearchIcon /></span>
         </div>
 
       </div>
       <div className="d-flex justify-content-between mb-3" style={{ backgroundColor: "#EEEEFF" }}>
-
-
       </div>
       {/* </div> */}
 
@@ -317,9 +316,9 @@ const Students = () => {
                   <TableCell style={{ color: "#384D6C", fontSize: "16px", fontWeight: "bold", textAlign: "left" }} align="center">Name</TableCell>
 
                   <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Hostel</TableCell>
-                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Room No</TableCell>
+                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">RoomNo</TableCell>
                   <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Status</TableCell>
-                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Payment due on</TableCell>
+                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Payment due </TableCell>
                   <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
@@ -333,14 +332,14 @@ const Students = () => {
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
                       >
-                        <TableCell align="left" style={{ color: "#384D6C", fontWeight: "bold" }}> &nbsp; &nbsp; &nbsp;{index + 1} &nbsp; &nbsp; &nbsp;<CropSquareIcon /></TableCell>
+                        <TableCell align="left" style={{ color: "#384D6C", fontWeight: "bold" }}> &nbsp; &nbsp; &nbsp;{index + 1} &nbsp; &nbsp; &nbsp;<CropSquareIcon className="alignline"/></TableCell>
                         <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold" }}> <div className="d-flex"><div style={{ backgroundColor: '#D9D9D9', height: "50px", width: "46px", borderRadius: "26px", marginLeft: "0px" }}>
-                          <img style={{ height: "40px", height: "50px", width: "46px", borderRadius: "26px" }} src={row.profile_image} alt="pic" /></div><div className="ms-2 mt-1">{row?.name}<br /><span style={{ color: 'gray', fontSize: '12px' }}><LocalPhoneIcon sx={{ height: "13px", color: "#384D6C" }} />{row?.contact_no}</span></div></div></TableCell>
+                          <img style={{ height: "40px", height: "50px", width: "46px", borderRadius: "26px" }} src={row.profile_image} alt="pic" /></div><div className="ms-2 mt-1">{row?.name}<br /><span style={{ color: 'gray', fontSize: '12px' }}><LocalPhoneIcon sx={{ height: "13px", color: "#384D6C" }} />{row?.contact_no||"Not available"}</span></div></div></TableCell>
                         <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold" }}>
-                          {row?.bio === null ? "N/A" : row?.hostel_name}
+                          {row?.bio === null ? "N/A" : row?.hostel_name||"Not available"}
                         </TableCell>
                         <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold" }}>
-                          {row?.email === null ? "N/A" : row?.room_name}
+                          {row?.email === null ? "N/A" : row?.room_name||"Not available"}
                         </TableCell>
                         <TableCell align="center">
                           <Button
@@ -351,6 +350,7 @@ const Students = () => {
                             }}
                             style={{
                               height: "34px",
+                              width:"140px",
                               fontSize: "16px",
                               borderRadius: "25px",
                               backgroundColor: row?.verification_status === true ? "#C9D8FF" : "#CBFDB3",
