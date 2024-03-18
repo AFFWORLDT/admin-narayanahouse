@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import "./../App.css"
+import "./../App.css";
 import {
   Button,
   Box,
@@ -11,6 +11,7 @@ import {
   IconButton,
   Menu,
   Divider,
+  NativeSelect,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import Modal from "react-bootstrap/Modal";
@@ -28,11 +29,12 @@ import PauseIcon from "@mui/icons-material/Pause";
 import { fontWeight } from "@mui/system";
 import toast, { Toaster } from "react-hot-toast";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import TextField from "@mui/material/TextField";
-import CropSquareIcon from '@mui/icons-material/CropSquare';
+import CropSquareIcon from "@mui/icons-material/CropSquare";
+import { Link } from "react-router-dom";
 const Students = () => {
   const [student, setStudent] = useState([]);
   const [pageNo, setPageNo] = useState(1);
@@ -41,6 +43,9 @@ const Students = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [pageData, setPageData] = useState([]);
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
+  const [filterdata, setFilterData] = useState([]);
+  const [status, setStatus] = useState("all");
+  const [search, setSearch] = useState("");
 
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
@@ -111,55 +116,29 @@ const Students = () => {
 
   const url = process.env.REACT_APP_PROD_ADMIN_API;
 
-
   const [studentData, setStudentData] = useState([]);
 
   const loadData = async () => {
     try {
-      const responce = await axios.get(`${url}/student/allocation-info`)
-      setStudentData(responce?.data)
-      console.log(studentData)
+      const responce = await axios.get(`${url}/student/allocation-info`);
+      setStudentData(responce?.data);
+      console.log(studentData);
     } catch (err) {
-      console.log(err.message)
+      console.log(err.message);
     }
-  }
+  };
 
   useEffect(() => {
     getStudents();
     loadData();
   }, []);
 
-  useEffect(() => {
-    getStudents();
-  }, [pageNo]);
-  useEffect(() => {
-    const startIndex = page * rowsPerPage;
-    const dataForPage = student?.slice(
-      startIndex,
-      startIndex + rowsPerPage
-    );
-    setPageData(dataForPage);
-  }, [page, rowsPerPage]);
-
-  const slicePage = () => {
-    const startIndex = page * rowsPerPage;
-    const endIndex = Math.min(startIndex + rowsPerPage, student.length);
-    // Ensure pageData is always within bounds of affiliatedata
-    const dataForPage = student.slice(startIndex, endIndex);
-    setPageData(dataForPage);
-  };
-
-  useEffect(() => {
-    const startIndex = page * rowsPerPage;
-    const dataForPage = student?.slice(startIndex, startIndex + rowsPerPage);
-    setPageData(dataForPage);
-  }, [page, rowsPerPage]);
-
   const updatestatus = async (data) => {
     const studentId = data?.student_id;
     const verified = data?.verified;
-    const url = `${URL}/student/${studentId}/update-verification?verified=${verified === true ? 0 : 1
-      }`;
+    const url = `${URL}/student/${studentId}/update-verification?verified=${
+      verified === true ? 0 : 1
+    }`;
 
     try {
       const config = {
@@ -276,29 +255,129 @@ const Students = () => {
     }
   };
 
-  return (
-    <div className=" h-100 main " style={{ backgroundColor: "#EEEEFF"}}>
-      
-      <p className="ms-5 pt-3 fs-5" style={{ fontWeight: "bold", color: "#384D6C" }}>Students</p>
-      <div className="d-flex w-100 pb-4" style={{ backgroundColor: "#EEEEFF", marginLeft: "5px", paddingTop: "25px" }}>
+  useEffect(() => {
+    const filterData = studentData?.filter((student) => {
+      if (
+        !student ||
+        (!student.name && !student.contact_no && !student.room_name)
+      ) {
+        return false;
+      }
 
-        <div className="w-100" style={{ position: 'relative' }}>
+      if (!search || search === "") {
+        return true;
+      }
+
+      const name = student.name?.toLowerCase() || "";
+      const hostel = student.hostel_name
+        ? student.hostel_name.toLowerCase()
+        : "";
+      const contactNo = student.contact_no
+        ? student.contact_no.toLowerCase()
+        : "";
+      const roomName = student.room_name ? student.room_name.toLowerCase() : "";
+      const query = search.toLowerCase();
+
+      return (
+        name.includes(query) ||
+        hostel.includes(query) ||
+        contactNo.includes(query) ||
+        roomName.includes(query)
+      );
+    });
+    setFilterData(filterData);
+  }, [search, studentData]);
+
+  useEffect(() => {
+    const filterData = studentData?.filter((student) => {
+      if (status === "all") {
+        return student;
+      }
+      if (status === "pending") {
+        return student?.verification_status === null;
+      }
+      if (status === "verify") {
+        return student?.verification_status === true;
+      }
+      if (status === "reject") {
+        return student?.verification_status === false;
+      }
+    });
+    setFilterData(filterData);
+  }, [status, studentData]);
+
+  const sortedStudents = [...filterdata].sort((a, b) => {
+    const dueDateA = new Date(a.payment_due_on);
+    const dueDateB = new Date(b.payment_due_on);
+
+    if (dueDateA < dueDateB) {
+      return -1;
+    } else if (dueDateA > dueDateB) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+  useEffect(() => {
+    const startIndex = page * rowsPerPage;
+    const endIndex = Math.min(startIndex + rowsPerPage, filterdata?.length);
+    const dataForPage = sortedStudents?.slice(startIndex, endIndex);
+    setPageData(dataForPage);
+  }, [page, rowsPerPage, filterdata]);
+
+  return (
+    <div className=" h-100 main " style={{ backgroundColor: "#EEEEFF" }}>
+      <p
+        className="ms-5 pt-3 fs-5"
+        style={{ fontWeight: "bold", color: "#384D6C" }}
+      >
+        Students
+      </p>
+      <div
+        className="d-flex w-100 pb-4"
+        style={{
+          backgroundColor: "#EEEEFF",
+          marginLeft: "5px",
+          paddingTop: "25px",
+        }}
+      >
+        <div className="w-100" style={{ position: "relative" }}>
           <input
             className="p-2 ms-4 ps-3 input-searchfield"
-            style={{ border: "2px solid black", borderRadius: "25px", color: "black", fontWeight: "bold" }}
+            style={{
+              border: "2px solid black",
+              borderRadius: "25px",
+              color: "black",
+              fontWeight: "bold",
+            }}
             type="text"
             placeholder="Search"
+            onChange={(e) => setSearch(e.target.value)}
           />
-          <span className="serchicon" style={{ position: 'absolute', top: '50%', right: '965px', transform: 'translateY(-50%)', color: '#888' }}><SearchIcon /></span>
+          <span
+            className="serchicon"
+            style={{
+              position: "absolute",
+              top: "50%",
+              right: "965px",
+              transform: "translateY(-50%)",
+              color: "#888",
+            }}
+          >
+            <SearchIcon />
+          </span>
         </div>
-
       </div>
-      <div className="d-flex justify-content-between mb-3" style={{ backgroundColor: "#EEEEFF" }}>
-      </div>
+      <div
+        className="d-flex justify-content-between mb-3"
+        style={{ backgroundColor: "#EEEEFF" }}
+      ></div>
       {/* </div> */}
 
-      <TableContainer component={Paper} style={{ color: "#384D6C", backgroundColor: "#EEEEFF" }}>
-
+      <TableContainer
+        component={Paper}
+        style={{ color: "#384D6C", backgroundColor: "#EEEEFF" }}
+      >
         {loading ? (
           <LinearProgress />
         ) : (
@@ -309,76 +388,242 @@ const Students = () => {
               aria-label="simple table"
             >
               <TableHead>
-                <TableRow
-                  sx={{ fontWeight: "bold" }}
-                >
-                  <TableCell className="ms-5" style={{ color: "#384D6C", fontSize: "16px" }} align="left"> &nbsp;  &nbsp; No.</TableCell>
-                  <TableCell style={{ color: "#384D6C", fontSize: "16px", fontWeight: "bold", textAlign: "left" }} align="center">Name</TableCell>
+                <TableRow sx={{ fontWeight: "bold" }}>
+                  <TableCell
+                    className="ms-5"
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="left"
+                  >
+                    {" "}
+                    &nbsp; &nbsp; No.
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      color: "#384D6C",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      textAlign: "left",
+                    }}
+                    align="center"
+                  >
+                    Name
+                  </TableCell>
 
-                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Hostel</TableCell>
-                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">RoomNo</TableCell>
-                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Status</TableCell>
-                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Payment due </TableCell>
-                  <TableCell style={{ color: "#384D6C", fontSize: "16px" }} align="center">Action</TableCell>
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="center"
+                  >
+                    Hostel
+                  </TableCell>
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="center"
+                  >
+                    RoomNo
+                  </TableCell>
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="center"
+                  >
+                    <FormControl>
+                      <NativeSelect
+                        onChange={(e) => setStatus(e.target.value)}
+                        sx={{
+                          color: "#384D6C",
+                          fontSize: "16px",
+                          fontWeight: "500",
+                        }}
+                        align="center"
+                      >
+                        <option
+                          value={"all"}
+                          style={{ color: "#384D6C", fontSize: "16px" }}
+                          align="center"
+                        >
+                          All
+                        </option>
+                        <option
+                          value={"pending"}
+                          style={{ color: "#384D6C", fontSize: "16px" }}
+                          align="center"
+                        >
+                          Pending
+                        </option>
+                        <option
+                          value={"verify"}
+                          style={{ color: "#384D6C", fontSize: "16px" }}
+                          align="center"
+                        >
+                          Verified
+                        </option>
+                        <option
+                          value={"reject"}
+                          style={{ color: "#384D6C", fontSize: "16px" }}
+                          align="center"
+                        >
+                          Rejected
+                        </option>
+                      </NativeSelect>
+                    </FormControl>
+                  </TableCell>
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="center"
+                  >
+                    Payment due{" "}
+                  </TableCell>
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="center"
+                  >
+                    Action
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {student?.length > 0 ? (
+                {pageData?.length > 0 ? (
                   <>
-                    {studentData?.map((row, index) => (
+                    {pageData?.map((row, index) => (
                       <TableRow
-                        key={row?.affiliate_id}
+                        key={index}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
                       >
-                        <TableCell align="left" style={{ color: "#384D6C", fontWeight: "bold" }}> &nbsp; &nbsp; &nbsp;{index + 1} &nbsp; &nbsp; &nbsp;<CropSquareIcon className="alignline"/></TableCell>
-                        <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold" }}> <div className="d-flex"><div style={{ backgroundColor: '#D9D9D9', height: "50px", width: "46px", borderRadius: "26px", marginLeft: "0px" }}>
-                          <img style={{ height: "40px", height: "50px", width: "46px", borderRadius: "26px" }} src={row.profile_image} alt="pic" /></div><div className="ms-2 mt-1">{row?.name}<br /><span style={{ color: 'gray', fontSize: '12px' }}><LocalPhoneIcon sx={{ height: "13px", color: "#384D6C" }} />{row?.contact_no||"Not available"}</span></div></div></TableCell>
-                        <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold" }}>
-                          {row?.bio === null ? "N/A" : row?.hostel_name||"Not available"}
+                        <TableCell
+                          align="left"
+                          style={{ color: "#384D6C", fontWeight: "bold" }}
+                        >
+                          {" "}
+                          &nbsp; &nbsp; &nbsp;{index + 1} &nbsp; &nbsp; &nbsp;
+                          <CropSquareIcon className="alignline" />
                         </TableCell>
-                        <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold" }}>
-                          {row?.email === null ? "N/A" : row?.room_name||"Not available"}
+                        <TableCell
+                          align="center"
+                          style={{ color: "#384D6C", fontWeight: "bold" }}
+                        >
+                          {" "}
+                          <div className="d-flex">
+                            <div
+                              style={{
+                                backgroundColor: "#D9D9D9",
+                                height: "50px",
+                                width: "46px",
+                                borderRadius: "26px",
+                                marginLeft: "0px",
+                              }}
+                            >
+                              <img
+                                style={{
+                                  height: "40px",
+                                  height: "50px",
+                                  width: "46px",
+                                  borderRadius: "26px",
+                                }}
+                                src={row.profile_image}
+                                alt="pic"
+                              />
+                            </div>
+                            <div className="ms-2 mt-1">
+                              {row?.name}
+                              <br />
+                              <span style={{ color: "gray", fontSize: "12px" }}>
+                                <LocalPhoneIcon
+                                  sx={{ height: "13px", color: "#384D6C" }}
+                                />
+                                {row?.contact_no || "Not available"}
+                              </span>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{ color: "#384D6C", fontWeight: "bold" }}
+                        >
+                          {row?.bio === null
+                            ? "N/A"
+                            : row?.hostel_name || "Not available"}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{ color: "#384D6C", fontWeight: "bold" }}
+                        >
+                          {row?.email === null
+                            ? "N/A"
+                            : row?.room_name || "Not available"}
                         </TableCell>
                         <TableCell align="center">
                           <Button
                             variant="contained"
-                            color={row?.verification_status === true ? "warning" : "primary"}
+                            color={
+                              row?.verification_status === true
+                                ? "warning"
+                                : "primary"
+                            }
                             onClick={() => {
                               updatestatus(row);
                             }}
                             style={{
                               height: "34px",
-                              width:"140px",
+                              width: "140px",
                               fontSize: "16px",
                               borderRadius: "25px",
-                              backgroundColor: row?.verification_status === true ? "#C9D8FF" : "#CBFDB3",
-                              color: row?.verification_status === true ? "#264C95" : "#248A00"
+                              backgroundColor:
+                                row?.verification_status === true
+                                  ? "#C9D8FF"
+                                  : "#CBFDB3",
+                              color:
+                                row?.verification_status === true
+                                  ? "#264C95"
+                                  : "#248A00",
                             }}
                           >
                             {row?.verification_status === false ? (
                               <CloudDoneIcon />
                             ) : (
                               <PauseIcon />
-                            )} &nbsp; {row?.verification_status === true ? "Pending" : "Verified"}
+                            )}{" "}
+                            &nbsp;{" "}
+                            {row?.verification_status === true
+                              ? "Pending"
+                              : "Verified"}
                           </Button>
                         </TableCell>
 
-                        <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold" }}>
-                          <Button className="bg-primary ps-3 pe-3" style={{ color: "white", borderRadius: "20px" }}>{row?.student_id === null ? "N/A" : new Date(row?.payment_due_on).toLocaleDateString('en-IN')}</Button>
+                        <TableCell
+                          align="center"
+                          style={{ color: "#384D6C", fontWeight: "bold" }}
+                        >
+                          <Button
+                            className="bg-primary ps-3 pe-3"
+                            style={{ color: "white", borderRadius: "20px" }}
+                          >
+                            {row?.student_id === null
+                              ? "N/A"
+                              : new Date(
+                                  row?.payment_due_on
+                                ).toLocaleDateString("en-IN")}
+                          </Button>
                         </TableCell>
-                        <TableCell align="center" style={{ color: "#384D6C", fontWeight: "bold", fontSize: "25px", cursor: "pointer" }}>
-
+                        <TableCell
+                          align="center"
+                          style={{
+                            color: "#384D6C",
+                            fontWeight: "bold",
+                            fontSize: "25px",
+                            cursor: "pointer",
+                          }}
+                        >
                           <IconButton
-
                             aria-label="open menu"
                             aria-controls="account-menu"
                             aria-haspopup="true"
                             onClick={handleClick}
                             edge="end"
                             sx={{ ml: "auto" }}
-                          >...</IconButton>
+                          >
+                            ...
+                          </IconButton>
                           <Menu
                             onClick={handleCloses}
                             anchorEl={anchorEl}
@@ -401,26 +646,59 @@ const Students = () => {
                           >
                             <h6 style={{ textAlign: "center" }}>Take Action</h6>
                             <Divider />
-                            <MenuItem sx={{ backgroundColor: "#FFC2C2", margin: "5px 10px", borderRadius: "25px" }}>Room Allocation</MenuItem>
-                            <MenuItem sx={{ backgroundColor: "#FFC2C2", margin: "5px 10px", borderRadius: "25px" }} onClick={handleCloses}>&nbsp; View Payments</MenuItem>
-                            <MenuItem sx={{ backgroundColor: "#FFC2C2", margin: "5px 10px", borderRadius: "25px", paddingLeft: "20px" }}> &nbsp; &nbsp; View Profile</MenuItem>
+                            <MenuItem
+                              sx={{
+                                backgroundColor: "#FFC2C2",
+                                margin: "5px 10px",
+                                borderRadius: "25px",
+                              }}
+                            >
+                              Room Allocation
+                            </MenuItem>
+                            <MenuItem
+                              sx={{
+                                backgroundColor: "#FFC2C2",
+                                margin: "5px 10px",
+                                borderRadius: "25px",
+                              }}
+                              onClick={handleCloses}
+                            >
+                              &nbsp; View Payments
+                            </MenuItem>
+                            <Link
+                              to={`/studentprofile/${row?.student_id}`}
+                              style={{ textDecoration: "none", color: "black" }}
+                            >
+                              <MenuItem
+                                sx={{
+                                  backgroundColor: "#FFC2C2",
+                                  margin: "5px 10px",
+                                  borderRadius: "25px",
+                                  paddingLeft: "20px",
+                                }}
+                              >
+                                {" "}
+                                &nbsp; &nbsp; View Profile
+                              </MenuItem>
+                            </Link>
                           </Menu>
-
-
-
                         </TableCell>
                       </TableRow>
                     ))}
                   </>
                 ) : (
-                  <h1>No Students Found</h1>
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      No Students Found
+                    </TableCell>
+                  </TableRow>
                 )}
               </TableBody>
             </Table>
             <TablePagination
               rowsPerPageOptions={[10, 25, 50, 100]}
               component="div"
-              count={student.length}
+              count={sortedStudents?.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
