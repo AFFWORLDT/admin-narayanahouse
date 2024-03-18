@@ -31,7 +31,7 @@ import toast, { Toaster } from "react-hot-toast";
 function StudentProfile() {
   const theme = useTheme();
   const { id } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [studentDetails, setStudentDetails] = useState({});
   const [order, setOrder] = useState([]);
   const [orderDetails, setOrderDetails] = useState({});
@@ -68,41 +68,6 @@ function StudentProfile() {
     }
   };
 
-  const handelDeny = async (orderId) => {
-    const url = `${URL}/allocation/verify_allocation?order_id=${orderId}&transaction_verification_status=false&allotted=false`;
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const res = await axios.put(url, config);
-      if (res?.status === 200) {
-        toast.success("Deny SuccessFully");
-        navigate("/")
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-  const handelApprov = async (orderId) => {
-    const url = `${URL}/allocation/verify_allocation?order_id=${orderId}&transaction_verification_status=true&allotted=true`;
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const res = await axios.put(url, config);
-      if (res?.status === 200) {
-        toast.success("Approv SuccessFully");
-        navigate("/");
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   useEffect(() => {
     order?.forEach((obj) => {
       if (obj?.student_id === id) {
@@ -110,6 +75,29 @@ function StudentProfile() {
       }
     });
   }, [order]);
+
+  const updatestatus = async () => {
+    const studentId = id;
+    const verified = studentDetails?.verified;
+    const url = `${URL}/student/${studentId}/update-verification?verified=${
+      verified === true ? 0 : 1
+    }`;
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const res = await axios.patch(url, config);
+      if (res?.status === 200) {
+        toast.success(res?.data?.message);
+        getStudentdetails();
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   useEffect(() => {
     getStudentdetails();
@@ -164,43 +152,6 @@ function StudentProfile() {
                         height: "150px",
                       }}
                     />
-                  </Box>
-                  <Box className="d-flex justify-content-evenly  mx-auto mt-4 gap-2 gap-lg-0 gap-md-0 gap-sm-2">
-                    <button
-                      style={{
-                        width: "150px",
-                        backgroundColor: "#FFFFFF",
-                        border: "1px solid #D1D5DB",
-                        borderRadius: "8px",
-                        fontWeight: "bold",
-                        color: "#384D6C",
-                        height: "33px",
-                      }}
-                      onClick={() => {
-                        handelApprov(orderDetails?.order_id);
-                      }}
-                    >
-                      {" "}
-                      Approve
-                    </button>
-                    <button
-                      style={{
-                        width: "150px",
-                        background: "#FF0404",
-
-                        border: "1px solid #D1D5DB",
-                        borderRadius: "8px",
-                        fontWeight: "bold",
-                        color: "#fff",
-                        height: "33px",
-                      }}
-                      onClick={() => {
-                        handelDeny(orderDetails?.order_id);
-                      }}
-                    >
-                      {" "}
-                      Deny
-                    </button>
                   </Box>
                 </Box>
               </Box>
@@ -843,26 +794,45 @@ function StudentProfile() {
             container
             sx={{
               border: "1px solid #D0D0D0",
-              width: "90%",
+              width: "100%",
               margin: "25px auto",
             }}
           ></Box>
-          {studentDetails?.verified === false && (
-            <ListItemText sx={{ textAlign: "center", color: "red" }}>
-              Rejected
-            </ListItemText>
-          )}
-          {studentDetails?.verified === null && (
-            <ListItemText sx={{ textAlign: "center", color: "#ff8c1a" }}>
-              Pending
-            </ListItemText>
-          )}
-          {studentDetails?.verified === true && (
-            <ListItemText sx={{ textAlign: "center", color: "Green" }}>
-              Verified
-            </ListItemText>
-          )}
+          <Grid container justifyContent={"center"} spacing={3}>
+            <Grid item md={3} xs={6} className="d-flex justify-content-center">
+              <button
+                style={{
+                  backgroundColor: studentDetails?.verified ? "Red" : "Green",
+                  border: "1px solid #D1D5DB",
+                  borderRadius: "8px",
+                  fontWeight: "700",
+                  color: "#ffff",
+                  width: "160px",
+                  padding: "10px 10px",
+                }}
+                onClick={updatestatus}
+              >
+                {studentDetails?.verified ? "Reject" : "Verify"}
+              </button>
+            </Grid>
+          </Grid>
         </Box>
+        {studentDetails?.verified === false && (
+          <ListItemText sx={{ textAlign: "center", color: "red" }}>
+            Application is rejected
+          </ListItemText>
+        )}
+        {studentDetails?.verified === null && (
+          <ListItemText sx={{ textAlign: "center", color: "#ff8c1a" }}>
+            Application is Pending
+          </ListItemText>
+        )}
+        {studentDetails?.verified === true && (
+          <ListItemText sx={{ textAlign: "center", color: "Green" }}>
+            Application is Verified
+          </ListItemText>
+        )}
+
         <Toaster />
       </>
     </Box>
