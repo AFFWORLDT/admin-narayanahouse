@@ -352,9 +352,18 @@ function StudentProfile() {
                       readOnly
                       value={
                         studentDetails?.dob
-                          ? new Date(studentDetails?.dob)
-                              .toISOString()
-                              .substr(0, 10)
+                          ? (() => {
+                              const dobDate = new Date(studentDetails?.dob);
+                              if (isNaN(dobDate.getTime())) {
+                                console.error(
+                                  "Invalid date format:",
+                                  studentDetails?.dob
+                                );
+                                return null;
+                              } else {
+                                return dobDate.toISOString().substr(0, 10);
+                              }
+                            })()
                           : null
                       }
                       placeholder="Enter date of joining"
