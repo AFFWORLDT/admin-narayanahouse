@@ -864,7 +864,7 @@ function StudentProfile() {
                     width: "160px",
                     padding: "10px 10px",
                   }}
-                  onClick={updatestatusFalse}
+                  onClick={updatestatusTrue}
                 >
                   Verified
                 </button>
@@ -911,7 +911,7 @@ function StudentProfile() {
                       width: "160px",
                       padding: "10px 10px",
                     }}
-                    onClick={updatestatusFalse}
+                    onClick={updatestatusTrue}
                   >
                     Verified
                   </button>
