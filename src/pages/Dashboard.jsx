@@ -1,4 +1,19 @@
-import { Avatar, Badge, Box, Divider, Typography } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  Divider,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
@@ -14,6 +29,10 @@ const Dashboard = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const [order, setOrder] = useState([]);
   const [filterStudent, setFilteredStudents] = useState([]);
+  const [pendingStudent, setPendingStudent] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [pageData, setPageData] = useState([]);
 
   const getStudents = async () => {
     const url = `${URL}/student/?page=${1}`;
@@ -73,6 +92,15 @@ const Dashboard = () => {
     getAllocationverification();
   }, []);
 
+  useEffect(() => {
+    const filterStudent = Student?.filter((obj) => {
+      if (obj.verified === null) {
+        return obj;
+      }
+    });
+    setPendingStudent(filterStudent);
+  }, [Student]);
+
   const handelDeny = async (id) => {
     const url = `${URL}/allocation/verify_allocation?order_id=${id}&transaction_verification_status=false&allotted=false`;
     try {
@@ -107,6 +135,20 @@ const Dashboard = () => {
       console.log(error.message);
     }
   };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  useEffect(() => {
+    const startIndex = page * rowsPerPage;
+    const endIndex = Math.min(startIndex + rowsPerPage, pendingStudent?.length);
+    const dataForPage = pendingStudent?.slice(startIndex, endIndex);
+    setPageData(dataForPage);
+  }, [page, rowsPerPage, pendingStudent]);
 
   return (
     <>
@@ -472,7 +514,84 @@ const Dashboard = () => {
             );
           })}
         </Box>
+
         <Toaster />
+        <Box>
+          <TableContainer
+            component={Paper}
+            sx={{
+              width: "98%",
+              minHeight: 200,
+              background: "#fff",
+              borderRadius: "8px",
+              margin: {
+                xs: "30px 5px",
+                lg: "30px 10px",
+                sm: "30px 10px",
+              },
+              padding: "10px 0px",
+            }}
+          >
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="">Profile</TableCell>
+                  <TableCell align="center">Name</TableCell>
+                  <TableCell align="center">Number</TableCell>
+                  <TableCell align="center">Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {pageData?.length > 0 ? (
+                  pageData?.map((obj) => {
+                    return (
+                      <>
+                        <TableRow
+                          key={obj.student_id}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell>
+                            <Avatar
+                              src={obj?.profile_pic}
+                              alt="Profile Pic"
+                              sx={{ height: 50, width: 50 }}
+                            />
+                          </TableCell>
+                          <TableCell align="center">{obj?.name}</TableCell>
+                          <TableCell align="center">
+                            {obj?.contact_no}
+                          </TableCell>
+                          <TableCell align="center">
+                            <Link to={`/studentprofile/${obj.student_id}`}>
+                              <Button variant="outlined">View Profile</Button>
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      </>
+                    );
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      No Students Found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 15, 20]}
+              component="div"
+              count={pageData?.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TableContainer>
+        </Box>
       </Box>
     </>
   );
