@@ -21,6 +21,8 @@ import axios from "axios";
 import logo from "./../assets/img/logonarayana.png";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+
 const Dashboard = () => {
   const [Student, setStudent] = useState([]);
   const [hostel, setHostel] = useState([]);
@@ -30,7 +32,6 @@ const Dashboard = () => {
   const [order, setOrder] = useState([]);
   const [filterStudent, setFilteredStudents] = useState([]);
   const [pendingStudent, setPendingStudent] = useState([]);
-  const [rejectStudent,setRejectStudent]=useState([])
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [pageData, setPageData] = useState([]);
@@ -100,14 +101,6 @@ const Dashboard = () => {
       }
     });
     setPendingStudent(filterStudent);
-  }, [Student]);
-  useEffect(() => {
-    const filterStudent = Student?.filter((obj) => {
-      if (obj.verified === false) {
-        return obj;
-      }
-    });
-    setRejectStudent(filterStudent);
   }, [Student]);
 
   const handelDeny = async (id) => {
@@ -205,6 +198,23 @@ const Dashboard = () => {
             flexWrap: "wrap",
           }}
         >
+          <Box
+            sx={{
+              margin: { xs: "10px  80px", sm: "0" },
+            }}
+          >
+            <Avatar
+              className="d-block mx-auto"
+              alt="Remy Sharp"
+              src={logo}
+              sx={{
+                width: 150,
+                height: 150,
+                borderRadius: "10px",
+                boxShadow: "6px 6px 10px 2px #ccc",
+              }}
+            />
+          </Box>
           <Box sx={{ width: { sm: "100%", lg: 300 } }}>
             <Typography
               sx={{
@@ -228,22 +238,6 @@ const Dashboard = () => {
               This is NARAYANA HOUSE admin dashboard designed to reflect an
               overview of the most important events inside the panel.
             </Typography>
-          </Box>
-          <Box
-            sx={{
-              margin: { xs: "10px  80px", sm: "0" },
-            }}
-          >
-            <Avatar
-              alt="Remy Sharp"
-              src={logo}
-              sx={{
-                width: 150,
-                height: 150,
-                borderRadius: "10px",
-                boxShadow: "6px 6px 10px 2px #ccc",
-              }}
-            />
           </Box>
 
           <Box>
@@ -269,7 +263,7 @@ const Dashboard = () => {
         <Box
           sx={{
             width: "98%",
-            minHeight: 400,
+            // minHeight: 400,
             background: "#fff",
             borderRadius: "8px",
             margin: { xs: "30px 5px", lg: "30px 10px", sm: "30px 10px" },
@@ -312,7 +306,7 @@ const Dashboard = () => {
                 <Box
                   sx={{
                     width: { xs: "98%", lg: "97%", sm: "98%" },
-                    height: { xs: 500, lg: 240 },
+
                     border: "1px solid black",
                     margin: "20px auto",
                     borderRadius: "11px",
@@ -443,20 +437,27 @@ const Dashboard = () => {
                       </Box>
                     </Typography>
                   </Box>
-                  <Box component={"div"} sx={{ margin: "20px 80px" }}>
-                    <Link to={`/studentprofile/${student_id}`}>
+                  <Box
+                    component={"div"}
+                    sx={{ margin: "20px 80px" }}
+                    className="d-flex  justify-content-center gap-3 flex-column align-items-center"
+                  >
+                    <Link
+                      to={`/studentprofile/${student_id}`}
+                      style={{ textDecoration: "none" }}
+                    >
                       <button
                         style={{
-                          width: "350px",
-                          border: "1.5px solid black",
-                          height: "35px",
+                          width: "300px",
+                          border: "1.5px solid #346feb",
                           borderRadius: "10px",
                           color: "#384D6C",
                           fontSize: "16px",
                           fontWeight: "bold",
                           background: "#fff",
-                          margin: "10px 30px",
+                          margin: "0px auto",
                           display: "block",
+                          padding: "7px 0",
                         }}
                       >
                         View Student Profile
@@ -464,15 +465,15 @@ const Dashboard = () => {
                     </Link>
                     <button
                       style={{
-                        width: "350px",
+                        width: "300px",
                         border: "1.5px solid black",
-                        height: "35px",
+                        padding: "7px 0",
                         borderRadius: "10px",
                         color: "#fff",
                         fontSize: "16px",
                         fontWeight: "bold",
-                        background: "#FF0404",
-                        margin: "10px 30px",
+                        background: "#ff6b6b",
+                        margin: "0px auto",
                         display: "block",
                       }}
                       onClick={() => {
@@ -483,32 +484,33 @@ const Dashboard = () => {
                     </button>
                     <button
                       style={{
-                        width: "350px",
-                        border: "none",
-                        height: "35px",
-                        borderRadius: "none",
-                        color: "#441B1B",
-                        fontSize: "20px",
+                        width: "300px",
+                        border: "1.5px solid black",
+                        padding: "7px 0",
+                        borderRadius: "10px",
+                        color: "#384D6C",
+                        fontSize: "16px",
                         fontWeight: "bold",
-                        background: "#fff",
-                        margin: "10px 30px",
+                        background: "",
+                        margin: "0px auto",
                         display: "block",
-                        cursor: "default",
                       }}
                     >
                       Room Rent : ₹ {room_rent}/-{" "}
                     </button>
                     <button
                       style={{
-                        width: "350px",
+                        width: "300px",
                         border: "1.5px solid black",
-                        height: "35px",
+                        padding: "7px 0",
                         borderRadius: "10px",
-                        color: "#fff",
+                        color: "white",
                         fontSize: "16px",
                         fontWeight: "bold",
+                        margin: "0px auto",
+                        display: "block",
                         background: "#384D6C",
-                        margin: "10px 30px",
+                        margin: "0px 30px",
                         display: "block",
                       }}
                       onClick={() => {
@@ -525,7 +527,28 @@ const Dashboard = () => {
         </Box>
 
         <Toaster />
-        <Box>
+        <Box  sx={{
+            width: "98%",
+            // minHeight: 400,
+            background: "#fff",
+            borderRadius: "8px",
+            margin: { xs: "30px 5px", lg: "30px 10px", sm: "30px 10px" },
+            padding: "10px 0px",
+          }}>
+          
+          <p  style={{
+              margin: "10px 30px",
+              color: "#384D6C",
+              fontSize: "20px",
+              fontWeight: "bold",
+            }}>Pending Profile Verification Requests </p>
+              <Divider
+            sx={{
+              width: "100%",
+              height: 2,
+              bgcolor: "#CFCDCD",
+            }}
+          />
           <TableContainer
             component={Paper}
             sx={{
@@ -541,12 +564,11 @@ const Dashboard = () => {
               padding: "10px 0px",
             }}
           >
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ minWidth: 100 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="">Profile</TableCell>
-                  <TableCell align="center">Name</TableCell>
-                  <TableCell align="center">Number</TableCell>
+                  <TableCell align="center">Profile</TableCell>
+
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
@@ -561,17 +583,50 @@ const Dashboard = () => {
                             "&:last-child td, &:last-child th": { border: 0 },
                           }}
                         >
-                          <TableCell>
-                            <Avatar
-                              src={obj?.profile_pic}
-                              alt="Profile Pic"
-                              sx={{ height: 50, width: 50 }}
-                            />
+                          <TableCell
+                            align="center"
+                            className="d-flex justify-content-center"
+                            style={{ color: "#384D6C", fontWeight: "bold" }}
+                          >
+                            {" "}
+                            <div className="d-flex ">
+                              <div
+                                style={{
+                                  backgroundColor: "#D9D9D9",
+                                  height: "40px",
+                                  width: "40px",
+                                  borderRadius: "26px",
+                                }}
+                              >
+                                <img
+                                  style={{
+                                    height: "40px",
+                                    width: "40px",
+                                    borderRadius: "26px",
+                                  }}
+                                  src={`${
+                                    obj.profile_image
+                                      ? obj.profile_image
+                                      : "https://w7.pngwing.com/pngs/223/244/png-transparent-computer-icons-avatar-user-profile-avatar-heroes-rectangle-black.png"
+                                  }`}
+                                  alt="pic"
+                                />
+                              </div>
+                              <div className="ms-2 mt-1">
+                                {obj?.name}
+                                <br />
+                                <span
+                                  style={{ color: "gray", fontSize: "12px" }}
+                                >
+                                  <LocalPhoneIcon
+                                    sx={{ height: "13px", color: "#384D6C" }}
+                                  />
+                                  {obj?.contact_no || "Not available"}
+                                </span>
+                              </div>
+                            </div>
                           </TableCell>
-                          <TableCell align="center">{obj?.name}</TableCell>
-                          <TableCell align="center">
-                            {obj?.contact_no}
-                          </TableCell>
+
                           <TableCell align="center">
                             <Link to={`/studentprofile/${obj.student_id}`}>
                               <Button variant="outlined">View Profile</Button>
@@ -599,74 +654,6 @@ const Dashboard = () => {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
-          </TableContainer>
-        </Box>
-        <Box>
-          <TableContainer
-            component={Paper}
-            sx={{
-              width: "98%",
-              minHeight: 200,
-              background: "#fff",
-              borderRadius: "8px",
-              margin: {
-                xs: "30px 5px",
-                lg: "30px 10px",
-                sm: "30px 10px",
-              },
-              padding: "10px 0px",
-            }}
-          >
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="">Profile</TableCell>
-                  <TableCell align="center">Name</TableCell>
-                  <TableCell align="center">Number</TableCell>
-                  <TableCell align="center">Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rejectStudent?.length > 0 ? (
-                  rejectStudent?.map((obj) => {
-                    return (
-                      <>
-                        <TableRow
-                          key={obj.student_id}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell>
-                            <Avatar
-                              src={obj?.profile_pic}
-                              alt="Profile Pic"
-                              sx={{ height: 50, width: 50 }}
-                            />
-                          </TableCell>
-                          <TableCell align="center">{obj?.name}</TableCell>
-                          <TableCell align="center">
-                            {obj?.contact_no}
-                          </TableCell>
-                          <TableCell align="center">
-                            <Link to={`/studentprofile/${obj.student_id}`}>
-                              <Button variant="outlined">View Profile</Button>
-                            </Link>
-                          </TableCell>
-                        </TableRow>
-                      </>
-                    );
-                  })
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={7} align="center">
-                      No Students Found
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-           
           </TableContainer>
         </Box>
       </Box>
