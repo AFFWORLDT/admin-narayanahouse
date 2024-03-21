@@ -527,7 +527,28 @@ const Dashboard = () => {
         </Box>
 
         <Toaster />
-        <Box>
+        <Box  sx={{
+            width: "98%",
+            // minHeight: 400,
+            background: "#fff",
+            borderRadius: "8px",
+            margin: { xs: "30px 5px", lg: "30px 10px", sm: "30px 10px" },
+            padding: "10px 0px",
+          }}>
+          
+          <p  style={{
+              margin: "10px 30px",
+              color: "#384D6C",
+              fontSize: "20px",
+              fontWeight: "bold",
+            }}>Pending Profile Verification Requests </p>
+              <Divider
+            sx={{
+              width: "100%",
+              height: 2,
+              bgcolor: "#CFCDCD",
+            }}
+          />
           <TableContainer
             component={Paper}
             sx={{
