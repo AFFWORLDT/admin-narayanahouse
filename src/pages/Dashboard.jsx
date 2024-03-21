@@ -30,6 +30,7 @@ const Dashboard = () => {
   const [order, setOrder] = useState([]);
   const [filterStudent, setFilteredStudents] = useState([]);
   const [pendingStudent, setPendingStudent] = useState([]);
+  const [rejectStudent,setRejectStudent]=useState([])
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [pageData, setPageData] = useState([]);
@@ -99,6 +100,14 @@ const Dashboard = () => {
       }
     });
     setPendingStudent(filterStudent);
+  }, [Student]);
+  useEffect(() => {
+    const filterStudent = Student?.filter((obj) => {
+      if (obj.verified === false) {
+        return obj;
+      }
+    });
+    setRejectStudent(filterStudent);
   }, [Student]);
 
   const handelDeny = async (id) => {
@@ -590,6 +599,74 @@ const Dashboard = () => {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
+          </TableContainer>
+        </Box>
+        <Box>
+          <TableContainer
+            component={Paper}
+            sx={{
+              width: "98%",
+              minHeight: 200,
+              background: "#fff",
+              borderRadius: "8px",
+              margin: {
+                xs: "30px 5px",
+                lg: "30px 10px",
+                sm: "30px 10px",
+              },
+              padding: "10px 0px",
+            }}
+          >
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="">Profile</TableCell>
+                  <TableCell align="center">Name</TableCell>
+                  <TableCell align="center">Number</TableCell>
+                  <TableCell align="center">Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rejectStudent?.length > 0 ? (
+                  rejectStudent?.map((obj) => {
+                    return (
+                      <>
+                        <TableRow
+                          key={obj.student_id}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell>
+                            <Avatar
+                              src={obj?.profile_pic}
+                              alt="Profile Pic"
+                              sx={{ height: 50, width: 50 }}
+                            />
+                          </TableCell>
+                          <TableCell align="center">{obj?.name}</TableCell>
+                          <TableCell align="center">
+                            {obj?.contact_no}
+                          </TableCell>
+                          <TableCell align="center">
+                            <Link to={`/studentprofile/${obj.student_id}`}>
+                              <Button variant="outlined">View Profile</Button>
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      </>
+                    );
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      No Students Found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+           
           </TableContainer>
         </Box>
       </Box>
