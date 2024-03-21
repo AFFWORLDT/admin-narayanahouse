@@ -12,6 +12,7 @@ import {
   Menu,
   Divider,
   NativeSelect,
+  ListItemText,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import Modal from "react-bootstrap/Modal";
@@ -34,7 +35,8 @@ import AddIcon from "@mui/icons-material/Add";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import TextField from "@mui/material/TextField";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import CancelIcon from "@mui/icons-material/Cancel";
 const Students = () => {
   const [student, setStudent] = useState([]);
   const [pageNo, setPageNo] = useState(1);
@@ -46,6 +48,7 @@ const Students = () => {
   const [filterdata, setFilterData] = useState([]);
   const [status, setStatus] = useState("all");
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
@@ -325,6 +328,11 @@ const Students = () => {
     setPageData(dataForPage);
   }, [page, rowsPerPage, filterdata]);
 
+  const handleNavigate = (studentId) => {
+    console.log("Navigating to student profile:", studentId);
+    navigate(`/studentprofile/${studentId}`);
+  };
+
   return (
     <div className=" h-100 main " style={{ backgroundColor: "#EEEEFF" }}>
       <p
@@ -337,7 +345,7 @@ const Students = () => {
         className="d-flex w-100 pb-4"
         style={{
           backgroundColor: "#EEEEFF",
-          marginLeft: "5px",
+          marginLeft: "0px",
           paddingTop: "25px",
         }}
       >
@@ -485,7 +493,7 @@ const Students = () => {
                   <>
                     {pageData?.map((row, index) => (
                       <TableRow
-                        key={index}
+                        key={row?.student_id}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
@@ -553,41 +561,52 @@ const Students = () => {
                             : row?.room_name || "Not available"}
                         </TableCell>
                         <TableCell align="center">
-                          <Button
-                            variant="contained"
-                            color={
-                              row?.verification_status === true
-                                ? "warning"
-                                : "primary"
-                            }
-                            onClick={() => {
-                              updatestatus(row);
-                            }}
-                            style={{
-                              height: "34px",
-                              width: "140px",
-                              fontSize: "16px",
-                              borderRadius: "25px",
-                              backgroundColor:
-                                row?.verification_status === true
-                                  ? "#C9D8FF"
-                                  : "#CBFDB3",
-                              color:
-                                row?.verification_status === true
-                                  ? "#264C95"
-                                  : "#248A00",
-                            }}
-                          >
-                            {row?.verification_status === false ? (
-                              <CloudDoneIcon />
-                            ) : (
-                              <PauseIcon />
-                            )}{" "}
-                            &nbsp;{" "}
-                            {row?.verification_status === true
-                              ? "Pending"
-                              : "Verified"}
-                          </Button>
+                          {row?.verification_status === false && (
+                            <Button
+                              variant="contained"
+                              style={{
+                                height: "34px",
+                                width: "140px",
+                                fontSize: "16px",
+                                borderRadius: "25px",
+                                backgroundColor: "red",
+                              }}
+                            >
+                              <CancelIcon /> <ListItemText>Reject</ListItemText>
+                            </Button>
+                          )}
+                          {row?.verification_status === null && (
+                            <Button
+                              variant="contained"
+                              style={{
+                                height: "34px",
+                                width: "140px",
+                                fontSize: "16px",
+                                borderRadius: "25px",
+                                backgroundColor: "#F7B946",
+                              }}
+                            >
+                              <PauseIcon />{" "}
+                              <ListItemText> Pending</ListItemText>
+                            </Button>
+                          )}
+                          {row?.verification_status === true && (
+                            <Button
+                              variant="contained"
+                              style={{
+                                height: "34px",
+                                width: "140px",
+                                fontSize: "16px",
+                                borderRadius: "25px",
+                                background: "#CBFDB3",
+                                color: "green",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              <CloudDoneIcon sx={{ fill: "green" }} />{" "}
+                              <ListItemText> Verified</ListItemText>
+                            </Button>
+                          )}
                         </TableCell>
 
                         <TableCell
@@ -614,74 +633,20 @@ const Students = () => {
                             cursor: "pointer",
                           }}
                         >
-                          <IconButton
-                            aria-label="open menu"
-                            aria-controls="account-menu"
-                            aria-haspopup="true"
-                            onClick={handleClick}
-                            edge="end"
-                            sx={{ ml: "auto" }}
-                          >
-                            ...
-                          </IconButton>
-                          <Menu
-                            onClick={handleCloses}
-                            anchorEl={anchorEl}
-                            id="account-menu"
-                            open={opendropdown}
-                            onClose={handleClose}
-                            anchorOrigin={{
-                              vertical: "top",
-                              horizontal: "right",
-                            }}
-                            transformOrigin={{
-                              vertical: "top",
-                              horizontal: "right",
-                            }}
-                            PaperProps={{
-                              style: {
-                                boxShadow: "none",
-                              },
+                          <Button
+                            onClick={() => handleNavigate(row?.student_id)}
+                            style={{
+                              border: "1.5px solid black",
+                              height: "35px",
+                              padding: "10px",
+                              color: "#fff",
+                              fontSize: "16px",
+                              fontWeight: "bold",
+                              background: "#384D6C",
                             }}
                           >
-                            <h6 style={{ textAlign: "center" }}>Take Action</h6>
-                            <Divider />
-                            <MenuItem
-                              sx={{
-                                backgroundColor: "#FFC2C2",
-                                margin: "5px 10px",
-                                borderRadius: "25px",
-                              }}
-                            >
-                              Room Allocation
-                            </MenuItem>
-                            <MenuItem
-                              sx={{
-                                backgroundColor: "#FFC2C2",
-                                margin: "5px 10px",
-                                borderRadius: "25px",
-                              }}
-                              onClick={handleCloses}
-                            >
-                              &nbsp; View Payments
-                            </MenuItem>
-                            <Link
-                              to={`/studentprofile/${row?.student_id}`}
-                              style={{ textDecoration: "none", color: "black" }}
-                            >
-                              <MenuItem
-                                sx={{
-                                  backgroundColor: "#FFC2C2",
-                                  margin: "5px 10px",
-                                  borderRadius: "25px",
-                                  paddingLeft: "20px",
-                                }}
-                              >
-                                {" "}
-                                &nbsp; &nbsp; View Profile
-                              </MenuItem>
-                            </Link>
-                          </Menu>
+                            View Profile
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}

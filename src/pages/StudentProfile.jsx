@@ -76,12 +76,28 @@ function StudentProfile() {
     });
   }, [order]);
 
-  const updatestatus = async () => {
+  const updatestatusTrue = async () => {
     const studentId = id;
-    const verified = studentDetails?.verified;
-    const url = `${URL}/student/${studentId}/update-verification?verified=${
-      verified === true ? 0 : 1
-    }`;
+    const url = `${URL}/student/${studentId}/update-verification?verified=true`;
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const res = await axios.patch(url, config);
+      if (res?.status === 200) {
+        toast.success(res?.data?.message);
+        getStudentdetails();
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const updatestatusFalse = async () => {
+    const studentId = id;
+    const url = `${URL}/student/${studentId}/update-verification?verified=false`;
 
     try {
       const config = {
@@ -808,22 +824,100 @@ function StudentProfile() {
             }}
           ></Box>
           <Grid container justifyContent={"center"} spacing={3}>
-            <Grid item md={3} xs={6} className="d-flex justify-content-center">
-              <button
-                style={{
-                  backgroundColor: studentDetails?.verified ? "Red" : "Green",
-                  border: "1px solid #D1D5DB",
-                  borderRadius: "8px",
-                  fontWeight: "700",
-                  color: "#ffff",
-                  width: "160px",
-                  padding: "10px 10px",
-                }}
-                onClick={updatestatus}
+            {studentDetails?.verified === true && (
+              <Grid
+                item
+                md={3}
+                xs={6}
+                className="d-flex justify-content-center"
               >
-                {studentDetails?.verified ? "Reject" : "Verify"}
-              </button>
-            </Grid>
+                <button
+                  style={{
+                    backgroundColor: "red",
+                    border: "1px solid #D1D5DB",
+                    borderRadius: "8px",
+                    fontWeight: "700",
+                    color: "#ffff",
+                    width: "160px",
+                    padding: "10px 10px",
+                  }}
+                  onClick={updatestatusFalse}
+                >
+                  Reject
+                </button>
+              </Grid>
+            )}
+            {studentDetails?.verified === false && (
+              <Grid
+                item
+                md={3}
+                xs={6}
+                className="d-flex justify-content-center"
+              >
+                <button
+                  style={{
+                    backgroundColor: "green",
+                    border: "1px solid #D1D5DB",
+                    borderRadius: "8px",
+                    fontWeight: "700",
+                    color: "#ffff",
+                    width: "160px",
+                    padding: "10px 10px",
+                  }}
+                  onClick={updatestatusFalse}
+                >
+                  Verified
+                </button>
+              </Grid>
+            )}
+
+            {studentDetails?.verified === null && (
+              <>
+                <Grid
+                  item
+                  md={3}
+                  xs={6}
+                  className="d-flex justify-content-center"
+                >
+                  <button
+                    style={{
+                      backgroundColor: "red",
+                      border: "1px solid #D1D5DB",
+                      borderRadius: "8px",
+                      fontWeight: "700",
+                      color: "#ffff",
+                      width: "160px",
+                      padding: "10px 10px",
+                    }}
+                    onClick={updatestatusFalse}
+                  >
+                    Reject
+                  </button>
+                </Grid>
+
+                <Grid
+                  item
+                  md={3}
+                  xs={6}
+                  className="d-flex justify-content-center"
+                >
+                  <button
+                    style={{
+                      backgroundColor: "green",
+                      border: "1px solid #D1D5DB",
+                      borderRadius: "8px",
+                      fontWeight: "700",
+                      color: "#ffff",
+                      width: "160px",
+                      padding: "10px 10px",
+                    }}
+                    onClick={updatestatusFalse}
+                  >
+                    Verified
+                  </button>
+                </Grid>
+              </>
+            )}
           </Grid>
         </Box>
         {studentDetails?.verified === false && (
