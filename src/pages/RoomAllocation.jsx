@@ -447,16 +447,16 @@ function RoomAllocation() {
 
   return (
     <>
-      <Box bgcolor={"#EEEEFF"}>
+      <Box bgcolor={"#EEEEFF"} minHeight={"100vh"}>
         <Box
           sx={{
             [theme.breakpoints.up("xs")]: {
               marginLeft: "0px",
-              padding: "10px",
+              padding: "10px 0px",
             },
             [theme.breakpoints.up("md")]: {
               marginLeft: "265px",
-              padding: "10px",
+              padding: "10px 10px",
             },
           }}
         >
@@ -464,12 +464,12 @@ function RoomAllocation() {
             <Typography
               variant="h6"
               className="mt-3"
-              sx={{ color: "#384D6C", marginLeft: { xs: "20px", md: "40px" } }}
+              sx={{ color: "#384D6C", marginLeft: { xs: "20px", md: "20px" } }}
             >
               Room Allocation
             </Typography>
           </Box>
-          <Box sx={{ px: 5, py: 3 }}>
+          <Box sx={{ px: 2, py: 1 }}>
             {loading && <LinearProgress color="primary" />}
 
             {allHostels?.map((hostelObj, i) => {
@@ -511,9 +511,9 @@ function RoomAllocation() {
                           <Grid item xs={12} md={4} className="d-flex ">
                             <Box
                               sx={{
-                                padding: "10px",
+                                padding: "0px",
                                 textAlign: "",
-                                widthl: "100%",
+                                width: "100%",
                               }}
                             >
                               <Box className="mx-auto">
@@ -926,8 +926,8 @@ function RoomAllocation() {
                   border: "1px solid black",
                   bgcolor: "transparent",
                   cursor: "pointer",
-                  borderRadius:"5px",
-                  boxShadow:" 1px 1px 3px gray "
+                  borderRadius: "5px",
+                  boxShadow: " 1px 1px 3px gray ",
                 },
                 [theme.breakpoints.up("md")]: {
                   width: "100%",
@@ -943,7 +943,7 @@ function RoomAllocation() {
                 <Grid item xs={12} md={2} className="">
                   <Box
                     sx={{
-                      padding: "10px",
+                      padding: "0px",
                       textAlign: "",
                       widthl: "100%",
                     }}
