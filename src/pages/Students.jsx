@@ -614,7 +614,7 @@ const Students = () => {
                           style={{ color: "#384D6C", fontWeight: "bold" }}
                         >
                           <Button
-                            className="bg-primary ps-3 pe-3"
+                            className="bg-primary px-3"
                             style={{ color: "white", borderRadius: "20px" }}
                           >
                             {row?.student_id === null
@@ -635,14 +635,18 @@ const Students = () => {
                         >
                           <Button
                             onClick={() => handleNavigate(row?.student_id)}
-                            style={{
+                            sx={{
                               border: "1.5px solid black",
-                              height: "35px",
-                              padding: "10px",
+                              padding:{xs:"5px 10px" ,md:"2px 10px"},
                               color: "#fff",
-                              fontSize: "16px",
+                              fontSize: { xs: "11px", md: "16px" },
                               fontWeight: "bold",
-                              background: "#384D6C",
+                              bgcolor: "#384D6C",
+                              width: { md: "150px", xs: "100px" },  
+                              borderRadius: "20px",
+                              "&:hover": {
+                                bgcolor: "#384D6C",
+                              },
                             }}
                           >
                             View Profile
