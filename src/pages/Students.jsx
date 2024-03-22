@@ -37,6 +37,7 @@ import TextField from "@mui/material/TextField";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
 import { Link, useNavigate } from "react-router-dom";
 import CancelIcon from "@mui/icons-material/Cancel";
+import swal from "sweetalert";
 const Students = () => {
   const [student, setStudent] = useState([]);
   const [pageNo, setPageNo] = useState(1);
@@ -97,6 +98,16 @@ const Students = () => {
       setPageNo(pageNo - 1);
     } else {
       setPageNo(1);
+    }
+  };
+
+  const deleteStudentById = async (id) => {
+    const response = await axios.delete(`${URL}/student/${id}`);
+    if (response) {
+      window.location.reload();
+      toast.success("student delete successfully");
+    } else {
+      toast.error(" error while deleting");
     }
   };
 
@@ -486,6 +497,12 @@ const Students = () => {
                   >
                     Action
                   </TableCell>
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="center"
+                  >
+                    Delete
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -503,7 +520,10 @@ const Students = () => {
                           style={{ color: "#384D6C", fontWeight: "bold" }}
                         >
                           {" "}
-                          &nbsp; &nbsp; &nbsp;{ (page * rowsPerPage) + index + 1} &nbsp; &nbsp; &nbsp;
+                          &nbsp; &nbsp; &nbsp;{page * rowsPerPage +
+                            index +
+                            1}{" "}
+                          &nbsp; &nbsp; &nbsp;
                           <CropSquareIcon className="alignline" />
                         </TableCell>
                         <TableCell
@@ -628,7 +648,6 @@ const Students = () => {
                           align="center"
                           style={{
                             color: "#384D6C",
-                            fontWeight: "bold",
                             fontSize: "25px",
                             cursor: "pointer",
                           }}
@@ -637,12 +656,11 @@ const Students = () => {
                             onClick={() => handleNavigate(row?.student_id)}
                             sx={{
                               border: "1.5px solid black",
-                              padding:{xs:"5px 10px" ,md:"2px 10px"},
+                              padding: { xs: "5px 10px", md: "2px 10px" },
                               color: "#fff",
                               fontSize: { xs: "11px", md: "16px" },
-                              fontWeight: "bold",
                               bgcolor: "#384D6C",
-                              width: { md: "150px", xs: "100px" },  
+                              width: { md: "150px", xs: "100px" },
                               borderRadius: "20px",
                               "&:hover": {
                                 bgcolor: "#384D6C",
@@ -650,6 +668,47 @@ const Students = () => {
                             }}
                           >
                             View Profile
+                          </Button>
+                        </TableCell>
+
+                        <TableCell
+                          align="center"
+                          style={{
+                            color: "#384D6C",
+                            fontSize: "25px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <Button
+                            onClick={() => {
+                              swal({
+                                title: "Are you sure?",
+                                text: "Once deleted, you will not be able to recover this record!",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                              }).then((willDelete) => {
+                                if (willDelete) {
+                                  deleteStudentById(row.student_id);
+                                } else {
+                                  swal("Your Record is safe");
+                                }
+                              });
+                            }}
+                            sx={{
+                              border: "1.5px solid black",
+                              padding: { xs: "5px 10px", md: "2px 10px" },
+                              color: "#fff",
+                              fontSize: { xs: "11px", md: "16px" },
+                              bgcolor: "#ff4f42",
+                              width: { md: "150px", xs: "100px" },
+                              borderRadius: "20px",
+                              "&:hover": {
+                                bgcolor: "#ff4f42",
+                              },
+                            }}
+                          >
+                            Delete
                           </Button>
                         </TableCell>
                       </TableRow>
