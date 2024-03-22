@@ -356,18 +356,18 @@ const Dashboard = () => {
                         margin: "15px 0",
                       }}
                     >
-                      Contact{" "}
+                      Contact no. {" "}
                       <Box
                         component={"span"}
                         sx={{
-                          marginLeft: "93px",
+                          marginLeft: "60px",
                           color: "#384D6C",
                           fontSize: "16px",
                           fontWeight: "500",
                         }}
                       >
                         {" "}
-                        7563858453{" "}
+                       {obj.contact_no ? obj.contact_no : "not found"}
                       </Box>
                     </Typography>
                     <Typography
