@@ -503,7 +503,7 @@ const Students = () => {
                           style={{ color: "#384D6C", fontWeight: "bold" }}
                         >
                           {" "}
-                          &nbsp; &nbsp; &nbsp;{index + 1} &nbsp; &nbsp; &nbsp;
+                          &nbsp; &nbsp; &nbsp;{ (page * rowsPerPage) + index + 1} &nbsp; &nbsp; &nbsp;
                           <CropSquareIcon className="alignline" />
                         </TableCell>
                         <TableCell
