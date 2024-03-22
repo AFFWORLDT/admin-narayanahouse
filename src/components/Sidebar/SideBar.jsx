@@ -94,11 +94,7 @@ function SideBar(props) {
       name: "Room Allocation",
       icon: <RoomPreferencesIcon />,
     },
-    {
-      path: "/hostels",
-      name: "Hostels",
-      icon: <ApartmentIcon />,
-    },
+    
     {
       path: "/students",
       name: "Students",
