@@ -76,7 +76,7 @@ function RoomAllocation() {
         `${URL}/room/get_room?hostel_name=${hostelName}&room_name=${roomName}`
       );
 
-      if(response){
+      if (response) {
         setAddNewRoomData(response.data);
       }
     } catch (error) {
@@ -498,22 +498,17 @@ function RoomAllocation() {
                         sx={{
                           [theme.breakpoints.up("xs")]: {
                             width: "100%",
-                            padding: "10px",
+                            padding: "1px",
                           },
                           [theme.breakpoints.up("md")]: {
                             width: "100%",
-                            padding: "10px",
+                            padding: "1px",
                           },
                         }}
                       >
                         <Grid container spacing={1}>
                           {/* First Box */}
-                          <Grid
-                            item
-                            xs={12}
-                            md={4}
-                            className="d-flex justify-content-center align-items-center"
-                          >
+                          <Grid item xs={12} md={4} className="d-flex ">
                             <Box
                               sx={{
                                 padding: "10px",
@@ -521,7 +516,7 @@ function RoomAllocation() {
                                 widthl: "100%",
                               }}
                             >
-                              <Box className=" mx-auto">
+                              <Box className="mx-auto">
                                 <Typography
                                   variant="body2"
                                   sx={{
@@ -928,15 +923,15 @@ function RoomAllocation() {
                 [theme.breakpoints.up("xs")]: {
                   width: "100%",
                   padding: "10px",
-                  height: "100px ",
                   border: "1px solid black",
                   bgcolor: "transparent",
                   cursor: "pointer",
+                  borderRadius:"5px",
+                  boxShadow:" 1px 1px 3px gray "
                 },
                 [theme.breakpoints.up("md")]: {
                   width: "100%",
                   padding: "10px",
-                  height: "100px ",
                   border: "1px solid black",
                   bgcolor: "transparent",
                   cursor: "pointer",
@@ -945,18 +940,12 @@ function RoomAllocation() {
             >
               <Grid container spacing={1}>
                 {/* First Box */}
-                <Grid
-                  item
-                  xs={12}
-                  md={4}
-                  className="d-flex justify-content-center align-items-center"
-                >
+                <Grid item xs={12} md={2} className="">
                   <Box
                     sx={{
                       padding: "10px",
                       textAlign: "",
                       widthl: "100%",
-                      justifyContent: "center",
                     }}
                   >
                     <Box className=" mx-auto">
@@ -967,17 +956,12 @@ function RoomAllocation() {
                             fontSize: "16px",
                             color: "#384D6C",
                             fontWeight: "700",
-                            marginLeft: "10px",
-                            textAlign: "center",
-                            marginTop: "10px",
+                            padding: "10px",
                           },
                           [theme.breakpoints.up("md")]: {
                             fontSize: "16px",
                             color: "#384D6C",
                             fontWeight: "700",
-                            marginLeft: "40px",
-                            textAlign: "center",
-                            marginTop: "20px",
                           },
                         }}
                       >
