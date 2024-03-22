@@ -373,7 +373,11 @@ const Dashboard = () => {
                         }}
                       >
                         {" "}
-                        7563858453{" "}
+                        {Student?.map((obj) => {
+                          if (obj.student_id === student_id) {
+                            return obj.contact_no;
+                          }
+                        })}{" "}
                       </Box>
                     </Typography>
                     <Typography

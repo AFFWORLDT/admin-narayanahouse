@@ -166,6 +166,7 @@ function StudentProfile() {
                       className="d-block mx-auto rounded-circle p-1 bg-black bg- bg-white shadow"
                       style={{
                         height: "150px",
+                        width:150
                       }}
                     />
                   </Box>

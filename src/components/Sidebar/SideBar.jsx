@@ -35,8 +35,11 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
 import logo from "./../../assets/img/logonarayana.png";
 import { Button } from "@mui/material";
-import { getResFromLocalStorage, removeUserFromLocalStorage } from "../../service/localstorage";
-import adminImg from "../../assets/img/logonarayana.png"
+import {
+  getResFromLocalStorage,
+  removeUserFromLocalStorage,
+} from "../../service/localstorage";
+import adminImg from "../../assets/img/logonarayana.png";
 import { toast } from "react-hot-toast";
 
 const drawerWidth = 265;
@@ -49,7 +52,7 @@ function SideBar(props) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
-  const user  = getResFromLocalStorage();
+  const user = getResFromLocalStorage();
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -79,7 +82,6 @@ function SideBar(props) {
     toast.success("Logged out successfully");
     setTimeout(() => {
       navigate("/login");
-      
     }, 2000);
   };
 
@@ -141,8 +143,13 @@ function SideBar(props) {
           >
             <Avatar src={adminImg} alt="adminImg " />
           </IconButton>
-          <Button sx={{ marginLeft: "20px" }} onClick={handleLogout} variant="contained" color={user ? "error" : "primary"}>
-            {user ? "Logout" : "Login"}
+          <Button
+            sx={{ marginLeft: "20px" }}
+            onClick={handleLogout}
+            variant="contained"
+            color={user ? "primary" : "error"}
+          >
+            {user ? "Login" : "Logout"}
           </Button>
           {/* <Menu
             anchorEl={anchorEl}
