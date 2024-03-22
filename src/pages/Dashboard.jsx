@@ -356,7 +356,7 @@ const Dashboard = () => {
                         margin: "15px 0",
                       }}
                     >
-                      Contact no. {" "}
+                      Contact no.{" "}
                       <Box
                         component={"span"}
                         sx={{
@@ -367,7 +367,11 @@ const Dashboard = () => {
                         }}
                       >
                         {" "}
-                       {obj.contact_no ? obj.contact_no : "not found"}
+                        {Student?.map((obj) => {
+                          if (obj.student_id === student_id) {
+                            return obj.contact_no;
+                          }
+                        })}
                       </Box>
                     </Typography>
                     <Typography
@@ -527,22 +531,27 @@ const Dashboard = () => {
         </Box>
 
         <Toaster />
-        <Box  sx={{
+        <Box
+          sx={{
             width: "98%",
             // minHeight: 400,
             background: "#fff",
             borderRadius: "8px",
             margin: { xs: "30px 5px", lg: "30px 10px", sm: "30px 10px" },
             padding: "10px 0px",
-          }}>
-          
-          <p  style={{
+          }}
+        >
+          <p
+            style={{
               margin: "10px 30px",
               color: "#384D6C",
               fontSize: "20px",
               fontWeight: "bold",
-            }}>Pending Profile Verification Requests </p>
-              <Divider
+            }}
+          >
+            Pending Profile Verification Requests{" "}
+          </p>
+          <Divider
             sx={{
               width: "100%",
               height: 2,

@@ -137,8 +137,13 @@ function SideBar(props) {
           >
             <Avatar src={adminImg} alt="adminImg " />
           </IconButton>
-          <Button sx={{ marginLeft: "20px" }} onClick={handleLogout} variant="contained" color={user ? "error" : "primary"}>
-            {user ? "Logout" : "Login"}
+          <Button
+            sx={{ marginLeft: "20px" }}
+            onClick={handleLogout}
+            variant="contained"
+            color={user ? "primary" : "error"}
+          >
+            {user ? "Login" : "Logout"}
           </Button>
           {/* <Menu
             anchorEl={anchorEl}
