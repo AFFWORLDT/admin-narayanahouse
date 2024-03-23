@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -35,8 +35,11 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
 import logo from "./../../assets/img/logonarayana.png";
 import { Button } from "@mui/material";
-import { getResFromLocalStorage, removeUserFromLocalStorage } from "../../service/localstorage";
-import adminImg from "../../assets/img/logonarayana.png"
+import {
+  getUserFromLocalStorage,
+  removeUserFromLocalStorage,
+} from "../../service/localstorage";
+import adminImg from "../../assets/img/logonarayana.png";
 import { toast } from "react-hot-toast";
 
 const drawerWidth = 265;
@@ -49,7 +52,12 @@ function SideBar(props) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
-  const user  = getResFromLocalStorage();
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    const user = getUserFromLocalStorage();
+
+    setUser(user);
+  }, [user]);
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -79,7 +87,7 @@ function SideBar(props) {
     toast.success("Logged out successfully");
     setTimeout(() => {
       navigate("/login");
-      
+
     }, 2000);
   };
 
@@ -146,9 +154,9 @@ function SideBar(props) {
             sx={{ marginLeft: "20px" }}
             onClick={handleLogout}
             variant="contained"
-            color={user ? "primary" : "error"}
+            color={user ? "error" : "primary"}
           >
-            {user ? "Login" : "Logout"}
+            {user ? "Logout" : "Login"}
           </Button>
           {/* <Menu
             anchorEl={anchorEl}
