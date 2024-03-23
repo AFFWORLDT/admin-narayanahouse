@@ -20,6 +20,7 @@ import { getUserFromLocalStorage } from "./service/localstorage";
 import NewsPost from "./pages/NewsPost";
 import RoomAllocation from "./pages/RoomAllocation";
 import StudentProfile from "./pages/StudentProfile";
+import RoomAllocationHistory from "./pages/RoomAllocationHistory";
 function App() {
   const [user, setUser] = useState({});
   useEffect(() => {
@@ -32,7 +33,7 @@ function App() {
       <Router>
         {user ? <SideBar /> : null}
         <Routes>
-        <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<PrivateRoute Component={Dashboard} />} />
           {/* <Route path="/advitisors" element={<PrivateRoute Component={Advitisors} />} /> */}
           <Route
@@ -49,6 +50,10 @@ function App() {
           <Route
             path="/students"
             element={<PrivateRoute Component={Students} />}
+          />
+          <Route
+            path="/roomallocationhistory"
+            element={<PrivateRoute Component={RoomAllocationHistory} />}
           />
           <Route
             path="/studentprofile/:id"
