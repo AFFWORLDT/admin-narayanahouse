@@ -94,11 +94,16 @@ function SideBar(props) {
       name: "Room Allocation",
       icon: <RoomPreferencesIcon />,
     },
-    
+
     {
       path: "/students",
       name: "Students",
       icon: <AssignmentIndIcon />,
+    },
+    {
+      path: "/roomallocationhistory",
+      name: "Room Allocation History",
+      icon: <RoomPreferencesIcon />,
     },
     // {
     //   path: "/news",
