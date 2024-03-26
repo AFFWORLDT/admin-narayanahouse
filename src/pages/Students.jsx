@@ -104,7 +104,7 @@ const Students = () => {
   const deleteStudentById = async (id) => {
     const response = await axios.delete(`${URL}/student/${id}`);
     if (response) {
-      window.location.reload();
+      loadData();
       toast.success("student delete successfully");
     } else {
       toast.error(" error while deleting");
@@ -170,26 +170,6 @@ const Students = () => {
     }
   };
 
-  const handleDelete = async (Id) => {
-    const url = `${URL}/student/${Id}`;
-    try {
-      const result = window.confirm("Are you sure to delete this user?");
-      if (result) {
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-        const response = await axios.delete(url, config);
-        if (response.status === 200) {
-          toast.success(response?.data?.message);
-          getStudents();
-        }
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
   const handleEdit = (data) => {
     const {
       bio,
