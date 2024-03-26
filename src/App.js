@@ -23,6 +23,7 @@ import StudentProfile from "./pages/StudentProfile";
 import RoomAllocationHistory from "./pages/RoomAllocationHistory";
 import PaymentOptions from "./pages/PaymentOptions";
 import UpdatePassword from "./pages/UpdatePassword";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const [user, setUser] = useState({});
@@ -66,7 +67,10 @@ function App() {
             path="/studentprofile/:id"
             element={<PrivateRoute Component={StudentProfile} />}
           />
-          <Route path="/payment-option" element={<PrivateRoute Component={PaymentOptions} />} />
+          <Route
+            path="/payment-option"
+            element={<PrivateRoute Component={PaymentOptions} />}
+          />
 
           {/* <Route path="/order" element={<Order />} />
           <Route path="/saved" element={<Saved />} /> */}
@@ -77,6 +81,7 @@ function App() {
         </Routes>
       </Router>
       <Toaster />
+      <Analytics />
     </>
   );
 }
