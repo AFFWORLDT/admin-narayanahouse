@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import LockClockIcon from "@mui/icons-material/LockClock";
 import PropTypes from "prop-types";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import AppBar from "@mui/material/AppBar";
@@ -42,8 +44,6 @@ import {
 import adminImg from "../../assets/img/logonarayana.png";
 import { toast } from "react-hot-toast";
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';;
-import LockClockIcon from "@mui/icons-material/LockClock";
-import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 
 const drawerWidth = 265;
 
