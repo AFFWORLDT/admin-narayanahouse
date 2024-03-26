@@ -274,6 +274,7 @@ function RoomAllocation() {
   const handleNewAddHostellSubmit = async (event) => {
     event.preventDefault();
     const { name, full_address, description } = newAddHostelFormData;
+    const trimmedName = name.trim();
 
     // Check if any required field is empty
     if (!name || !full_address || !description) {
@@ -282,12 +283,17 @@ function RoomAllocation() {
     }
 
     try {
-      const response = await axios.post(`${URL}/hostel`, newAddHostelFormData);
+      const response = await axios.post(`${URL}/hostel`, {
+        name: trimmedName,
+        full_address,
+        description,
+        ...addNewRoomFormData,
+      });
       if (response) {
         setTimeout(() => {
           toast.success("New hostel created successfully 🎉", 3000);
         }, 1000);
-        // console.log("new hostel -->",response?.data);
+        console.log("new hostel -->",response?.data);   
         setAddHostelModel(false);
         setNewAddHostelFormData({
           name: "",
@@ -1534,7 +1540,7 @@ function RoomAllocation() {
           }}
         >
           <Typography variant="h6" className="my-1">
-            Add new Room for
+            Add new Room for {currentHostelName}
           </Typography>
 
           <form onSubmit={handleAddNewRoomSubmit}>
