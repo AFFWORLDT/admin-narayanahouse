@@ -69,31 +69,31 @@ function RoomAllocation() {
   const [currentRoomName, setCurrentRoomName] = useState("");
   const [addRoomImagesModel, setAddRoomImagesModel] = useState(false);
   const [getAllRoomImages, setGetAllRoomImages] = useState({});
-    const deleteRoomByHostelNameRoomName = async (hostelName, roomName) => {
-      try {
-        const trimmedHostelName = hostelName.trim();
-        const trimmedRoomName = roomName.trim();
+  const deleteRoomByHostelNameRoomName = async (hostelName, roomName) => {
+    try {
+      const trimmedHostelName = hostelName.trim();
+      const trimmedRoomName = roomName.trim();
 
-        const response = await axios.delete(`${URL}/room/delete_room`, {
-          params: {
-            hostel_name: trimmedHostelName,
-            room_name: trimmedRoomName,
-          },
-        });
+      const response = await axios.delete(`${URL}/room/delete_room`, {
+        params: {
+          hostel_name: trimmedHostelName,
+          room_name: trimmedRoomName,
+        },
+      });
 
-        if (response.status === 200) {
-          toast.success("Room deleted successfully");
-          getRoomByHostelName(trimmedHostelName);
-        } else {
-          toast.error("Failed to delete room. Please try again.");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        toast.error(
-          "An error occurred while deleting the room. Please try again later."
-        );
+      if (response.status === 200) {
+        toast.success("Room deleted successfully");
+        getRoomByHostelName(trimmedHostelName);
+      } else {
+        toast.error("Failed to delete room. Please try again.");
       }
-    };
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error(
+        "An error occurred while deleting the room. Please try again later."
+      );
+    }
+  };
 
   const deleteHostelByName = async (hostelName) => {
     try {
@@ -739,7 +739,8 @@ function RoomAllocation() {
                                 onClick={() => {
                                   swal({
                                     title: "Are you sure?",
-                                    text: "Once deleted, you will not be able to recover this hostel and its images. Student room will also be deleted!",
+                                    text: "Once deleted, you can't recover this hostel and its images, as well as its rooms and their images.",
+                                    icon: "warning",
                                     buttons: true,
                                     dangerMode: true,
                                   }).then((willDelete) => {
@@ -844,7 +845,7 @@ function RoomAllocation() {
                                           swal({
                                             title: "Are you sure?",
                                             text: "Once deleted, you  will not be able to recover this room and its images!",
-                                            icons: "warning",
+                                            icon: "warning",
                                             buttons: true,
                                             dangerMode: true,
                                           }).then((willDeleted) => {
