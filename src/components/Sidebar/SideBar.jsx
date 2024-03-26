@@ -41,6 +41,7 @@ import {
 } from "../../service/localstorage";
 import adminImg from "../../assets/img/logonarayana.png";
 import { toast } from "react-hot-toast";
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';;
 import LockClockIcon from "@mui/icons-material/LockClock";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 
@@ -118,6 +119,11 @@ function SideBar(props) {
       path: "/updatepassword",
       name: "Update Password",
       icon: <LockClockIcon />,
+    },
+    {
+      path: "/payment-option",
+      name: "Payment Option",
+      icon: <AccountBalanceIcon />,
     },
     // {
     //   path: "/news",
