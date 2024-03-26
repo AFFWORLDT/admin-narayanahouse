@@ -29,6 +29,8 @@ import ImageIcon from "@mui/icons-material/Image";
 import toast from "react-hot-toast";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { editableInputTypes } from "@testing-library/user-event/dist/utils";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import swal from "sweetalert";
 function RoomAllocation() {
   const inputRef = useRef();
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
@@ -66,6 +68,19 @@ function RoomAllocation() {
   const [currentRoomName, setCurrentRoomName] = useState("");
   const [addRoomImagesModel, setAddRoomImagesModel] = useState(false);
   const [getAllRoomImages, setGetAllRoomImages] = useState({});
+
+  const deleteHostelByName = async (hostelName) => {
+    try {
+      const trimmedHostelName = hostelName.trim();
+      const response = await axios.delete(`${URL}/hostel/${trimmedHostelName}`);
+      if (response) {
+        toast("hostel deleted successfully");
+        getAllHostels();
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const getCurrentRoomDataByHostelandRoomNameQuery = async (
     hostelName,
@@ -682,6 +697,26 @@ function RoomAllocation() {
                                   setAddHostelImagesModel(true);
                                   setCurrentHostelName(hostelObj.name);
                                   getAllHostelImagesByHostelName(name);
+                                }}
+                              />
+                            </Box>
+                            <Box className="">
+                              <DeleteForeverIcon
+                                className=" d-block mx-auto"
+                                style={{ cursor: "pointer ", color: "#1466b7" }}
+                                onClick={() => {
+                                  swal({
+                                    title: "Are you sure?",
+                                    text: "Once deleted, you will not be able to recover this hostel and its images. Student room will also be deleted!",
+                                    buttons: true,
+                                    dangerMode: true,
+                                  }).then((willDelete) => {
+                                    if (willDelete) {
+                                      deleteHostelByName(hostelObj.name);
+                                    } else {
+                                      swal("Your Record is safe");
+                                    }
+                                  });
                                 }}
                               />
                             </Box>
