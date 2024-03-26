@@ -41,6 +41,8 @@ import {
 } from "../../service/localstorage";
 import adminImg from "../../assets/img/logonarayana.png";
 import { toast } from "react-hot-toast";
+import LockClockIcon from "@mui/icons-material/LockClock";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 
 const drawerWidth = 265;
 
@@ -87,7 +89,6 @@ function SideBar(props) {
     toast.success("Logged out successfully");
     setTimeout(() => {
       navigate("/login");
-
     }, 2000);
   };
 
@@ -110,8 +111,13 @@ function SideBar(props) {
     },
     {
       path: "/roomallocationhistory",
-      name: "Room Allocation History",
-      icon: <RoomPreferencesIcon />,
+      name: "Allocation History",
+      icon: <WorkHistoryIcon />,
+    },
+    {
+      path: "/updatepassword",
+      name: "Update Password",
+      icon: <LockClockIcon />,
     },
     // {
     //   path: "/news",
