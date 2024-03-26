@@ -29,6 +29,9 @@ import ImageIcon from "@mui/icons-material/Image";
 import toast from "react-hot-toast";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { editableInputTypes } from "@testing-library/user-event/dist/utils";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import swal from "sweetalert";
+import { icons } from "react-icons";
 function RoomAllocation() {
   const inputRef = useRef();
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
@@ -66,6 +69,44 @@ function RoomAllocation() {
   const [currentRoomName, setCurrentRoomName] = useState("");
   const [addRoomImagesModel, setAddRoomImagesModel] = useState(false);
   const [getAllRoomImages, setGetAllRoomImages] = useState({});
+  const deleteRoomByHostelNameRoomName = async (hostelName, roomName) => {
+    try {
+      const trimmedHostelName = hostelName.trim();
+      const trimmedRoomName = roomName.trim();
+
+      const response = await axios.delete(`${URL}/room/delete_room`, {
+        params: {
+          hostel_name: trimmedHostelName,
+          room_name: trimmedRoomName,
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Room deleted successfully");
+        getRoomByHostelName(trimmedHostelName);
+      } else {
+        toast.error("Failed to delete room. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error(
+        "An error occurred while deleting the room. Please try again later."
+      );
+    }
+  };
+
+  const deleteHostelByName = async (hostelName) => {
+    try {
+      const trimmedHostelName = hostelName.trim();
+      const response = await axios.delete(`${URL}/hostel/${trimmedHostelName}`);
+      if (response) {
+        toast("hostel deleted successfully");
+        getAllHostels();
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const getCurrentRoomDataByHostelandRoomNameQuery = async (
     hostelName,
@@ -259,6 +300,7 @@ function RoomAllocation() {
   const handleNewAddHostellSubmit = async (event) => {
     event.preventDefault();
     const { name, full_address, description } = newAddHostelFormData;
+    const trimmedName = name.trim();
 
     // Check if any required field is empty
     if (!name || !full_address || !description) {
@@ -267,12 +309,17 @@ function RoomAllocation() {
     }
 
     try {
-      const response = await axios.post(`${URL}/hostel`, newAddHostelFormData);
+      const response = await axios.post(`${URL}/hostel`, {
+        name: trimmedName,
+        full_address,
+        description,
+        ...addNewRoomFormData,
+      });
       if (response) {
         setTimeout(() => {
           toast.success("New hostel created successfully 🎉", 3000);
         }, 1000);
-        // console.log("new hostel -->",response?.data);
+        console.log("new hostel -->", response?.data);
         setAddHostelModel(false);
         setNewAddHostelFormData({
           name: "",
@@ -685,6 +732,27 @@ function RoomAllocation() {
                                 }}
                               />
                             </Box>
+                            <Box className="">
+                              <DeleteForeverIcon
+                                className=" d-block mx-auto"
+                                style={{ cursor: "pointer ", color: "#1466b7" }}
+                                onClick={() => {
+                                  swal({
+                                    title: "Are you sure?",
+                                    text: "Once deleted, you can't recover this hostel and its images, as well as its rooms and their images.",
+                                    icon: "warning",
+                                    buttons: true,
+                                    dangerMode: true,
+                                  }).then((willDelete) => {
+                                    if (willDelete) {
+                                      deleteHostelByName(hostelObj.name);
+                                    } else {
+                                      swal("Your Record is safe");
+                                    }
+                                  });
+                                }}
+                              />
+                            </Box>
                           </Box>
                         </Box>
                       </Box>
@@ -721,26 +789,27 @@ function RoomAllocation() {
                               >
                                 <Box
                                   component={"div"}
-                                  className="d-flex justify-content-between"
+                                  className="d-flex justify-content-between align-items-center "
                                 >
                                   <Box component={"div"}>
                                     <Typography
                                       component={"span"}
                                       fontSize="15px"
                                       color={"primary"}
+                                      className="d-flex justify-content-evenly gap-1 align-items-center"
                                     >
                                       {" "}
-                                      <AcUnitIcon fontSize="15px" /> AC
+                                      <AcUnitIcon fontSize="small" /> AC
                                     </Typography>
                                   </Box>
                                   <Box
                                     component={"div"}
-                                    className="d-flex justify-content-evenly  gap-3"
+                                    className="d-flex justify-content-center gap-3  align-items-center "
                                   >
-                                    <Box>
+                                    <Box className=" d-flex  justify-content-center align-items-center">
                                       {" "}
                                       <BorderColorIcon
-                                        fontSize="15px"
+                                        fontSize="small"
                                         color={"primary"}
                                         style={{
                                           cursor: "pointer",
@@ -756,9 +825,9 @@ function RoomAllocation() {
                                         }}
                                       />{" "}
                                     </Box>
-                                    <Box>
+                                    <Box className=" d-flex  justify-content-center align-items-center">
                                       <ImageIcon
-                                        fontSize="20px"
+                                        fontSize="small"
                                         color={"primary"}
                                         onClick={() => {
                                           setAddRoomImagesModel(true);
@@ -768,7 +837,32 @@ function RoomAllocation() {
                                         }}
                                       />
                                     </Box>
-                                    <Box>
+                                    <Box className=" d-flex  justify-content-center align-items-center">
+                                      <DeleteForeverIcon
+                                        fontSize="small"
+                                        color={"primary"}
+                                        onClick={() => {
+                                          swal({
+                                            title: "Are you sure?",
+                                            text: "Once deleted, you  will not be able to recover this room and its images!",
+                                            icon: "warning",
+                                            buttons: true,
+                                            dangerMode: true,
+                                          }).then((willDeleted) => {
+                                            if (willDeleted) {
+                                              deleteRoomByHostelNameRoomName(
+                                                data.hostel_name,
+                                                data.room_name
+                                              );
+                                              console.log(data);
+                                            } else {
+                                              swal("Your Record is safe");
+                                            }
+                                          });
+                                        }}
+                                      />
+                                    </Box>
+                                    <Box className=" d-flex  justify-content-center align-items-center">
                                       <Typography
                                         fontSize="15px"
                                         color={"primary"}
@@ -1499,7 +1593,7 @@ function RoomAllocation() {
           }}
         >
           <Typography variant="h6" className="my-1">
-            Add new Room for
+            Add new Room for {currentHostelName}
           </Typography>
 
           <form onSubmit={handleAddNewRoomSubmit}>
