@@ -31,6 +31,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { editableInputTypes } from "@testing-library/user-event/dist/utils";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import swal from "sweetalert";
+import { icons } from "react-icons";
 function RoomAllocation() {
   const inputRef = useRef();
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
@@ -68,6 +69,31 @@ function RoomAllocation() {
   const [currentRoomName, setCurrentRoomName] = useState("");
   const [addRoomImagesModel, setAddRoomImagesModel] = useState(false);
   const [getAllRoomImages, setGetAllRoomImages] = useState({});
+    const deleteRoomByHostelNameRoomName = async (hostelName, roomName) => {
+      try {
+        const trimmedHostelName = hostelName.trim();
+        const trimmedRoomName = roomName.trim();
+
+        const response = await axios.delete(`${URL}/room/delete_room`, {
+          params: {
+            hostel_name: trimmedHostelName,
+            room_name: trimmedRoomName,
+          },
+        });
+
+        if (response.status === 200) {
+          toast.success("Room deleted successfully");
+          getRoomByHostelName(trimmedHostelName);
+        } else {
+          toast.error("Failed to delete room. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        toast.error(
+          "An error occurred while deleting the room. Please try again later."
+        );
+      }
+    };
 
   const deleteHostelByName = async (hostelName) => {
     try {
@@ -293,7 +319,7 @@ function RoomAllocation() {
         setTimeout(() => {
           toast.success("New hostel created successfully 🎉", 3000);
         }, 1000);
-        console.log("new hostel -->",response?.data);   
+        console.log("new hostel -->", response?.data);
         setAddHostelModel(false);
         setNewAddHostelFormData({
           name: "",
@@ -762,26 +788,27 @@ function RoomAllocation() {
                               >
                                 <Box
                                   component={"div"}
-                                  className="d-flex justify-content-between"
+                                  className="d-flex justify-content-between align-items-center "
                                 >
                                   <Box component={"div"}>
                                     <Typography
                                       component={"span"}
                                       fontSize="15px"
                                       color={"primary"}
+                                      className="d-flex justify-content-evenly gap-1 align-items-center"
                                     >
                                       {" "}
-                                      <AcUnitIcon fontSize="15px" /> AC
+                                      <AcUnitIcon fontSize="small" /> AC
                                     </Typography>
                                   </Box>
                                   <Box
                                     component={"div"}
-                                    className="d-flex justify-content-evenly  gap-3"
+                                    className="d-flex justify-content-center gap-3  align-items-center "
                                   >
-                                    <Box>
+                                    <Box className=" d-flex  justify-content-center align-items-center">
                                       {" "}
                                       <BorderColorIcon
-                                        fontSize="15px"
+                                        fontSize="small"
                                         color={"primary"}
                                         style={{
                                           cursor: "pointer",
@@ -797,9 +824,9 @@ function RoomAllocation() {
                                         }}
                                       />{" "}
                                     </Box>
-                                    <Box>
+                                    <Box className=" d-flex  justify-content-center align-items-center">
                                       <ImageIcon
-                                        fontSize="20px"
+                                        fontSize="small"
                                         color={"primary"}
                                         onClick={() => {
                                           setAddRoomImagesModel(true);
@@ -809,7 +836,32 @@ function RoomAllocation() {
                                         }}
                                       />
                                     </Box>
-                                    <Box>
+                                    <Box className=" d-flex  justify-content-center align-items-center">
+                                      <DeleteForeverIcon
+                                        fontSize="small"
+                                        color={"primary"}
+                                        onClick={() => {
+                                          swal({
+                                            title: "Are you sure?",
+                                            text: "Once deleted, you  will not be able to recover this room and its images!",
+                                            icons: "warning",
+                                            buttons: true,
+                                            dangerMode: true,
+                                          }).then((willDeleted) => {
+                                            if (willDeleted) {
+                                              deleteRoomByHostelNameRoomName(
+                                                data.hostel_name,
+                                                data.room_name
+                                              );
+                                              console.log(data);
+                                            } else {
+                                              swal("Your Record is safe");
+                                            }
+                                          });
+                                        }}
+                                      />
+                                    </Box>
+                                    <Box className=" d-flex  justify-content-center align-items-center">
                                       <Typography
                                         fontSize="15px"
                                         color={"primary"}
