@@ -1,5 +1,13 @@
-import { Box, Paper, useTheme, Typography, Grid, Button } from "@mui/material";
-import React, { useState, useRef } from "react";
+import {
+  Box,
+  Paper,
+  useTheme,
+  Typography,
+  Grid,
+  Button,
+  Modal,
+} from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import toast from "react-hot-toast";
@@ -13,6 +21,19 @@ function PaymentOptions() {
   const fileInputRef = useRef(null);
   const URL = process.env.REACT_APP_PROD_ADMIN_API;
   const [previewImage, setPreviewImage] = useState(null);
+  const [paymentDetails, setPaymentDetails] = useState({});
+  const [paymentDetailsModel, setPaymentDetailsModel] = useState(false);
+
+  const getPaymentDetail = async () => {
+    try {
+      const response = await axios.get(`${URL}/admin/qrcode`);
+      if (response && response.data) {
+        setPaymentDetails(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const clearImage = () => {
     setPreviewImage(null);
@@ -56,10 +77,14 @@ function PaymentOptions() {
         setPreviewImage(null);
         setQrImage("");
         setUpiId("");
+        getPaymentDetail();
+        setPaymentDetailsModel(false)
       }
     } catch (error) {
       console.error("Error uploading QR image:", error);
       toast.error("Failed to upload payment details", 3000);
+      setPaymentDetailsModel(false)
+
     } finally {
       setLoading(false);
       setPreviewImage(null);
@@ -67,7 +92,9 @@ function PaymentOptions() {
       setUpiId("");
     }
   };
-
+  useEffect(() => {
+    getPaymentDetail();
+  }, []);
   return (
     <>
       <Box bgcolor={"#EEEEFF"} minHeight={"100vh"}>
@@ -111,7 +138,7 @@ function PaymentOptions() {
                 },
               }}
             >
-              Update Payment Details
+              Payment Details
             </Typography>
 
             <Box className="payment-info-container mt-5 ">
@@ -136,12 +163,9 @@ function PaymentOptions() {
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={8}>
-                    <Paper
-                      onClick={handlClick}
+                    <Box
                       sx={{
-                        backgroundColor: "#DEDEDE",
                         borderRadius: "10px",
-                        cursor: "pointer",
                         position: "relative",
                         [theme.breakpoints.up("md")]: {
                           margin: "0 auto",
@@ -158,39 +182,14 @@ function PaymentOptions() {
                       }}
                     >
                       <Box className="w-100  h-100 d-flex justify-content-center align-items-center flex-column">
-                        {previewImage ? (
-                          <>
-                            <DeleteIcon
-                              onClick={clearImage}
-                              fontSize="large"
-                              style={{
-                                position: "absolute",
-                                top: 5,
-                                right: 5,
-                                color: "red",
-                              }}
-                            />
-
-                            <img
-                              src={previewImage}
-                              alt="Preview"
-                              style={{ maxWidth: "100%", maxHeight: "100%" }}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <CloudUploadIcon fontSize="large" color="#384D6C" />
-                            <input
-                              type="file"
-                              name="file"
-                              onChange={qrFileHandler}
-                              ref={fileInputRef}
-                              style={{ display: "none" }}
-                            />
-                          </>
-                        )}
+                        <img
+                          className="shadow-lg"
+                          src={paymentDetails.qr_code_url}
+                          alt="Preview"
+                          style={{ maxWidth: "100%", maxHeight: "100%" }}
+                        />
                       </Box>
-                    </Paper>
+                    </Box>
                   </Grid>
                 </Grid>
               </Box>
@@ -235,7 +234,7 @@ function PaymentOptions() {
                         type="text"
                         className="form-control py-2"
                         placeholder="Enter upi id"
-                        onChange={(e) => setUpiId(e.target.value)}
+                        value={paymentDetails.upi_id}
                       />
                     </Box>
                   </Grid>
@@ -264,7 +263,9 @@ function PaymentOptions() {
                       }}
                     >
                       <Button
-                        onClick={UploadQrImage}
+                        onClick={() => {
+                          setPaymentDetailsModel(true);
+                        }}
                         sx={{
                           [theme.breakpoints.up("xs")]: {
                             backgroundColor: "#384D6C",
@@ -276,7 +277,7 @@ function PaymentOptions() {
                           },
                         }}
                       >
-                        {loading ? "Uploading..." : "Upload"}
+                        Update
                       </Button>
                     </Box>
                   </Grid>
@@ -284,6 +285,233 @@ function PaymentOptions() {
               </Box>
             </Box>
           </Paper>
+          <Modal
+            onClose={() => setPaymentDetailsModel(false)}
+            open={paymentDetailsModel}
+          >
+            <Box>
+              <Paper
+                sx={{
+                  [theme.breakpoints.up("xs")]: {
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    bgcolor: "#EEEEFF",
+                    boxShadow: 24,
+                    padding: "10px",
+                    borderRadius: "8px",
+                    width: "95%",
+                  },
+                  [theme.breakpoints.up("md")]: {
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    bgcolor: "#EEEEFF",
+                    boxShadow: 24,
+                    padding: "30px",
+
+                    borderRadius: "8px",
+                    width: "40%",
+                  },
+                }}
+              >
+                <Typography
+                  sx={{
+                    [theme.breakpoints.up("xs")]: {
+                      color: "#384D6C",
+                      fontWeight: "bold",
+                      fontSize: "18px",
+                    },
+                    [theme.breakpoints.up("md")]: {
+                      color: "#384D6C",
+                      fontWeight: "bold",
+                      fontSize: "22px",
+                    },
+                  }}
+                >
+                  Update Payment Details
+                </Typography>
+
+                <Box className="payment-info-container mt-5 ">
+                  <Box className="box-1 mb-5  ">
+                    <Grid container spacing={{ xs: 2 }}>
+                      <Grid
+                        item
+                        xs={12}
+                        md={4}
+                        className=" justify-content-center d-flex align-items-center "
+                      >
+                        <Typography
+                          sx={{
+                            [theme.breakpoints.up("xs")]: {
+                              color: "#384D6C",
+                              fontWeight: "bold",
+                              fontSize: "18px",
+                            },
+                          }}
+                        >
+                          QR :
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={8}>
+                        <Paper
+                          onClick={handlClick}
+                          sx={{
+                            backgroundColor: "#DEDEDE",
+                            borderRadius: "10px",
+                            cursor: "pointer",
+                            position: "relative",
+                            [theme.breakpoints.up("md")]: {
+                              margin: "0 auto",
+                              height: "250px",
+                              width: "300px",
+                            },
+                            [theme.breakpoints.up("xs")]: {
+                              width: "250px",
+                              height: "210px",
+
+                              margin: "5px",
+                              margin: "0 auto",
+                            },
+                          }}
+                        >
+                          <Box className="w-100  h-100 d-flex justify-content-center align-items-center flex-column">
+                            {previewImage ? (
+                              <>
+                                <DeleteIcon
+                                  onClick={clearImage}
+                                  fontSize="large"
+                                  style={{
+                                    position: "absolute",
+                                    top: 5,
+                                    right: 5,
+                                    color: "red",
+                                  }}
+                                />
+
+                                <img
+                                  src={previewImage}
+                                  alt="Preview"
+                                  style={{
+                                    maxWidth: "100%",
+                                    maxHeight: "100%",
+                                  }}
+                                />
+                              </>
+                            ) : (
+                              <>
+                                <CloudUploadIcon
+                                  fontSize="large"
+                                  color="#384D6C"
+                                />
+                                <input
+                                  type="file"
+                                  name="file"
+                                  onChange={qrFileHandler}
+                                  ref={fileInputRef}
+                                  style={{ display: "none" }}
+                                />
+                              </>
+                            )}
+                          </Box>
+                        </Paper>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                  <Box className="box-2 mb-5">
+                    <Grid container spacing={{ xs: 2 }}>
+                      <Grid
+                        item
+                        xs={12}
+                        md={4}
+                        className=" justify-content-center d-flex align-items-center"
+                      >
+                        <Typography
+                          sx={{
+                            [theme.breakpoints.up("xs")]: {
+                              color: "#384D6C",
+                              fontWeight: "bold",
+                              fontSize: "18px",
+                            },
+                          }}
+                        >
+                          UPI ID :
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={8}>
+                        <Box
+                          className="d-flex  justify-content-center align-items-center"
+                          sx={{
+                            width: "300px",
+                            margin: "0 auto",
+                            backgroundColor: "#DEDEDE",
+                            borderRadius: "10px",
+                            cursor: "pointer",
+                            [theme.breakpoints.up("md")]: {
+                              width: "300px",
+                            },
+                            [theme.breakpoints.up("xs")]: {
+                              width: "250px",
+                            },
+                          }}
+                        >
+                          <input
+                            type="text"
+                            className="form-control py-2"
+                            placeholder="Enter upi id"
+                            onChange={(e) => setUpiId(e.target.value)}
+                          />
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </Box>
+
+                  <Box className="box-2">
+                    <Grid container>
+                      <Grid item xs={0} md={4}></Grid>
+                      <Grid item xs={12} md={8}>
+                        <Box
+                          className="d-flex  justify-content-center align-items-center"
+                          sx={{
+                            [theme.breakpoints.up("md")]: {
+                              width: "300px",
+                              margin: "0 auto",
+                              cursor: "pointer",
+                              padding: "0 5px",
+                            },
+                            [theme.breakpoints.up("xs")]: {
+                              width: "260px",
+                              margin: "0 auto",
+                              cursor: "pointer",
+                              padding: "0 5px",
+                            },
+                          }}
+                        >
+                          <Button
+                            onClick={UploadQrImage}
+                            sx={{
+                              [theme.breakpoints.up("xs")]: {
+                                backgroundColor: "#384D6C",
+                                color: "white",
+                                width: "100%",
+                                "&:hover": {
+                                  backgroundColor: "#384D6C",
+                                },
+                              },
+                            }}
+                          >
+                            {loading ? "Uploading..." : "Upload"}
+                          </Button>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Box>
+              </Paper>
+            </Box>
+          </Modal>
         </Box>
       </Box>
     </>
