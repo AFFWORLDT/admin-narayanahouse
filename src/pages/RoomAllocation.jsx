@@ -797,9 +797,16 @@ function RoomAllocation() {
                                       fontSize="15px"
                                       color={"primary"}
                                       className="d-flex justify-content-evenly gap-1 align-items-center"
+                                      sx={{
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                        maxWidth: "70px",
+                                      }}
                                     >
-                                      {" "}
-                                      <AcUnitIcon fontSize="small" /> AC
+                                      {data?.room_description
+                                        ? data?.room_description
+                                        : "No Description"}
                                     </Typography>
                                   </Box>
                                   <Box
@@ -829,6 +836,9 @@ function RoomAllocation() {
                                       <ImageIcon
                                         fontSize="small"
                                         color={"primary"}
+                                        style={{
+                                          cursor: "pointer",
+                                        }}
                                         onClick={() => {
                                           setAddRoomImagesModel(true);
                                           setCurrentRoomName(data.room_name);
@@ -841,6 +851,9 @@ function RoomAllocation() {
                                       <DeleteForeverIcon
                                         fontSize="small"
                                         color={"primary"}
+                                        style={{
+                                          cursor: "pointer",
+                                        }}
                                         onClick={() => {
                                           swal({
                                             title: "Are you sure?",
@@ -862,10 +875,11 @@ function RoomAllocation() {
                                         }}
                                       />
                                     </Box>
-                                    <Box className=" d-flex  justify-content-center align-items-center">
+                                    <Box className=" d-flex  fw-bold justify-content-center align-items-center">
                                       <Typography
                                         fontSize="15px"
                                         color={"primary"}
+                                        fontWeight="bold"
                                       >
                                         {" "}
                                         {data.room_name}
