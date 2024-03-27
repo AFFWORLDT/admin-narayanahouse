@@ -273,7 +273,7 @@ function SideBar(props) {
         sx={{
           flexGrow: 1,
           bgcolor: "background.default",
-          p: 3,
+          p: 0,
           marginLeft: { sm: open ? `${drawerWidth}px` : 0 },
           transition: "margin-left 0.3s ease-in-out",
         }}

@@ -119,275 +119,271 @@ function RoomAllocationHistory() {
   });
 
   return (
-    <Box
-      bgcolor={"#EEEEFF"}
-      sx={{
-        [theme.breakpoints.up("xs")]: {
-          marginLeft: "0px",
-          padding: "10px 5px",
-        },
-        [theme.breakpoints.up("md")]: {
-          marginLeft: "265px",
-          padding: "px",
-        },
-        [theme.breakpoints.up("sm")]: {
-          marginLeft: "265px",
-          padding: "10px",
-        },
-      }}
-    >
-      <Box>
+    <Box bgcolor={"#EEEEFF"} minHeight={"100vh"}>
+      <Box
+        sx={{
+          [theme.breakpoints.up("xs")]: {
+            marginLeft: "0px",
+            padding: "10px 0px",
+          },
+          [theme.breakpoints.up("md")]: {
+            marginLeft: "265px",
+            padding: "10px 10px",
+          },
+        }}
+      >
         <p
-          className="container"
+          className="container mt-3"
           style={{ fontSize: "20px", fontWeight: "700", color: "#384D6C" }}
         >
           Room Allocation History
         </p>
-      </Box>
 
-      <div
-        className="d-flex w-100 pb-4"
-        style={{
-          backgroundColor: "#EEEEFF",
-          marginLeft: "0px",
-          paddingTop: "25px",
-        }}
-      >
-        <div className="w-100" style={{ position: "relative" }}>
-          <input
-            className="p-2 ms-4 ps-3 input-searchfield"
-            style={{
-              border: "2px solid black",
-              borderRadius: "25px",
-              color: "black",
-              fontWeight: "bold",
-            }}
-            type="text"
-            placeholder="Enter Order Id"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <span
-            className="serchicon"
-            style={{
-              position: "absolute",
-              top: "50%",
-              right: "965px",
-              transform: "translateY(-50%)",
-              color: "#888",
-            }}
-          ></span>
+        <div
+          className="d-flex w-100 pb-4"
+          style={{
+            backgroundColor: "#EEEEFF",
+            marginLeft: "0px",
+            paddingTop: "10px",
+          }}
+        >
+          <div className="w-100" style={{ position: "relative" }}>
+            <input
+              className="p-2 ms-1 ps-3 input-searchfield"
+              style={{
+                border: "2px solid black",
+                borderRadius: "25px",
+                color: "black",
+                fontWeight: "bold",
+              }}
+              type="text"
+              placeholder="Enter Order Id"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <span
+              className="serchicon"
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "965px",
+                transform: "translateY(-50%)",
+                color: "#888",
+              }}
+            ></span>
+          </div>
         </div>
-      </div>
-      <div style={{ backgroundColor: "#EEEEFF" }}></div>
-      {/* </div> */}
+        <div style={{ backgroundColor: "#EEEEFF" }}></div>
+        {/* </div> */}
 
-      <TableContainer
-        component={Paper}
-        style={{ color: "#384D6C", backgroundColor: "#EEEEFF" }}
-      >
-        <>
-          <Table
-            id="offers-table"
-            sx={{ minWidth: 550 }}
-            aria-label="simple table"
-          >
-            <TableHead>
-              <TableRow sx={{ fontWeight: "bold" }}>
-                <TableCell
-                  style={{ color: "#384D6C", fontSize: "16px" }}
-                  align="left"
-                >
-                  {" "}
-                  &nbsp; &nbsp; No.
-                </TableCell>
-                <TableCell
-                  style={{
-                    color: "#384D6C",
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                  }}
-                  align="center"
-                >
-                  Name
-                </TableCell>
+        <TableContainer
+          component={Paper}
+          style={{ color: "#384D6C", backgroundColor: "#EEEEFF" }}
+        >
+          <>
+            <Table
+              id="offers-table"
+              sx={{ minWidth: 550 }}
+              aria-label="simple table"
+            >
+              <TableHead>
+                <TableRow sx={{ fontWeight: "bold" }}>
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="left"
+                  >
+                    {" "}
+                    &nbsp; &nbsp; No.
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      color: "#384D6C",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                    }}
+                    align="center"
+                  >
+                    Name
+                  </TableCell>
 
-                <TableCell
-                  style={{ color: "#384D6C", fontSize: "16px" }}
-                  align="center"
-                >
-                  Hostel
-                </TableCell>
-                <TableCell
-                  style={{ color: "#384D6C", fontSize: "16px" }}
-                  align="center"
-                >
-                  Room Rent
-                </TableCell>
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="center"
+                  >
+                    Hostel
+                  </TableCell>
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="center"
+                  >
+                    Room Rent
+                  </TableCell>
 
-                <TableCell
-                  style={{ color: "#384D6C", fontSize: "16px" }}
-                  align="center"
-                >
-                  Order ID/UTR{" "}
-                </TableCell>
-                <TableCell
-                  style={{ color: "#384D6C", fontSize: "16px" }}
-                  align="center"
-                >
-                  Allocation Req at
-                </TableCell>
-                <TableCell
-                  style={{ color: "#384D6C", fontSize: "16px" }}
-                  align="center"
-                >
-                  <FormControl>
-                    <NativeSelect
-                      onChange={(e) => setStatus(e.target.value)}
-                      sx={{
-                        color: "#384D6C",
-                        fontSize: "16px",
-                        fontWeight: "500",
-                      }}
-                      align="center"
-                    >
-                      <option
-                        value={"all"}
-                        style={{ color: "#384D6C", fontSize: "16px" }}
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="center"
+                  >
+                    Order ID/UTR{" "}
+                  </TableCell>
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="center"
+                  >
+                    Allocation Req at
+                  </TableCell>
+                  <TableCell
+                    style={{ color: "#384D6C", fontSize: "16px" }}
+                    align="center"
+                  >
+                    <FormControl>
+                      <NativeSelect
+                        onChange={(e) => setStatus(e.target.value)}
+                        sx={{
+                          color: "#384D6C",
+                          fontSize: "16px",
+                          fontWeight: "500",
+                        }}
                         align="center"
                       >
-                        All
-                      </option>
-                      <option
-                        value={"pending"}
-                        style={{ color: "#384D6C", fontSize: "16px" }}
-                        align="center"
-                      >
-                        Pending
-                      </option>
-                      <option
-                        value={"verify"}
-                        style={{ color: "#384D6C", fontSize: "16px" }}
-                        align="center"
-                      >
-                        Verified
-                      </option>
-                      <option
-                        value={"reject"}
-                        style={{ color: "#384D6C", fontSize: "16px" }}
-                        align="center"
-                      >
-                        Rejected
-                      </option>
-                    </NativeSelect>
-                  </FormControl>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {sortData?.map((obj, i) => {
-                const {
-                  allocation_request_at,
-                  allotted,
-                  hostel_name,
-                  order_id,
-                  payment_due_on,
-                  room_id,
-                  room_name,
-                  room_rent,
-                  student_id,
-                } = obj;
-                return (
-                  <>
-                    <TableRow key={room_id}>
-                      <TableCell align="left">{i + 1}</TableCell>
-                      <TableCell align="center">
-                        {student?.map((obj) => {
-                          if (obj?.student_id === student_id) {
-                            if (obj?.name) {
-                              return obj.name;
+                        <option
+                          value={"all"}
+                          style={{ color: "#384D6C", fontSize: "16px" }}
+                          align="center"
+                        >
+                          All
+                        </option>
+                        <option
+                          value={"pending"}
+                          style={{ color: "#384D6C", fontSize: "16px" }}
+                          align="center"
+                        >
+                          Pending
+                        </option>
+                        <option
+                          value={"verify"}
+                          style={{ color: "#384D6C", fontSize: "16px" }}
+                          align="center"
+                        >
+                          Verified
+                        </option>
+                        <option
+                          value={"reject"}
+                          style={{ color: "#384D6C", fontSize: "16px" }}
+                          align="center"
+                        >
+                          Rejected
+                        </option>
+                      </NativeSelect>
+                    </FormControl>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {sortData?.map((obj, i) => {
+                  const {
+                    allocation_request_at,
+                    allotted,
+                    hostel_name,
+                    order_id,
+                    payment_due_on,
+                    room_id,
+                    room_name,
+                    room_rent,
+                    student_id,
+                  } = obj;
+                  return (
+                    <>
+                      <TableRow key={room_id}>
+                        <TableCell align="left">{i + 1}</TableCell>
+                        <TableCell align="center">
+                          {student?.map((obj) => {
+                            if (obj?.student_id === student_id) {
+                              if (obj?.name) {
+                                return obj.name;
+                              }
                             }
-                          }
-                        })}
-                      </TableCell>
-                      <TableCell align="center">
-                        {hostel_name}
-                        <br />
-                        <span style={{ color: "gray", fontSize: "12px" }}>
-                          {room_name || "Not available"}
-                        </span>
-                      </TableCell>
-                      <TableCell align="center">{room_rent}</TableCell>
-                      <TableCell align="center">{order_id}</TableCell>
-                      <TableCell align="center">
-                        {new Date(allocation_request_at).toLocaleDateString(
-                          "en-IN"
-                        )}
-                      </TableCell>
-                      <TableCell align="center">
-                        {allotted === false && (
-                          <Button
-                            variant="contained"
-                            style={{
-                              height: "34px",
-                              width: "140px",
-                              fontSize: "16px",
-                              borderRadius: "25px",
-                              backgroundColor: "red",
-                            }}
-                          >
-                            <CancelIcon /> <ListItemText>Reject</ListItemText>
-                          </Button>
-                        )}
-                        {allotted === null && (
-                          <Button
-                            variant="contained"
-                            style={{
-                              height: "34px",
-                              width: "140px",
-                              fontSize: "16px",
-                              borderRadius: "25px",
-                              backgroundColor: "#F7B946",
-                            }}
-                          >
-                            <PauseIcon /> <ListItemText> Pending</ListItemText>
-                          </Button>
-                        )}
-                        {allotted === true && (
-                          <Button
-                            variant="contained"
-                            style={{
-                              height: "34px",
-                              width: "140px",
-                              fontSize: "16px",
-                              borderRadius: "25px",
-                              background: "#CBFDB3",
-                              color: "green",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            <CloudDoneIcon sx={{ fill: "green" }} />{" "}
-                            <ListItemText> Verified</ListItemText>
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  </>
-                );
-              })}
-            </TableBody>
-          </Table>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50, 100]}
-            component="div"
-            count={""}
-            rowsPerPage={""}
-            page={""}
-            onPageChange={""}
-            onRowsPerPageChange={""}
-          />
-        </>
-      </TableContainer>
-      <Toaster />
+                          })}
+                        </TableCell>
+                        <TableCell align="center">
+                          {hostel_name}
+                          <br />
+                          <span style={{ color: "gray", fontSize: "12px" }}>
+                            {room_name || "Not available"}
+                          </span>
+                        </TableCell>
+                        <TableCell align="center">{room_rent}</TableCell>
+                        <TableCell align="center">{order_id}</TableCell>
+                        <TableCell align="center">
+                          {new Date(allocation_request_at).toLocaleDateString(
+                            "en-IN"
+                          )}
+                        </TableCell>
+                        <TableCell align="center">
+                          {allotted === false && (
+                            <Button
+                              variant="contained"
+                              style={{
+                                height: "34px",
+                                width: "140px",
+                                fontSize: "16px",
+                                borderRadius: "25px",
+                                backgroundColor: "red",
+                              }}
+                            >
+                              <CancelIcon /> <ListItemText>Reject</ListItemText>
+                            </Button>
+                          )}
+                          {allotted === null && (
+                            <Button
+                              variant="contained"
+                              style={{
+                                height: "34px",
+                                width: "140px",
+                                fontSize: "16px",
+                                borderRadius: "25px",
+                                backgroundColor: "#F7B946",
+                              }}
+                            >
+                              <PauseIcon />{" "}
+                              <ListItemText> Pending</ListItemText>
+                            </Button>
+                          )}
+                          {allotted === true && (
+                            <Button
+                              variant="contained"
+                              style={{
+                                height: "34px",
+                                width: "140px",
+                                fontSize: "16px",
+                                borderRadius: "25px",
+                                background: "#CBFDB3",
+                                color: "green",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              <CloudDoneIcon sx={{ fill: "green" }} />{" "}
+                              <ListItemText> Verified</ListItemText>
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  );
+                })}
+              </TableBody>
+            </Table>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 50, 100]}
+              component="div"
+              count={""}
+              rowsPerPage={""}
+              page={""}
+              onPageChange={""}
+              onRowsPerPageChange={""}
+            />
+          </>
+        </TableContainer>
+        <Toaster />
+      </Box>
     </Box>
   );
 }

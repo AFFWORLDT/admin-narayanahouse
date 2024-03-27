@@ -159,15 +159,15 @@ const Dashboard = () => {
         sx={{
           [theme.breakpoints.up("xs")]: {
             marginLeft: "0px",
-            padding: "10px 5px",
+            padding: "20px 10px",
           },
           [theme.breakpoints.up("md")]: {
             marginLeft: "265px",
-            padding: "10px",
+            padding: "25px 10px",
           },
           [theme.breakpoints.up("sm")]: {
             marginLeft: "265px",
-            padding: "10px",
+            padding: "20px 10px",
           },
         }}
       >
