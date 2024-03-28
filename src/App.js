@@ -22,6 +22,7 @@ import RoomAllocation from "./pages/RoomAllocation";
 import StudentProfile from "./pages/StudentProfile";
 import RoomAllocationHistory from "./pages/RoomAllocationHistory";
 import UpdatePassword from "./pages/UpdatePassword";
+import Request from "./pages/Requests";
 function App() {
   const [user, setUser] = useState({});
   useEffect(() => {
@@ -63,6 +64,10 @@ function App() {
           <Route
             path="/studentprofile/:id"
             element={<PrivateRoute Component={StudentProfile} />}
+          />
+          <Route
+            path="/request"
+            element={<PrivateRoute Component={Request} />}
           />
           <Route path="/wallet" element={<PrivateRoute Component={Wallet} />} />
 

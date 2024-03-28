@@ -119,6 +119,11 @@ function SideBar(props) {
       name: "Update Password",
       icon: <LockClockIcon />,
     },
+    {
+      path: "/request",
+      name: "Enquiry",
+      icon: <LockClockIcon />,
+    },
     // {
     //   path: "/news",
     //   name: "News",
