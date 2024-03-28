@@ -9,7 +9,10 @@ function EnquiryCard({
   hostel_location,
   message,
   seen,
+  quote_id,
+  handelSeen,
 }) {
+ 
   return (
     <Box
       component={"div"}
@@ -136,6 +139,8 @@ function EnquiryCard({
                 fontSize: "15px",
                 fontWeight: "650",
               }}
+              onClick={handelSeen}
+              type="button"
             >
               UNSEEN
             </button>
@@ -153,6 +158,8 @@ function EnquiryCard({
                 fontSize: "15px",
                 fontWeight: "650",
               }}
+              onClick={handelSeen}
+              type="button"
             >
               UNSEEN
             </button>
@@ -170,6 +177,8 @@ function EnquiryCard({
                 fontSize: "15px",
                 fontWeight: "650",
               }}
+              onClick={handelSeen}
+              type="button"
             >
               SEEN
             </button>

@@ -71,13 +71,15 @@ function App() {
           />
 
           <Route
-            path="/request"
+            path="/enquirys"
             element={<PrivateRoute Component={Request} />}
           />
           <Route path="/wallet" element={<PrivateRoute Component={Wallet} />} />
 
-          <Route path="/payment-option" element={<PrivateRoute Component={PaymentOptions} />} />
-
+          <Route
+            path="/payment-option"
+            element={<PrivateRoute Component={PaymentOptions} />}
+          />
 
           {/* <Route path="/order" element={<Order />} />
           <Route path="/saved" element={<Saved />} /> */}

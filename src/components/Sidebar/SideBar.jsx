@@ -43,7 +43,7 @@ import {
 } from "../../service/localstorage";
 import adminImg from "../../assets/img/logonarayana.png";
 import { toast } from "react-hot-toast";
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';;
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 
 const drawerWidth = 265;
 
@@ -121,15 +121,15 @@ function SideBar(props) {
       icon: <LockClockIcon />,
     },
     {
-
-      path: "/request",
-      name: "Enquiry",
+      path: "/enquirys",
+      name: "Enquirys",
       icon: <LockClockIcon />,
+    },
 
+    {
       path: "/payment-option",
       name: "Payment Option",
       icon: <AccountBalanceIcon />,
-
     },
     // {
     //   path: "/news",
