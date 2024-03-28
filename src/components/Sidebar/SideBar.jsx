@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import LockClockIcon from "@mui/icons-material/LockClock";
 import PropTypes from "prop-types";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import AppBar from "@mui/material/AppBar";
@@ -41,8 +43,7 @@ import {
 } from "../../service/localstorage";
 import adminImg from "../../assets/img/logonarayana.png";
 import { toast } from "react-hot-toast";
-import LockClockIcon from "@mui/icons-material/LockClock";
-import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';;
 
 const drawerWidth = 265;
 
@@ -120,9 +121,15 @@ function SideBar(props) {
       icon: <LockClockIcon />,
     },
     {
+
       path: "/request",
       name: "Enquiry",
       icon: <LockClockIcon />,
+
+      path: "/payment-option",
+      name: "Payment Option",
+      icon: <AccountBalanceIcon />,
+
     },
     // {
     //   path: "/news",
@@ -272,7 +279,7 @@ function SideBar(props) {
         sx={{
           flexGrow: 1,
           bgcolor: "background.default",
-          p: 3,
+          p: 0,
           marginLeft: { sm: open ? `${drawerWidth}px` : 0 },
           transition: "margin-left 0.3s ease-in-out",
         }}

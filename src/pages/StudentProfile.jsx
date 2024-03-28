@@ -770,43 +770,60 @@ function StudentProfile() {
                 justifyContent: "space-between",
               }}
             >
-              <Box>
-                <h2 className="text-center"> Aadhar Front </h2>
-                <form className="notes-upload-form">
+              <Box className="mx-auto">
+                <Typography
+                  sx={{
+                    fontSize: { xs: "20px", md: "30px", fontWeight: "bold" },
+                    color:"#5e35a6"
+                  }}
+                  className="text-center"
+                >
+                  {" "}
+                  Aadhar Front{" "}
+                </Typography>
+                <form className="notes-upload-form mt-2">
                   <Avatar
                     src={studentDetails?.aadharfront_pic}
                     alt=""
                     sx={{
                       width: {
-                        xs: "350px",
+                        xs: "310px",
                         sm: "380px",
                         lg: "500px",
-                        md: "700px",
+                        md: "300px",
                       },
-                      height: 280,
-                      margin: { xs: "", sm: "20px 0px" },
+                      height: { md: 280, xs: 180 },
                       borderRadius: "5px",
                     }}
                   />
                 </form>
               </Box>
 
-              <Box>
-                <h2 className="text-center"> Aadhar Back </h2>
+              <Box className="mx-auto">
+                <Typography
+                  sx={{
+                    fontSize: { xs: "20px", md: "30px", fontWeight: "bold" },
+                    marginTop: { xs: "10px", md: "0px" },
+                    color:"#5e35a6" 
+                  }}
+                  className="text-center "
+                >
+                  {" "}
+                  Aadhar Back{" "}
+                </Typography>
 
-                <form>
+                <form className="mt-2">
                   <Avatar
                     src={studentDetails?.aadharback_pic}
                     alt=""
                     sx={{
                       width: {
-                        xs: "350px",
+                        xs: "310px",
                         sm: "380px",
                         lg: "500px",
                         md: "700px",
                       },
-                      height: { xs: 280, sm: 280, md: 400, lg: 280 },
-                      margin: { xs: "", sm: "20px 0px" },
+                      height: { md: 280, xs: 180 },
                       borderRadius: "5px",
                     }}
                   />
