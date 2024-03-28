@@ -121,9 +121,15 @@ function SideBar(props) {
       icon: <LockClockIcon />,
     },
     {
+
+      path: "/request",
+      name: "Enquiry",
+      icon: <LockClockIcon />,
+
       path: "/payment-option",
       name: "Payment Option",
       icon: <AccountBalanceIcon />,
+
     },
     // {
     //   path: "/news",

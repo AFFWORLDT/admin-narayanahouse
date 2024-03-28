@@ -24,6 +24,9 @@ import RoomAllocationHistory from "./pages/RoomAllocationHistory";
 import PaymentOptions from "./pages/PaymentOptions";
 import UpdatePassword from "./pages/UpdatePassword";
 
+import Request from "./pages/Requests";
+
+
 function App() {
   const [user, setUser] = useState({});
   useEffect(() => {
@@ -66,7 +69,15 @@ function App() {
             path="/studentprofile/:id"
             element={<PrivateRoute Component={StudentProfile} />}
           />
+
+          <Route
+            path="/request"
+            element={<PrivateRoute Component={Request} />}
+          />
+          <Route path="/wallet" element={<PrivateRoute Component={Wallet} />} />
+
           <Route path="/payment-option" element={<PrivateRoute Component={PaymentOptions} />} />
+
 
           {/* <Route path="/order" element={<Order />} />
           <Route path="/saved" element={<Saved />} /> */}
