@@ -130,7 +130,7 @@ const Dashboard = () => {
       };
       const res = await axios.put(url, config);
       if (res?.status === 200) {
-        toast.success("Approv SuccessFully");
+        toast.success("Approved Successfully");
         getAllocationverification();
       }
     } catch (error) {
@@ -594,11 +594,14 @@ const Dashboard = () => {
                         >
                           <TableCell
                             align="center"
-                            className="d-flex justify-content-center"
+                            className="d-flex justify-content-start"
                             style={{ color: "#384D6C", fontWeight: "bold" }}
                           >
                             {" "}
-                            <div className="d-flex ">
+                            <Box
+                              className="d-flex"
+                              sx={{ width: "200px", marginX: "auto" }}
+                            >
                               <div
                                 style={{
                                   backgroundColor: "#D9D9D9",
@@ -633,12 +636,17 @@ const Dashboard = () => {
                                   {obj?.contact_no || "Not available"}
                                 </span>
                               </div>
-                            </div>
+                            </Box>
                           </TableCell>
 
                           <TableCell align="center">
                             <Link to={`/studentprofile/${obj.student_id}`}>
-                              <Button variant="outlined">View Profile</Button>
+                              <Button
+                                variant="outlined"
+                                sx={{ whiteSpace: "nowrap" }}
+                              >
+                                View Profile
+                              </Button>
                             </Link>
                           </TableCell>
                         </TableRow>
