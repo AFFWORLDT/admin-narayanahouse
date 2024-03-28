@@ -340,598 +340,593 @@ const Students = () => {
             },
           }}
         >
-            <p
-              className="ms-5 pt-3 fs-5"
-              style={{ fontWeight: "bold", color: "#384D6C" }}
-            >
-              Students
-            </p>
-            <div
-              className="d-flex w-100 pb-4"
-              style={{
-                backgroundColor: "#EEEEFF",
-                marginLeft: "0px",
-                paddingTop: "25px",
-              }}
-            >
-              <div className="w-100" style={{ position: "relative" }}>
-                <input
-                  className="p-2 ms-4 ps-3 input-searchfield"
-                  style={{
-                    border: "2px solid black",
-                    borderRadius: "25px",
-                    color: "black",
-                    fontWeight: "bold",
-                  }}
-                  type="text"
-                  placeholder="Search"
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <span
-                  className="serchicon"
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    right: "965px",
-                    transform: "translateY(-50%)",
-                    color: "#888",
-                  }}
-                >
-                  <SearchIcon />
-                </span>
-              </div>
+          <p
+            className="ms-5 pt-3 fs-5"
+            style={{ fontWeight: "bold", color: "#384D6C" }}
+          >
+            Students
+          </p>
+          <div
+            className="d-flex w-100 pb-4"
+            style={{
+              backgroundColor: "#EEEEFF",
+              marginLeft: "0px",
+              paddingTop: "25px",
+            }}
+          >
+            <div className="w-100" style={{ position: "relative" }}>
+              <input
+                className="p-2 ms-4 ps-3 input-searchfield"
+                style={{
+                  border: "2px solid black",
+                  borderRadius: "25px",
+                  color: "black",
+                  fontWeight: "bold",
+                }}
+                type="text"
+                placeholder="Search"
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <span
+                className="serchicon"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  right: "965px",
+                  transform: "translateY(-50%)",
+                  color: "#888",
+                }}
+              >
+                <SearchIcon />
+              </span>
             </div>
-            <div
-              className="d-flex justify-content-between mb-3"
-              style={{ backgroundColor: "#EEEEFF" }}
-            ></div>
-            {/* </div> */}
+          </div>
+          <div
+            className="d-flex justify-content-between mb-3"
+            style={{ backgroundColor: "#EEEEFF" }}
+          ></div>
+          {/* </div> */}
 
-            <TableContainer
-              component={Paper}
-              style={{ color: "#384D6C", backgroundColor: "#EEEEFF" }}
-            >
-              {loading ? (
-                <LinearProgress />
-              ) : (
-                <>
-                  <Table
-                    id="offers-table"
-                    sx={{ minWidth: 550 }}
-                    aria-label="simple table"
-                  >
-                    <TableHead>
-                      <TableRow sx={{ fontWeight: "bold" }}>
-                        <TableCell
-                          className="ms-5"
-                          style={{ color: "#384D6C", fontSize: "16px" }}
-                          align="left"
-                        >
-                          {" "}
-                          &nbsp; &nbsp; No.
-                        </TableCell>
-                        <TableCell
-                          style={{
-                            color: "#384D6C",
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            textAlign: "left",
-                          }}
-                          align="center"
-                        >
-                          Name
-                        </TableCell>
+          <TableContainer
+            component={Paper}
+            style={{ color: "#384D6C", backgroundColor: "#EEEEFF" }}
+          >
+            {loading ? (
+              <LinearProgress />
+            ) : (
+              <>
+                <Table
+                  id="offers-table"
+                  sx={{ minWidth: 550 }}
+                  aria-label="simple table"
+                >
+                  <TableHead>
+                    <TableRow sx={{ fontWeight: "bold" }}>
+                      <TableCell
+                        className="ms-5"
+                        style={{ color: "#384D6C", fontSize: "16px" }}
+                        align="left"
+                      >
+                        {" "}
+                        &nbsp; &nbsp; No.
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          color: "#384D6C",
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          textAlign: "left",
+                        }}
+                        align="center"
+                      >
+                        Name
+                      </TableCell>
 
-                        <TableCell
-                          style={{ color: "#384D6C", fontSize: "16px" }}
-                          align="center"
-                        >
-                          Hostel
-                        </TableCell>
-                        <TableCell
-                          style={{ color: "#384D6C", fontSize: "16px" }}
-                          align="center"
-                        >
-                          RoomNo
-                        </TableCell>
-                        <TableCell
-                          style={{ color: "#384D6C", fontSize: "16px" }}
-                          align="center"
-                        >
-                          <FormControl>
-                            <NativeSelect
-                              onChange={(e) => setStatus(e.target.value)}
-                              sx={{
-                                color: "#384D6C",
-                                fontSize: "16px",
-                                fontWeight: "500",
-                              }}
+                      <TableCell
+                        style={{ color: "#384D6C", fontSize: "16px" }}
+                        align="center"
+                      >
+                        Hostel
+                      </TableCell>
+                      <TableCell
+                        style={{ color: "#384D6C", fontSize: "16px" }}
+                        align="center"
+                      >
+                        RoomNo
+                      </TableCell>
+                      <TableCell
+                        style={{ color: "#384D6C", fontSize: "16px" }}
+                        align="center"
+                      >
+                        <FormControl>
+                          <NativeSelect
+                            onChange={(e) => setStatus(e.target.value)}
+                            sx={{
+                              color: "#384D6C",
+                              fontSize: "16px",
+                              fontWeight: "500",
+                            }}
+                            align="center"
+                          >
+                            <option
+                              value={"all"}
+                              style={{ color: "#384D6C", fontSize: "16px" }}
                               align="center"
                             >
-                              <option
-                                value={"all"}
-                                style={{ color: "#384D6C", fontSize: "16px" }}
-                                align="center"
-                              >
-                                All
-                              </option>
-                              <option
-                                value={"pending"}
-                                style={{ color: "#384D6C", fontSize: "16px" }}
-                                align="center"
-                              >
-                                Pending
-                              </option>
-                              <option
-                                value={"verify"}
-                                style={{ color: "#384D6C", fontSize: "16px" }}
-                                align="center"
-                              >
-                                Verified
-                              </option>
-                              <option
-                                value={"reject"}
-                                style={{ color: "#384D6C", fontSize: "16px" }}
-                                align="center"
-                              >
-                                Rejected
-                              </option>
-                            </NativeSelect>
-                          </FormControl>
-                        </TableCell>
-                        <TableCell
-                          style={{ color: "#384D6C", fontSize: "16px" }}
-                          align="center"
-                        >
-                          Payment due{" "}
-                        </TableCell>
-                        <TableCell
-                          style={{ color: "#384D6C", fontSize: "16px" }}
-                          align="center"
-                        >
-                          Action
-                        </TableCell>
-                        <TableCell
-                          style={{ color: "#384D6C", fontSize: "16px" }}
-                          align="center"
-                        >
-                          Delete
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {pageData?.length > 0 ? (
-                        <>
-                          {pageData?.map((row, index) => (
-                            <TableRow
-                              key={row?.student_id}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                              }}
+                              All
+                            </option>
+                            <option
+                              value={"pending"}
+                              style={{ color: "#384D6C", fontSize: "16px" }}
+                              align="center"
                             >
-                              <TableCell
-                                align="left"
-                                style={{ color: "#384D6C", fontWeight: "bold" }}
-                              >
-                                {" "}
-                                &nbsp; &nbsp; &nbsp;
-                                {page * rowsPerPage + index + 1} &nbsp; &nbsp;
-                                &nbsp;
-                                <CropSquareIcon className="alignline" />
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                style={{ color: "#384D6C", fontWeight: "bold" }}
-                              >
-                                {" "}
-                                <div className="d-flex">
-                                  <div
+                              Pending
+                            </option>
+                            <option
+                              value={"verify"}
+                              style={{ color: "#384D6C", fontSize: "16px" }}
+                              align="center"
+                            >
+                              Verified
+                            </option>
+                            <option
+                              value={"reject"}
+                              style={{ color: "#384D6C", fontSize: "16px" }}
+                              align="center"
+                            >
+                              Rejected
+                            </option>
+                          </NativeSelect>
+                        </FormControl>
+                      </TableCell>
+                      <TableCell
+                        style={{ color: "#384D6C", fontSize: "16px" }}
+                        align="center"
+                      >
+                        Payment due{" "}
+                      </TableCell>
+                      <TableCell
+                        style={{ color: "#384D6C", fontSize: "16px" }}
+                        align="center"
+                      >
+                        Action
+                      </TableCell>
+                      <TableCell
+                        style={{ color: "#384D6C", fontSize: "16px" }}
+                        align="center"
+                      >
+                        Delete
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {pageData?.length > 0 ? (
+                      <>
+                        {pageData?.map((row, index) => (
+                          <TableRow
+                            key={row?.student_id}
+                            sx={{
+                              "&:last-child td, &:last-child th": {
+                                border: 0,
+                              },
+                            }}
+                          >
+                            <TableCell
+                              align="left"
+                              style={{ color: "#384D6C", fontWeight: "bold" }}
+                            >
+                              {" "}
+                              &nbsp; &nbsp; &nbsp;
+                              {page * rowsPerPage + index + 1} &nbsp; &nbsp;
+                              &nbsp;
+                              <CropSquareIcon className="alignline" />
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              style={{ color: "#384D6C", fontWeight: "bold" }}
+                            >
+                              {" "}
+                              <div className="d-flex">
+                                <div
+                                  style={{
+                                    backgroundColor: "#D9D9D9",
+                                    height: "50px",
+                                    width: "46px",
+                                    borderRadius: "26px",
+                                    marginLeft: "0px",
+                                  }}
+                                >
+                                  <img
                                     style={{
-                                      backgroundColor: "#D9D9D9",
+                                      height: "40px",
                                       height: "50px",
                                       width: "46px",
                                       borderRadius: "26px",
-                                      marginLeft: "0px",
                                     }}
-                                  >
-                                    <img
-                                      style={{
-                                        height: "40px",
-                                        height: "50px",
-                                        width: "46px",
-                                        borderRadius: "26px",
-                                      }}
-                                      src={row.profile_image}
-                                      alt="pic"
-                                    />
-                                  </div>
-                                  <div className="ms-2 mt-1">
-                                    {row?.name}
-                                    <br />
-                                    <span
-                                      style={{
-                                        color: "gray",
-                                        fontSize: "12px",
-                                      }}
-                                    >
-                                      <LocalPhoneIcon
-                                        sx={{
-                                          height: "13px",
-                                          color: "#384D6C",
-                                        }}
-                                      />
-                                      {row?.contact_no || "Not available"}
-                                    </span>
-                                  </div>
+                                    src={row.profile_image}
+                                    alt="pic"
+                                  />
                                 </div>
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                style={{ color: "#384D6C", fontWeight: "bold" }}
-                              >
-                                {row?.bio === null
-                                  ? "N/A"
-                                  : row?.hostel_name || "Not available"}
-                              </TableCell>
-                              <TableCell
-                                align="center"
-                                style={{ color: "#384D6C", fontWeight: "bold" }}
-                              >
-                                {row?.email === null
-                                  ? "N/A"
-                                  : row?.room_name || "Not available"}
-                              </TableCell>
-                              <TableCell align="center">
-                                {row?.verification_status === false && (
-                                  <Button
-                                    variant="contained"
+                                <div className="ms-2 mt-1">
+                                  {row?.name}
+                                  <br />
+                                  <span
                                     style={{
-                                      height: "34px",
-                                      width: "140px",
-                                      fontSize: "16px",
-                                      borderRadius: "25px",
-                                      backgroundColor: "red",
+                                      color: "gray",
+                                      fontSize: "12px",
                                     }}
                                   >
-                                    <CancelIcon />{" "}
-                                    <ListItemText>Reject</ListItemText>
-                                  </Button>
-                                )}
-                                {row?.verification_status === null && (
-                                  <Button
-                                    variant="contained"
-                                    style={{
-                                      height: "34px",
-                                      width: "140px",
-                                      fontSize: "16px",
-                                      borderRadius: "25px",
-                                      backgroundColor: "#F7B946",
-                                    }}
-                                  >
-                                    <PauseIcon />{" "}
-                                    <ListItemText> Pending</ListItemText>
-                                  </Button>
-                                )}
-                                {row?.verification_status === true && (
-                                  <Button
-                                    variant="contained"
-                                    style={{
-                                      height: "34px",
-                                      width: "140px",
-                                      fontSize: "16px",
-                                      borderRadius: "25px",
-                                      background: "#CBFDB3",
-                                      color: "green",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    <CloudDoneIcon sx={{ fill: "green" }} />{" "}
-                                    <ListItemText> Verified</ListItemText>
-                                  </Button>
-                                )}
-                              </TableCell>
-
-                              <TableCell
-                                align="center"
-                                style={{ color: "#384D6C", fontWeight: "bold" }}
-                              >
+                                    <LocalPhoneIcon
+                                      sx={{
+                                        height: "13px",
+                                        color: "#384D6C",
+                                      }}
+                                    />
+                                    {row?.contact_no || "Not available"}
+                                  </span>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              style={{ color: "#384D6C", fontWeight: "bold" }}
+                            >
+                              {row?.bio === null
+                                ? "N/A"
+                                : row?.hostel_name || "Not available"}
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              style={{ color: "#384D6C", fontWeight: "bold" }}
+                            >
+                              {row?.email === null
+                                ? "N/A"
+                                : row?.room_name || "Not available"}
+                            </TableCell>
+                            <TableCell align="center">
+                              {row?.verification_status === false && (
                                 <Button
-                                  className="bg-primary px-3"
+                                  variant="contained"
                                   style={{
-                                    color: "white",
-                                    borderRadius: "20px",
+                                    height: "34px",
+                                    width: "140px",
+                                    fontSize: "16px",
+                                    borderRadius: "25px",
+                                    backgroundColor: "red",
                                   }}
                                 >
-                                  {row?.student_id === null
-                                    ? "N/A"
-                                    : new Date(
-                                        row?.payment_due_on
-                                      ).toLocaleDateString("en-IN")}
+                                  <CancelIcon />{" "}
+                                  <ListItemText>Reject</ListItemText>
                                 </Button>
-                              </TableCell>
-                              <TableCell
-                                align="center"
+                              )}
+                              {row?.verification_status === null && (
+                                <Button
+                                  variant="contained"
+                                  style={{
+                                    height: "34px",
+                                    width: "140px",
+                                    fontSize: "16px",
+                                    borderRadius: "25px",
+                                    backgroundColor: "#F7B946",
+                                  }}
+                                >
+                                  <PauseIcon />{" "}
+                                  <ListItemText> Pending</ListItemText>
+                                </Button>
+                              )}
+                              {row?.verification_status === true && (
+                                <Button
+                                  variant="contained"
+                                  style={{
+                                    height: "34px",
+                                    width: "140px",
+                                    fontSize: "16px",
+                                    borderRadius: "25px",
+                                    background: "#CBFDB3",
+                                    color: "green",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  <CloudDoneIcon sx={{ fill: "green" }} />{" "}
+                                  <ListItemText> Verified</ListItemText>
+                                </Button>
+                              )}
+                            </TableCell>
+
+                            <TableCell
+                              align="center"
+                              style={{ color: "#384D6C", fontWeight: "bold" }}
+                            >
+                              <Button
+                                className="bg-primary w-100 px-2"
                                 style={{
-                                  color: "#384D6C",
-                                  fontSize: "25px",
-                                  cursor: "pointer",
+                                  color: "white",
+                                  borderRadius: "20px",
                                 }}
                               >
-                                <Button
-                                  onClick={() =>
-                                    handleNavigate(row?.student_id)
-                                  }
-                                  sx={{
-                                    border: "1.5px solid black",
-                                    padding: { xs: "5px 10px", md: "2px 10px" },
-                                    color: "#fff",
-                                    fontSize: { xs: "11px", md: "16px" },
+                                {row?.student_id === null ||
+                                !row?.payment_due_on
+                                  ? "Not Available"
+                                  : new Date(
+                                      row.payment_due_on
+                                    ).toLocaleDateString("en-IN")}
+                              </Button>
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              style={{
+                                color: "#384D6C",
+                                fontSize: "25px",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <Button
+                                onClick={() => handleNavigate(row?.student_id)}
+                                sx={{
+                                  border: "1.5px solid black",
+                                  padding: { xs: "5px 10px", md: "2px 10px" },
+                                  color: "#fff",
+                                  fontSize: { xs: "11px", md: "16px" },
+                                  bgcolor: "#384D6C",
+                                  width: { md: "150px", xs: "100px" },
+                                  borderRadius: "20px",
+                                  "&:hover": {
                                     bgcolor: "#384D6C",
-                                    width: { md: "150px", xs: "100px" },
-                                    borderRadius: "20px",
-                                    "&:hover": {
-                                      bgcolor: "#384D6C",
-                                    },
-                                  }}
-                                >
-                                  View Profile
-                                </Button>
-                              </TableCell>
-
-                              <TableCell
-                                align="center"
-                                style={{
-                                  color: "#384D6C",
-                                  fontSize: "25px",
-                                  cursor: "pointer",
+                                  },
                                 }}
                               >
-                                <Button
-                                  onClick={() => {
-                                    swal({
-                                      title: "Are you sure?",
-                                      text: "Once deleted, you will not be able to recover this record!",
-                                      icon: "warning",
-                                      buttons: true,
-                                      dangerMode: true,
-                                    }).then((willDelete) => {
-                                      if (willDelete) {
-                                        deleteStudentById(row.student_id);
-                                      } else {
-                                        swal("Your Record is safe");
-                                      }
-                                    });
-                                  }}
-                                  sx={{
-                                    border: "1.5px solid black",
-                                    padding: { xs: "5px 10px", md: "2px 10px" },
-                                    color: "#fff",
-                                    fontSize: { xs: "11px", md: "16px" },
+                                View Profile
+                              </Button>
+                            </TableCell>
+
+                            <TableCell
+                              align="center"
+                              style={{
+                                color: "#384D6C",
+                                fontSize: "25px",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <Button
+                                onClick={() => {
+                                  swal({
+                                    title: "Are you sure?",
+                                    text: "Once deleted, you will not be able to recover this record!",
+                                    icon: "warning",
+                                    buttons: true,
+                                    dangerMode: true,
+                                  }).then((willDelete) => {
+                                    if (willDelete) {
+                                      deleteStudentById(row.student_id);
+                                    } else {
+                                      swal("Your Record is safe");
+                                    }
+                                  });
+                                }}
+                                sx={{
+                                  border: "1.5px solid black",
+                                  padding: { xs: "5px 10px", md: "2px 10px" },
+                                  color: "#fff",
+                                  fontSize: { xs: "11px", md: "16px" },
+                                  bgcolor: "#ff4f42",
+                                  width: { md: "150px", xs: "100px" },
+                                  borderRadius: "20px",
+                                  "&:hover": {
                                     bgcolor: "#ff4f42",
-                                    width: { md: "150px", xs: "100px" },
-                                    borderRadius: "20px",
-                                    "&:hover": {
-                                      bgcolor: "#ff4f42",
-                                    },
-                                  }}
-                                >
-                                  Delete
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </>
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={7} align="center">
-                            No Students Found
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                  <TablePagination
-                    rowsPerPageOptions={[10, 25, 50, 100]}
-                    component="div"
-                    count={sortedStudents?.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                  },
+                                }}
+                              >
+                                Delete
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </>
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={7} align="center">
+                          No Students Found
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+                <TablePagination
+                  rowsPerPageOptions={[10, 25, 50, 100]}
+                  component="div"
+                  count={sortedStudents?.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </>
+            )}
+          </TableContainer>
+
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Edit Student</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form className="scroll-bar">
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    value={name}
+                    placeholder="Enter Name"
+                    onChange={(event) => setName(event.target.value)}
                   />
-                </>
-              )}
-            </TableContainer>
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    value={bio}
+                    placeholder="Enter Bio"
+                    onChange={(event) => setBio(event.target.value)}
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter Email"
+                    variant="outlined"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                  />
+                </FormControl>
 
-            <Modal show={show} onHide={handleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title>Edit Student</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <form className="scroll-bar">
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value={name}
-                      placeholder="Enter Name"
-                      onChange={(event) => setName(event.target.value)}
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      value={bio}
-                      placeholder="Enter Bio"
-                      onChange={(event) => setBio(event.target.value)}
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter Email"
-                      variant="outlined"
-                      value={email}
-                      onChange={(event) => setEmail(event.target.value)}
-                    />
-                  </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter Father Name"
+                    variant="outlined"
+                    value={FathersName}
+                    onChange={(event) => setFathersName(event.target.value)}
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter Father occupation"
+                    variant="outlined"
+                    value={FathersOccupation}
+                    onChange={(event) =>
+                      setFathersOccupation(event.target.value)
+                    }
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter Mother Name"
+                    variant="outlined"
+                    value={MotherName}
+                    onChange={(event) => setMotherName(event.target.value)}
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter Mothers Occupation"
+                    variant="outlined"
+                    value={MothersOccupation}
+                    onChange={(event) =>
+                      setMothersOccupation(event.target.value)
+                    }
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter Institute Name"
+                    variant="outlined"
+                    value={InstituteName}
+                    onChange={(event) => setInstituteName(event.target.value)}
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter Local Guardian Name"
+                    variant="outlined"
+                    value={LocalGuardianName}
+                    onChange={(event) =>
+                      setLocalGuardianName(event.target.value)
+                    }
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter Local Guardian Occupation"
+                    variant="outlined"
+                    value={LocalGuardianOccupation}
+                    onChange={(event) =>
+                      setLocalGuardianOccupation(event.target.value)
+                    }
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter Permanent Address"
+                    variant="outlined"
+                    value={PermanetAddress}
+                    onChange={(event) => setPermanetAddress(event.target.value)}
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter State"
+                    variant="outlined"
+                    value={state}
+                    onChange={(event) => setState(event.target.value)}
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter city"
+                    variant="outlined"
+                    value={city}
+                    onChange={(event) => setCity(event.target.value)}
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter Relation local guardian"
+                    variant="outlined"
+                    value={RelationLocalguardian}
+                    onChange={(event) =>
+                      setRelationLocalguardian(event.target.value)
+                    }
+                  />
+                </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <TextField
+                    fullWidth
+                    placeholder="Enter Address building"
+                    variant="outlined"
+                    value={AddressBilding}
+                    onChange={(event) => setAddressBilding(event.target.value)}
+                  />
+                </FormControl>
 
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter Father Name"
-                      variant="outlined"
-                      value={FathersName}
-                      onChange={(event) => setFathersName(event.target.value)}
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter Father occupation"
-                      variant="outlined"
-                      value={FathersOccupation}
-                      onChange={(event) =>
-                        setFathersOccupation(event.target.value)
-                      }
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter Mother Name"
-                      variant="outlined"
-                      value={MotherName}
-                      onChange={(event) => setMotherName(event.target.value)}
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter Mothers Occupation"
-                      variant="outlined"
-                      value={MothersOccupation}
-                      onChange={(event) =>
-                        setMothersOccupation(event.target.value)
-                      }
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter Institute Name"
-                      variant="outlined"
-                      value={InstituteName}
-                      onChange={(event) => setInstituteName(event.target.value)}
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter Local Guardian Name"
-                      variant="outlined"
-                      value={LocalGuardianName}
-                      onChange={(event) =>
-                        setLocalGuardianName(event.target.value)
-                      }
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter Local Guardian Occupation"
-                      variant="outlined"
-                      value={LocalGuardianOccupation}
-                      onChange={(event) =>
-                        setLocalGuardianOccupation(event.target.value)
-                      }
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter Permanent Address"
-                      variant="outlined"
-                      value={PermanetAddress}
-                      onChange={(event) =>
-                        setPermanetAddress(event.target.value)
-                      }
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter State"
-                      variant="outlined"
-                      value={state}
-                      onChange={(event) => setState(event.target.value)}
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter city"
-                      variant="outlined"
-                      value={city}
-                      onChange={(event) => setCity(event.target.value)}
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter Relation local guardian"
-                      variant="outlined"
-                      value={RelationLocalguardian}
-                      onChange={(event) =>
-                        setRelationLocalguardian(event.target.value)
-                      }
-                    />
-                  </FormControl>
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <TextField
-                      fullWidth
-                      placeholder="Enter Address building"
-                      variant="outlined"
-                      value={AddressBilding}
-                      onChange={(event) =>
-                        setAddressBilding(event.target.value)
-                      }
-                    />
-                  </FormControl>
+                <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                  <InputLabel>Select Level</InputLabel>
+                  <Select
+                    value={level}
+                    onChange={(event) => setLevel(event.target.value)}
+                    placeholder="Select Level"
+                  >
+                    <MenuItem value="silver">Silver</MenuItem>
+                    <MenuItem value="gold">Gold</MenuItem>
+                    <MenuItem value="diamond">Diamond</MenuItem>
+                  </Select>
+                </FormControl>
+              </form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="contained" color="error" onClick={handleClose}>
+                Close
+              </Button>
+              <Button
+                sx={{ margin: "10px" }}
+                variant="contained"
+                color="success"
+                onClick={updatestudent}
+              >
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
 
-                  <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                    <InputLabel>Select Level</InputLabel>
-                    <Select
-                      value={level}
-                      onChange={(event) => setLevel(event.target.value)}
-                      placeholder="Select Level"
-                    >
-                      <MenuItem value="silver">Silver</MenuItem>
-                      <MenuItem value="gold">Gold</MenuItem>
-                      <MenuItem value="diamond">Diamond</MenuItem>
-                    </Select>
-                  </FormControl>
-                </form>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="contained" color="error" onClick={handleClose}>
-                  Close
-                </Button>
-                <Button
-                  sx={{ margin: "10px" }}
-                  variant="contained"
-                  color="success"
-                  onClick={updatestudent}
-                >
-                  Save Changes
-                </Button>
-              </Modal.Footer>
-            </Modal>
-
-            <Toaster />
+          <Toaster />
         </Box>
       </Box>
     </>
